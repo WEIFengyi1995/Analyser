@@ -10,8 +10,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    constantsTools* b=new constantsTools();
-    language *c=new language();
+    constantsTools* constTools=new constantsTools();
+    language * lang=new language();
 
 
     return a.exec();
