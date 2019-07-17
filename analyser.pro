@@ -24,17 +24,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+        constantstools.cpp \
+        language.cpp \
         main.cpp \
         mainwindow.cpp \
     analyser.cpp \
     analyserutils.cpp
 
 HEADERS += \
-        mainwindow.h \
+    mainwindow.h \
     analyser.h \
     service.h \
     analyserutils.h \
     analyserutils.h
 
 FORMS += \
-        mainwindow.ui
+    mainwindow.ui

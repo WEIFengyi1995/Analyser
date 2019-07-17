@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+private slots:
+    bool loginBtnClicked();
+    void exitBtnClicked();
 };
 
 #endif // MAINWINDOW_H
