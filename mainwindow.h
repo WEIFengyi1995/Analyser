@@ -19,7 +19,7 @@ private:
     Ui::MainWindow *ui;
 
 private slots:
-    void loginBtnClicked();
+    bool loginBtnClicked();
     void exitBtnClicked();
 };
 
