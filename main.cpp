@@ -6,6 +6,8 @@
 
 int main(int argc, char *argv[])
 {
+    //username: arcsolu
+    //password: analyser
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
