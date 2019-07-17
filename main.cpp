@@ -1,18 +1,19 @@
-//#include "mainwindow.h"
+#include "mainwindow.h"
 #include <QApplication>
 #include "constantstools.h"
 #include <QDebug>
-
-
+#include "language.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    //MainWindow w;
-    //w.show();
-    //return a.exec();
+    MainWindow w;
+    w.show();
+
     constantsTools* b=new constantsTools();
-    qDebug()<<b->PATH_DB<<"path_db";
-    return 0;
+    language *c=new language();
+
+
+    return a.exec();
 
 }
