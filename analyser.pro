@@ -24,10 +24,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+        constantstools.cpp \
+        language.cpp \
         main.cpp \
         mainwindow.cpp
 
 HEADERS += \
+        constantstools.h \
+        language.h \
         mainwindow.h
 
 FORMS += \
