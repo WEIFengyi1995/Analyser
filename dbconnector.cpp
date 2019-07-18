@@ -20,6 +20,8 @@ bool DBConnector::start(){
     db.setPassword(ISC_PASSWORD);
     db.setHostName(URL);
     db.setDatabaseName(constantsTools::FILE_DB_VENTAP);
+    qDebug()<<URL<<constantsTools::FILE_DB_VENTAP;
+    qDebug()<<ISC_USER<<ISC_PASSWORD;
     bool ok=db.open();
     return ok;
 }

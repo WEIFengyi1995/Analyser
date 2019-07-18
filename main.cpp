@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Service *ser = Analyser::getAnalyser();
-    Logger infoLogger(QDir().homePath()+"/hello.txt");
+    Logger infoLogger(constantsTools::PATH_REPORT);
     //    infoLogger.info_log("information!");
     //    infoLogger.warning_log("warning");
     //    infoLogger.severe_log("warning");
