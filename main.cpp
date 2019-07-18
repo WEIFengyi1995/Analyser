@@ -1,18 +1,22 @@
-//#include "mainwindow.h"
+#include "mainwindow.h"
 #include <QApplication>
+#include "service.h"
+#include "analyser.h"
 #include "constantstools.h"
 #include <QDebug>
-#include <QtMath>
-
+#include "language.h"
+#include "logger.h"
 
 int main(int argc, char *argv[])
 {
+    //username: arcsolu
+    //password: analyser
     QApplication a(argc, argv);
-    //MainWindow w;
-    //w.show();
-    //return a.exec();
-    constantsTools* b=new constantsTools();
-    qDebug()<<b->PATH_DB<<"path_db";
-    return 0;
-
+    MainWindow w;
+    w.show();
+    Service *ser = Analyser::getAnalyser();
+    qDebug()<<constantsTools::PATH_DB;
+    qDebug()<<language::info.value("A211");
+    ser->start();
+    return a.exec();
 }

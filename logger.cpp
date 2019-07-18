@@ -48,5 +48,16 @@ void Logger::severe(QString severe){
     file.close();
 }
 
+void Logger::info_log(QString information){
+      this->info(information);
+}
 
-
+void Logger::config_log(QString config){
+    this->config(config);
+}
+void Logger::warning_log(QString war){
+    this->warning(war);
+}
+void Logger::severe_log(QString sev){
+    this->severe(sev);
+}

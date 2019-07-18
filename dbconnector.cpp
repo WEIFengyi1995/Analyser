@@ -5,6 +5,7 @@ DBConnector::DBConnector()
 {
 
 }
+
 DBConnector* DBConnector::getDBConnector(){
     if(dbConnector==nullptr){
         dbConnector=new DBConnector();
