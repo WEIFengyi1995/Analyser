@@ -10,7 +10,8 @@ public:
     const QString PRODUCT="ventap";
     const QString PATH_DB=QString(QDir::separator())+"var"+QString(QDir::separator())+"lib"+QString(QDir::separator())+"firebird"
             +QString(QDir::separator())+"2.5"+QString(QDir::separator())+"data"+QString(QDir::separator());
-    const QString PATH_VENTAP_HOME=QString(QDir::separator())+"home"+QString(QDir::separator())+PRODUCT+QString(QDir::separator());
+    //const QString PATH_VENTAP_HOME=QString(QDir::separator())+"home"+QString(QDir::separator())+PRODUCT+QString(QDir::separator());
+    const QString PATH_VENTAP_HOME = QDir().homePath()+QDir::separator()+PRODUCT+QDir::separator();
     const QString PATH_VENTAP_DOC=PATH_VENTAP_HOME+"Documents"+QString(QDir::separator());
     const QString PATH_TMP=PATH_VENTAP_DOC+".tmp"+QString(QDir::separator());
     const QString PATH_DBK=PATH_TMP+"db"+QString(QDir::separator());

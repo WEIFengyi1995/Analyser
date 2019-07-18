@@ -1,6 +1,8 @@
 #include "analyser.h"
-#include "analyserutils.h"
+#include "constantstools.h"
 #include <QtDebug>
+#include <QException>
+
 
 Analyser * Analyser::instance = nullptr;
 
@@ -13,6 +15,11 @@ void Analyser::start(){
 
 Analyser::Analyser()
 {
+    this->shell = new ShellHandler();
+}
+Analyser::~Analyser(){
+    delete this->shell;
+    delete instance;
 }
 
 Analyser * Analyser::getAnalyser(){
@@ -23,9 +30,13 @@ Analyser * Analyser::getAnalyser(){
 
 }
 
+//install
 void Analyser::initAction(){
-    qDebug()<<"Start init Action";
-
+    shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
+    shell->doShell("mkdir -p "+constantsTools::PATH_REPORT,"");
+    shell->doShell("apt update","");
+    shell->doShell("apt install -y -f iozone3","");
+    shell->doShell("apt install -y -f nmon","");
 }
 
 void Analyser::clientAction(){
@@ -34,7 +45,7 @@ void Analyser::clientAction(){
 
 void Analyser::ioZone3Action(){
     qDebug()<<"Start ioZone3 Action";
-    qDebug()<<doShell("iozone -R -l 5 -u 5 -r 4k -s 100m -F ./p1 ./p2 ./p3 ./p4 ./p4","/home/arcsolu/io.log");
+    qDebug()<<shell->doShell("iozone -R -l 5 -u 5 -r 4k -s 100m -F ./p1 ./p2 ./p3 ./p4 ./p4","/home/arcsolu/io.log");
 
 }
 void Analyser::nmonAction(){

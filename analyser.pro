@@ -29,14 +29,15 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     analyser.cpp \
-    analyserutils.cpp
+    shellhandler.cpp
 
 HEADERS += \
     mainwindow.h \
     analyser.h \
     service.h \
-    analyserutils.h \
-    analyserutils.h
+    constantstools.h \
+    language.h \
+    shellhandler.h
 
 FORMS += \
     mainwindow.ui

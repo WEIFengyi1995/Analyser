@@ -16,6 +16,6 @@ int main(int argc, char *argv[])
     Service *ser = Analyser::getAnalyser();
     constantsTools* constTools=new constantsTools();
     language * lang=new language();
-    //ser->start();
+    ser->start();
     return a.exec();
 }
