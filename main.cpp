@@ -13,8 +13,8 @@ int main(int argc, char *argv[])
     //password: analyser
     QApplication a(argc, argv);
     MainWindow w;
-    w.show();
     Service *ser = Analyser::getAnalyser();
-    ser->start();
+    QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
+    w.show();
     return a.exec();
 }
