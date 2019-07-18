@@ -5,7 +5,6 @@ ShellHandler::ShellHandler()
 {
     this->proc = new QProcess();
     QObject::connect(proc,SIGNAL(errorOccurred(QProcess::ProcessError)),this,SLOT(handProcError(QProcess::ProcessError)));
-
 }
 
 int ShellHandler::doShell(QString cmd, QString output){

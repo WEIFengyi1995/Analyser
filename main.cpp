@@ -15,6 +15,6 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Service *ser = Analyser::getAnalyser();
-    //ser->start();
+    ser->start();
     return a.exec();
 }

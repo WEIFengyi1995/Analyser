@@ -31,7 +31,6 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     analyser.cpp \
-    analyserutils.cpp \
     shellhandler.cpp
 
 HEADERS += \
@@ -42,9 +41,7 @@ HEADERS += \
         mainwindow.h\
         analyser.h \
         service.h \
-        analyserutils.h \
         shellhandler.h
-         shellhandler.cpp
 
 
 FORMS += \
