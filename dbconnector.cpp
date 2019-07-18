@@ -18,7 +18,7 @@ bool DBConnector::start(){
     db.setUserName(ISC_USER);
     db.setPassword(ISC_PASSWORD);
     db.setHostName(URL);
-    db.setDatabaseName(FILE_DB_VENTAP);
+    db.setDatabaseName(constantsTools::FILE_DB_VENTAP);
     bool ok=db.open();
     return ok;
 }

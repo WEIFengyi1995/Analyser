@@ -5,6 +5,7 @@
 #include<QSqlDatabase>
 #include<QSqlQueryModel>
 #include<QObject>
+#include "constantstools.h"
 class DBConnector:public QObject
 {
 private:
@@ -20,8 +21,7 @@ private:
     const QString DEMO_SQL="select company from t_title order by create_date asc; ";
     static QString info_cr;
     static QString info_deno;
-    QString dbinfo=PROTOCOL+":"+QString(PORT)+"/"+FILE_DB_VENTAP+"?lc_ctype="+"&user_name="+ISC_USER+"&password="+ISC_PASSWORD;
-    QString FILE_DB_VENTAP="";
+    QString dbinfo=PROTOCOL+":"+QString(PORT)+"/"+constantsTools::FILE_DB_VENTAP+"?lc_ctype="+"&user_name="+ISC_USER+"&password="+ISC_PASSWORD;
     QSqlDatabase db;
 
 public:

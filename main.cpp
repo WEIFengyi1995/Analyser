@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     Service *ser = Analyser::getAnalyser();
     constantsTools* constTools=new constantsTools();
     language * lang=new language();
-    ser->start();
+  //  ser->start();
     qDebug()<<constantsTools::PATH_DB;
     qDebug()<<language::info.value("A211");
     ser->start();
