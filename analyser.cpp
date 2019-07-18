@@ -26,7 +26,7 @@ void Analyser::start(){
     emit(info("","Start backup "));
     this->ventapDBBackupAction();
     emit(info("","Service completed, clean up "));
-    this->doneAction();
+    //this->doneAction();
 }
 
 Analyser::Analyser()
