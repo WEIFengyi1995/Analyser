@@ -31,7 +31,8 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     analyser.cpp \
-    analyserutils.cpp
+    analyserutils.cpp \
+    shellhandler.cpp
 
 HEADERS += \
         constantstools.h \
