@@ -24,5 +24,5 @@ int ShellHandler::doShell(QString cmd){
 }
 void ShellHandler::handProcError(QProcess::ProcessError error){
     qDebug()<<error;
-    exit(0);
+    //exit(0);
 }

@@ -5,11 +5,12 @@
 #include "dbconnector.h"
 
 class Analyser:public Service
-
 {
+    Q_OBJECT
+public slots :
+    void start();
 
 public:
-    void start();
     static Analyser *getAnalyser();
     ~Analyser();
 

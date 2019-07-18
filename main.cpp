@@ -16,7 +16,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Service *ser = Analyser::getAnalyser();
-    Logger infoLogger(constantsTools::FILE_REP);
+    Logger infoLogger;
+    infoLogger.setFile("hello.txt");
     QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
     QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)));
     QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));

@@ -34,6 +34,7 @@ Analyser * Analyser::getAnalyser(){
 //install
 void Analyser::initAction(){
     emit info("ini","initAction...");
+
     shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
     shell->doShell("mkdir -p "+constantsTools::PATH_REPORT,"");
     shell->doShell("apt update","");
@@ -76,7 +77,6 @@ void Analyser::clientAction(){
     } catch (...) {
         emit error("error","A230");
         shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
-        exit(1);
     }{
         db->close();
     }
