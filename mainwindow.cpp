@@ -19,11 +19,11 @@ bool MainWindow::loginBtnClicked(){
         return false;
     }
     if(name=="arcsolu"&&password=="analyser"){
-        QMessageBox::information(this,"","Please wait...");
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
         ui->username->setEnabled(false);
         ui->password->setEnabled(false);
+        QMessageBox::information(this,"","Please wait...");
         emit loginSignal();
         return true;
     }
@@ -49,6 +49,9 @@ void MainWindow::done(){
     ui->completWidget->show();
 }
 
+void MainWindow::closeBtnClicked(){
+    this->close();
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -61,5 +64,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->completWidget->hide();
     ui->widget->show();
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
+    connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
 }
