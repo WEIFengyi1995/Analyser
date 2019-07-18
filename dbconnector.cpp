@@ -15,7 +15,7 @@ DBConnector* DBConnector::getDBConnector(){
 }
 
 bool DBConnector::start(){
-    db=QSqlDatabase::addDatabase("db");
+    db=QSqlDatabase::addDatabase(dbType,"db");
     db.setUserName(ISC_USER);
     db.setPassword(ISC_PASSWORD);
     db.setHostName(URL);

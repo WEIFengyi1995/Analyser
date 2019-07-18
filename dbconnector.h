@@ -22,7 +22,7 @@ private:
     const QString URL="127.0.0.1";
     const int PORT=3050;
     const QString LCC_CTYPE="UNICODE_FSS";
-
+    const QString dbType="QIBASE";
     //  const QString PROTOCOL="jdbc:firebird://";
    // QString dbinfo=PROTOCOL+":"+QString(PORT)+"/"+constantsTools::FILE_DB_VENTAP+"?lc_ctype="+"&user_name="+ISC_USER+"&password="+ISC_PASSWORD;
     QSqlDatabase db;
