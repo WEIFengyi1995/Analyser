@@ -22,22 +22,22 @@ Logger::~Logger(){
 void Logger::info(QString action,QString info){
     QTextStream out(file);
     out <<QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [info] "<<action <<" : "<<info;
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_INFO<<" [info] "<<COLOR_RESET<<action <<" : "<<info;
+    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_INFO<<" [info] "<<COLOR_RESET<<action <<" : "<<info<<"\n";
 }
 void Logger::warning(QString action,QString warning){
     QTextStream out(file);
     out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [warning] "<<action <<" : "<<warning;
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_WARNNING<<" [warning] "<<COLOR_RESET<<action <<" : "<<warning;
+    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_WARNNING<<" [warning] "<<COLOR_RESET<<action <<" : "<<warning<<"\n";
 }
 void Logger::config(QString action,QString config){
     QTextStream out(file);
     out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [config] "<<action <<" : "<<config;
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_CONFIG<<" [config] "<<COLOR_RESET<<action <<" : "<<config;
+    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_CONFIG<<" [config] "<<COLOR_RESET<<action <<" : "<<config<<"\n";
 }
 void Logger::severe(QString action,QString severe){
     QTextStream out(file);
     out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [severe] "<<action <<" : "<<severe;
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<<action <<" : "<<severe;
+    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<<action <<" : "<<severe<<"\n";
 }
 
 void Logger::info_log(QString action,QString information){
