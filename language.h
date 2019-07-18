@@ -2,7 +2,7 @@
 #define LANGUAGE_H
 
 
- #include <QMap>
+#include <QMap>
 
 class language
 {

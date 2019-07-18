@@ -363,7 +363,7 @@
       <string>Inspection terminates.</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="closeButton">
      <property name="geometry">
       <rect>
        <x>80</x>

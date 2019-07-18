@@ -1,11 +1,12 @@
 #ifndef SERCICE_H
 #define SERCICE_H
 #include<QObject>
-class Service:QObject
+class Service:public QObject
 {
     Q_OBJECT
-public:
+public slots:
     virtual void start() = 0;
+
 
 signals:
     void info(QString action,QString info);
