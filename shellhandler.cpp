@@ -22,6 +22,7 @@ int ShellHandler::doShell(QString cmd){
     int code = proc->execute(cmd);
     return code;
 }
+
 void ShellHandler::handProcError(QProcess::ProcessError error){
     qDebug()<<error;
     //exit(0);

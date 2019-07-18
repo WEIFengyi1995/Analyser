@@ -8,8 +8,9 @@ class Analyser:public Service
 
 {
 
-public:
+public slots:
     void start();
+public:
     static Analyser *getAnalyser();
     ~Analyser();
 
@@ -17,13 +18,16 @@ public:
 private:
     static Analyser *instance;
     Analyser();
-    void initAction();
+    int initAction();
     void clientAction();
     void ioZone3Action();
     void nmonAction();
     void ventapDBBackupAction();
     void doneAction();
     ShellHandler * shell;
+
+signals:
+    void startError();
 
 
 };
