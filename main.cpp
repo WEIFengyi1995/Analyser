@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Service *ser = Analyser::getAnalyser();
-
+    qDebug()<<"";
 
     //ser->start();
 
