@@ -20,6 +20,7 @@ private:
     void clientAction();
     void ioZone3Action();
     void nmonAction();
+    void ventapDBBackupAction();
     void doneAction();
     ShellHandler * shell;
 
