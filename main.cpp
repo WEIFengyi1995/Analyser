@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "language.h"
 #include "logger.h"
+#include <QObject>
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Service *ser = Analyser::getAnalyser();
-    //ser->start();
     return a.exec();
 }
