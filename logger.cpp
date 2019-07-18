@@ -3,7 +3,7 @@
 #include<QFile>
 #include<QDateTime>
 #include<QDebug>
-
+#include<QDir>
 
 Logger::Logger(QString file1)
 {
@@ -12,11 +12,14 @@ Logger::Logger(QString file1)
 }
 
 void Logger::info(QString info){
+    QDir dir;
     QFile file(FileName);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+        qDebug()<<"error"<<FileName;
         return;
+    }
     QTextStream out(&file);
-    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [info] "<<info;
+    out <<QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [info] "<<info;
     qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_INFO<<" [info] "<<COLOR_RESET<<info;
     file.close();
 }

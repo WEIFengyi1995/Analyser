@@ -16,7 +16,6 @@ int ShellHandler::doShell(QString cmd, QString output){
 
     }
 }
-
 void ShellHandler::handProcError(QProcess::ProcessError error){
     exit(0);
 }

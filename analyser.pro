@@ -44,7 +44,6 @@ HEADERS += \
         service.h \
         analyserutils.h \
         shellhandler.h
-         shellhandler.cpp
 
 
 FORMS += \

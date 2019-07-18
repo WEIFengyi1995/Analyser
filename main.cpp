@@ -15,6 +15,12 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Service *ser = Analyser::getAnalyser();
-    //ser->start();
+   // ser->start();
+    Logger infoLogger(QDir().homePath()+"/hello.txt");
+    infoLogger.info_log("information!");
+    infoLogger.warning_log("warning");
+    infoLogger.severe_log("warning");
+    infoLogger.config_log("warning");
+    connect();
     return a.exec();
 }
