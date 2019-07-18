@@ -17,10 +17,14 @@ public:
 
 private:
     Ui::MainWindow *ui;
+signals:
+    void loginSignal();
 
 private slots:
     bool loginBtnClicked();
     void exitBtnClicked();
+    void start();
+    void done();
 };
 
 #endif // MAINWINDOW_H
