@@ -9,9 +9,9 @@ public slots:
 
 
 signals:
-    void info(QString info);
-    void config(QString config);
-    void warning(QString warning);
-    void error(QString error);
+    void info(QString action,QString info);
+    void config(QString action,QString config);
+    void warning(QString action,QString warning);
+    void error(QString action,QString error);
 };
 #endif // SERCICE_H

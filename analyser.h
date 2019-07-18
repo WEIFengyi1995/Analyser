@@ -2,6 +2,7 @@
 #define ANALYSER_H
 #include "service.h"
 #include "shellhandler.h"
+#include "dbconnector.h"
 
 class Analyser:public Service
 

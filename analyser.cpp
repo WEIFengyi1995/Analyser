@@ -2,7 +2,8 @@
 #include "constantstools.h"
 #include <QtDebug>
 #include <QThread>
-#include "dbconnector.h"
+#include <QSqlQueryModel>
+#include <QSqlRecord>
 
 Analyser * Analyser::instance = nullptr;
 
@@ -32,7 +33,7 @@ Analyser * Analyser::getAnalyser(){
 
 //install
 void Analyser::initAction(){
-    emit info("initAction...");
+    emit info("ini","initAction...");
     shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
     shell->doShell("mkdir -p "+constantsTools::PATH_REPORT,"");
     shell->doShell("apt update","");
@@ -41,22 +42,44 @@ void Analyser::initAction(){
 }
 
 void Analyser::clientAction(){
-    emit info("check client info ...");
+
+    emit info("client action","check client info ...");
     qDebug()<<"Start client Action";
     DBConnector* db=DBConnector::getDBConnector();
     if(!db->start()){
-        emit error("数据库连接失败");
+        emit error("open db","数据库连接失败");
     }
     try {
         QSqlQueryModel* result=db->executeQuery(db->CR_SQL);
+        if(result->rowCount()<1){
+            emit error("execute query","找不到pvalue");
+        }
+        QString cr= result->record(0).value("pvalue").toString();
+        if(!cr.isEmpty()){
+            emit config("find pvalue!","configuration ok");
+        }else{
+            emit warning("pvalue error","empty!");
+        }
+        DBConnector::setInfoCr(cr);
 
-
-
+        QSqlQueryModel* result2=db->executeQuery(db->DENO_SQL);
+        if(result2->rowCount()<1){
+            emit error("execute query","company  deno no found ");
+        }
+        QString deno= result->record(0).value("company").toString();
+        if(!deno.isEmpty()){
+            emit config("find deno ","configuration ok");
+        }else{
+            emit warning("deno error ","empty!");
+        }
+        DBConnector::setInfoCr(deno);
     } catch (...) {
-
+        emit error("error","A230");
+        shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
+        exit(1);
     }{
+        db->close();
     }
-
 
 }
 
@@ -76,7 +99,7 @@ void Analyser::nmonAction(){
 }
 
 void Analyser::ventapDBBackupAction(){
-qDebug()<<"Start backup action";
+    qDebug()<<"Start backup action";
 }
 void Analyser::doneAction(){
     qDebug()<<"Start done Action";

@@ -19,37 +19,37 @@ Logger::~Logger(){
     file->close();
 }
 
-void Logger::info(QString info){
+void Logger::info(QString action,QString info){
     QTextStream out(file);
-    out <<QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [info] "<<info;
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_INFO<<" [info] "<<COLOR_RESET<<info;
+    out <<QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [info] "<<action <<" : "<<info;
+    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_INFO<<" [info] "<<COLOR_RESET<<action <<" : "<<info;
 }
-void Logger::warning(QString warning){
+void Logger::warning(QString action,QString warning){
     QTextStream out(file);
-    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [warning] "<<warning;
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_WARNNING<<" [warning] "<<COLOR_RESET<<warning;
+    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [warning] "<<action <<" : "<<warning;
+    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_WARNNING<<" [warning] "<<COLOR_RESET<<action <<" : "<<warning;
 }
-void Logger::config(QString config){
+void Logger::config(QString action,QString config){
     QTextStream out(file);
-    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [config] "<<config;
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_CONFIG<<" [config] "<<COLOR_RESET<<config;
+    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [config] "<<action <<" : "<<config;
+    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_CONFIG<<" [config] "<<COLOR_RESET<<action <<" : "<<config;
 }
-void Logger::severe(QString severe){
+void Logger::severe(QString action,QString severe){
     QTextStream out(file);
-    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [severe] "<<severe;
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<<severe;
+    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [severe] "<<action <<" : "<<severe;
+    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<<action <<" : "<<severe;
 }
 
-void Logger::info_log(QString information){
-      this->info(information);
+void Logger::info_log(QString action,QString information){
+      this->info(action,information);
 }
 
-void Logger::config_log(QString config){
-    this->config(config);
+void Logger::config_log(QString action,QString config){
+    this->config(action,config);
 }
-void Logger::warning_log(QString war){
-    this->warning(war);
+void Logger::warning_log(QString action,QString war){
+    this->warning(action,war);
 }
-void Logger::severe_log(QString sev){
-    this->severe(sev);
+void Logger::severe_log(QString action,QString sev){
+    this->severe(action,sev);
 }

@@ -3,9 +3,10 @@
 #include <QDebug>
 DBConnector::DBConnector()
 {
-
 }
-
+DBConnector* DBConnector::dbConnector=nullptr;
+QString DBConnector::info_cr="";
+QString DBConnector::info_deno="";
 DBConnector* DBConnector::getDBConnector(){
     if(dbConnector==nullptr){
         dbConnector=new DBConnector();
@@ -23,6 +24,9 @@ bool DBConnector::start(){
     return ok;
 }
 
+void DBConnector::close(){
+    db.close();
+}
 QString DBConnector::getInfoCr(){
     return info_cr;
 }
