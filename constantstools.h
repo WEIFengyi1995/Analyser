@@ -28,4 +28,6 @@ public:
 
 
 
+
+
 #endif // CONSTANTSTOOLS_H

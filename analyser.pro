@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,18 +25,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         constantstools.cpp \
+        dbconnector.cpp \
         language.cpp \
+        logger.cpp \
         main.cpp \
         mainwindow.cpp \
     analyser.cpp \
+    analyserutils.cpp \
     shellhandler.cpp
 
 HEADERS += \
-    mainwindow.h \
-    analyser.h \
-    service.h \
-    shellhandler.h \
-    constantstools.h\
-    language.h
+        constantstools.h \
+        dbconnector.h \
+        language.h \
+        logger.h \
+        mainwindow.h\
+        analyser.h \
+        service.h \
+        analyserutils.h \
+        shellhandler.h
+         shellhandler.cpp
+
+
 FORMS += \
     mainwindow.ui

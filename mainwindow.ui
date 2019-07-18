@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Annual Inspection Arcsolu</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QWidget" name="widget" native="true">
@@ -32,7 +32,7 @@
        <height>481</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="2,8,1,1,2">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,8,1,1,2">
       <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
@@ -309,6 +309,72 @@
        </spacer>
       </item>
      </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="runWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>60</y>
+      <width>391</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>271</width>
+       <height>131</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>24</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Inspecting now ... ...</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="completWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>140</y>
+      <width>211</width>
+      <height>141</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>151</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Inspection terminates.</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>100</y>
+       <width>113</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>close</string>
+     </property>
     </widget>
    </widget>
   </widget>

@@ -19,8 +19,12 @@ bool MainWindow::loginBtnClicked(){
         return false;
     }
     if(name=="arcsolu"&&password=="analyser"){
-        QMessageBox::information(this,"","Start writting logs...");
-        this->ui->Login->setEnabled(false);
+        QMessageBox::information(this,"","Please wait...");
+        ui->Login->setEnabled(false);
+        ui->exit->setEnabled(false);
+        ui->username->setEnabled(false);
+        ui->password->setEnabled(false);
+        emit loginSignal();
         return true;
     }
     QMessageBox::information(this,"","Wrong username or wrong password.");
@@ -31,11 +35,31 @@ void MainWindow::exitBtnClicked(){
     this->close();
 }
 
+
+void MainWindow::start(){
+    QMessageBox::information(this,"","Start writting logs, Please waiting for about 7 hours...");
+    ui->widget->hide();
+    ui->completWidget->hide();
+    ui->runWidget->show();
+}
+
+void MainWindow::done(){
+    ui->widget->hide();
+    ui->runWidget->hide();
+    ui->completWidget->show();
+}
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
+    this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
+    ui->runWidget->hide();
+    ui->completWidget->hide();
+    ui->widget->show();
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
 }
