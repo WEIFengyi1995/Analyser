@@ -14,7 +14,7 @@ class Logger:public QObject
     Q_OBJECT
 public:
     Logger(QString file);
-
+    ~Logger();
 public slots:
     void info_log(QString info);
     void warning_log(QString warning );
@@ -23,6 +23,7 @@ public slots:
 
 
 private:
+    QFile *file;
     QString FileName;
     QString DATE_FORMAT="dddd dd/MM/yyyy HH:mm:ss.zzz";
     void info(QString info);

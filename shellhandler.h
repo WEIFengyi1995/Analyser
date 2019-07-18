@@ -8,12 +8,11 @@ class ShellHandler:QObject
 public:
     ShellHandler();
     int doShell(QString cmd,QString output);
+    int doShell(QString cmd);
 private:
     QProcess *proc;
 private slots:
     void handProcError(QProcess::ProcessError error);
-
-
 };
 
 #endif // SHELLHANDLER_H

@@ -1,8 +1,8 @@
 #include "analyser.h"
 #include "constantstools.h"
 #include <QtDebug>
-#include <QException>
-
+#include <QThread>
+#include "dbconnector.h"
 
 Analyser * Analyser::instance = nullptr;
 
@@ -32,6 +32,7 @@ Analyser * Analyser::getAnalyser(){
 
 //install
 void Analyser::initAction(){
+    emit info("initAction...");
     shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
     shell->doShell("mkdir -p "+constantsTools::PATH_REPORT,"");
     shell->doShell("apt update","");
@@ -40,21 +41,43 @@ void Analyser::initAction(){
 }
 
 void Analyser::clientAction(){
+    emit info("check client info ...");
     qDebug()<<"Start client Action";
+    DBConnector* db=DBConnector::getDBConnector();
+    if(!db->start()){
+        emit error("数据库连接失败");
+    }
+    try {
+        QSqlQueryModel* result=db->executeQuery(db->CR_SQL);
+
+
+
+    } catch (...) {
+
+    }{
+    }
+
+
 }
 
 void Analyser::ioZone3Action(){
     qDebug()<<"Start ioZone3 Action";
     qDebug()<<shell->doShell("iozone -R -l 5 -u 5 -r 4k -s 100m -F "+constantsTools::PATH_TMP+"f1 "+constantsTools::PATH_TMP+"f2 "+
-                             constantsTools::PATH_TMP+"f3 "+constantsTools::PATH_TMP+"f4 "+constantsTools::PATH_TMP+"f5 ",constantsTools::FILE_IOZONE);
+                             constantsTools::PATH_TMP+"f3 "+constantsTools::PATH_TMP+"f4 "+constantsTools::PATH_TMP+"f5 ",
+                             constantsTools::FILE_IOZONE);
 
 }
 void Analyser::nmonAction(){
     qDebug()<<"Start nmon Action";
-   // qDebug()<<doShell("iozone -R -l 5 -u 5 -r 4k -s 100m -F ./p1 ./p2 ./p3 ./p4 ./p4","/home/arcsolu/io.log");
+    qDebug()<<shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -t -s "+QString::number(2)+" -c "+
+                             QString::number(5));
+    QThread::msleep((2*5+5)*1000);
 
 }
 
+void Analyser::ventapDBBackupAction(){
+qDebug()<<"Start backup action";
+}
 void Analyser::doneAction(){
     qDebug()<<"Start done Action";
 }

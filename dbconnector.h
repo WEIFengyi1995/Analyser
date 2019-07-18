@@ -16,23 +16,23 @@ private:
     const QString URL="127.0.0.1";
     const QString PROTOCOL="jdbc:firebird://";
     const int PORT=3050;
-    const QString LC_CTYPE="UNICODE_FSS";
-    const QString CR_SQL="select pvalue from t_param where pkey='SYS_CLIENT_REF'; ";
-    const QString DEMO_SQL="select company from t_title order by create_date asc; ";
-    static QString info_cr;
-    static QString info_deno;
+    const QString LCC_CTYPE="UNICODE_FSS";
+
     QString dbinfo=PROTOCOL+":"+QString(PORT)+"/"+constantsTools::FILE_DB_VENTAP+"?lc_ctype="+"&user_name="+ISC_USER+"&password="+ISC_PASSWORD;
     QSqlDatabase db;
 
 public:
     static DBConnector* getDBConnector();
     bool start();
+    static QString info_cr;
+    static QString info_deno;
     static QString getInfoCr();
     static QString getInfoDeno();
     static void setInfoCr(QString cr);
     static void setInfoDeno(QString deno);
     QSqlQueryModel* executeQuery(QString query);
-
+    const QString CR_SQL="select pvalue from t_param where pkey='SYS_CLIENT_REF'; ";
+    const QString DEMO_SQL="select company from t_title order by create_date asc; ";
 };
 DBConnector* DBConnector::dbConnector=nullptr   ;
 QString DBConnector::info_cr="";
