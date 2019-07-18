@@ -35,9 +35,8 @@ HEADERS += \
     mainwindow.h \
     analyser.h \
     service.h \
-    constantstools.h \
-    language.h \
-    shellhandler.h
-
+    shellhandler.h \
+    constantstools.h\
+    language.h
 FORMS += \
     mainwindow.ui

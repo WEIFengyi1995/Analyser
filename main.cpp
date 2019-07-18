@@ -17,5 +17,8 @@ int main(int argc, char *argv[])
     constantsTools* constTools=new constantsTools();
     language * lang=new language();
     ser->start();
+    qDebug()<<constantsTools::PATH_DB;
+    qDebug()<<language::info.value("A211");
+    //ser->start();
     return a.exec();
 }

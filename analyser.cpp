@@ -45,7 +45,8 @@ void Analyser::clientAction(){
 
 void Analyser::ioZone3Action(){
     qDebug()<<"Start ioZone3 Action";
-    qDebug()<<shell->doShell("iozone -R -l 5 -u 5 -r 4k -s 100m -F ./p1 ./p2 ./p3 ./p4 ./p4","/home/arcsolu/io.log");
+    qDebug()<<shell->doShell("iozone -R -l 5 -u 5 -r 4k -s 100m -F "+constantsTools::PATH_TMP+"f1 "+constantsTools::PATH_TMP+"f2 "+
+                             constantsTools::PATH_TMP+"f3 "+constantsTools::PATH_TMP+"f4 "+constantsTools::PATH_TMP+"f5 ",constantsTools::FILE_IOZONE);
 
 }
 void Analyser::nmonAction(){

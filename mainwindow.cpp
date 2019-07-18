@@ -20,6 +20,7 @@ bool MainWindow::loginBtnClicked(){
     }
     if(name=="arcsolu"&&password=="analyser"){
         QMessageBox::information(this,"","Start writting logs...");
+        this->ui->Login->setEnabled(false);
         return true;
     }
     QMessageBox::information(this,"","Wrong username or wrong password.");
