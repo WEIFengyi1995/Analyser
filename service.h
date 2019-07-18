@@ -7,6 +7,7 @@ class Service:public QObject
 public slots:
     virtual void start() = 0;
 
+
 signals:
     void info(QString action,QString info);
     void config(QString action,QString config);
