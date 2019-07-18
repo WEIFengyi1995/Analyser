@@ -14,7 +14,6 @@ public:
     const static QString PATH_TMP;
     const static QString PATH_DBK;
     const static QString PATH_REPORT;
-
     const static QString FILE_DB_VENTAP;
     const static QString FILE_DB_AUDIT;
     const static QString FILE_DBK_VENTAP;

@@ -1,13 +1,17 @@
 #ifndef ANALYSER_H
 #define ANALYSER_H
 #include "service.h"
+#include "shellhandler.h"
 
 class Analyser:public Service
 
 {
+
 public:
     void start();
     static Analyser *getAnalyser();
+    ~Analyser();
+
 
 private:
     static Analyser *instance;
@@ -17,6 +21,9 @@ private:
     void ioZone3Action();
     void nmonAction();
     void doneAction();
+    ShellHandler * shell;
+
+
 };
 
 #endif // ANALYSER_H
