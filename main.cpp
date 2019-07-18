@@ -2,7 +2,7 @@
 #include <QApplication>
 #include "constantstools.h"
 #include <QDebug>
-
+#include <QtMath>
 
 
 int main(int argc, char *argv[])

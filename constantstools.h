@@ -7,7 +7,7 @@ class constantsTools
 {
 public:
     constantsTools();
-    const QString PRODUCT="ventap";
+     const QString  PRODUCT="ventap";
     const QString PATH_DB=QString(QDir::separator())+"var"+QString(QDir::separator())+"lib"+QString(QDir::separator())+"firebird"
             +QString(QDir::separator())+"2.5"+QString(QDir::separator())+"data"+QString(QDir::separator());
     const QString PATH_VENTAP_HOME=QString(QDir::separator())+"home"+QString(QDir::separator())+PRODUCT+QString(QDir::separator());
@@ -27,6 +27,8 @@ public:
     const QString FILE_GBAK=PATH_REPORT+"gb.log";
     const QString FILE_TERM=PATH_REPORT+"tm.log";
 };
+
+
 
 
 
