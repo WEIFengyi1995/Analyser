@@ -36,7 +36,9 @@ HEADERS += \
     analyser.h \
     service.h \
     analyserutils.h \
-    analyserutils.h
+    analyserutils.h \
+    constantstools.h\
+    language.h
 
 FORMS += \
     mainwindow.ui

@@ -1,5 +1,5 @@
 #include "analyserutils.h"
-#include <openacc.h>
+
 int doShell(QString cmd,QString output){
     QProcess proc;
     if(!output.isEmpty()){
