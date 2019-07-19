@@ -63,6 +63,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
+    ui->errorText->adjustSize();
+    ui->errorText->setGeometry(QRect(328, 240, 329, 27*4));
+    ui->errorText->setWordWrap(true);
+    ui->errorText->setAlignment(Qt::AlignLeft);
     ui->runWidget->hide();
     ui->completWidget->hide();
     ui->widget->show();
