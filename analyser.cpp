@@ -28,13 +28,11 @@ void Analyser::start(){
     emit(info("","Analyser initialised"));
     if(this->initAction() !=0){
 
-        emit(error("","can not start the service, check your log file to fix it"));
-        qDebug()<<"can not strat the service, check log file";
-        this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit start_Error("can not strat the service, check log file");
-
-    }
-    {
+       emit(error("","can not start the service, check your log file to fix it"));
+       qDebug()<<"can not strat the service, check log file";
+       this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
+       emit start_Error("can not strat the service, check log file");
+    }else{
         emit(info("","Intitialisation done, collecting client information"));
         if(this->clientAction()){
             emit(info("","Start izone"));
@@ -169,8 +167,7 @@ void Analyser::nmonAction(){
 void Analyser::ventapDBBackupAction(){
     qDebug()<<"Start backup action";
     int i=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
-                         +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP+" | tee -a "
-                         +constantsTools::FILE_GBAK);
+                         +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP,constantsTools::FILE_GBAK);
     if(i==1){
        emit info("gbak db_ventap",language::info.value("A211"));
     }else if(i==0){
@@ -180,8 +177,7 @@ void Analyser::ventapDBBackupAction(){
     }
 
     int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
-                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT+" | tee -a "
-                         +constantsTools::FILE_GBAK);
+                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT, constantsTools::FILE_GBAK);
     if(j==1){
        emit info("gbak db_AUDIT"," sucess");
     }else if(j==0){
@@ -192,6 +188,7 @@ void Analyser::ventapDBBackupAction(){
 
 
 }
+
 void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");

@@ -24,7 +24,6 @@ private slots:
     bool loginBtnClicked();
     void exitBtnClicked();
     void closeBtnClicked();
-    void start();
     void done();
 };
 
