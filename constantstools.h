@@ -24,6 +24,8 @@ public:
     const static QString FILE_GFIX;
     const static QString FILE_GBAK;
     const static QString FILE_TERM;
+    const static int SAMPLE;
+    const static int INTERVAL;
 };
 
 
