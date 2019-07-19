@@ -16,12 +16,15 @@ const QString constantsTools::FILE_DB_VENTAP=PATH_DB+"ventap.fdb";
 const QString constantsTools::FILE_DB_AUDIT=PATH_DB+"audit.fdb";
 const QString constantsTools::FILE_DBK_VENTAP=PATH_DBK+"ventap.fbk";
 const QString constantsTools::FILE_DBK_AUDIT=PATH_DBK+"audit.fbk";
-const QString constantsTools::FILE_REP=PATH_TMP+"report.log";
+const QString constantsTools::FILE_REP=constantsTools::PATH_VENTAP_DOC+"report.log";
 const QString constantsTools::FILE_NMON=PATH_REPORT+"nm.log";
 const QString constantsTools::FILE_IOZONE=PATH_REPORT+"io.log";
 const QString constantsTools::FILE_GFIX=PATH_REPORT+"gf.log";
 const QString constantsTools::FILE_GBAK=PATH_REPORT+"gb.log";
 const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
+
+const int constantsTools::SAMPLE  = 1;
+const int constantsTools::INTERVAL = 2;
 
 constantsTools::constantsTools()
 {

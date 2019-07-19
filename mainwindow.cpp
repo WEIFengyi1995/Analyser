@@ -21,7 +21,7 @@ bool MainWindow::loginBtnClicked(){
         QMessageBox::information(this,"","Please input password.");
         return false;
     }
-    if(name=="arcsolu"||password=="analyser"){
+    if(name=="arcsolu"&&password=="arcsolu"){
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
         ui->username->setEnabled(false);
