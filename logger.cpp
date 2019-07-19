@@ -16,7 +16,7 @@ void Logger::setFile(QString file1){
     FileName=file1;
     file=new QFile(file1);
     if (!file->open(QIODevice::WriteOnly | QIODevice::Text)){
-        qDebug()<<"error while opening "<<FileName;
+        qDebug()<<"error while opening "<<file1<<file->errorString();
         return;
     }
 }

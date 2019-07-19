@@ -26,7 +26,9 @@ bool MainWindow::loginBtnClicked(){
         ui->exit->setEnabled(false);
         ui->username->setEnabled(false);
         ui->password->setEnabled(false);
-        QMessageBox::information(this,"","Please wait...");
+        ui->widget->hide();
+        ui->completWidget->hide();
+        ui->runWidget->show();
         emit loginSignal();
         return true;
     }
@@ -38,13 +40,6 @@ void MainWindow::exitBtnClicked(){
     this->close();
 }
 
-
-void MainWindow::start(){
-    QMessageBox::information(this,"","Start writting logs, Please waiting for about 7 hours...");
-    ui->widget->hide();
-    ui->completWidget->hide();
-    ui->runWidget->show();
-}
 
 void MainWindow::done(){
     ui->widget->hide();
