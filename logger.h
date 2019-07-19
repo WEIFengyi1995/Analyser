@@ -13,14 +13,16 @@ class Logger:public QObject
 {
     Q_OBJECT
 public:
-    Logger(QString file);
+    Logger();
+    void setFile(QString file);
     ~Logger();
 public slots:
     void info_log(QString action,QString info);
     void warning_log(QString action,QString warning );
     void severe_log(QString action,QString severe);
     void config_log(QString action,QString config );
-
+signals:
+    void error(QString error);
 
 private:
     QFile *file;

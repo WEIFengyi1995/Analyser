@@ -10,9 +10,6 @@
 Analyser * Analyser::instance = nullptr;
 
 
-
-
-
 Analyser::Analyser()
 {
     this->shell = new ShellHandler();
@@ -27,8 +24,8 @@ Analyser * Analyser::getAnalyser(){
         instance = new Analyser();
     }
     return instance;
-
 }
+
 
 void Analyser::start(){
     emit(info("","Analyser initialised"));
@@ -127,7 +124,6 @@ void Analyser::clientAction(){
     } catch (...) {
         emit error("error","A230");
         shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
-        exit(1);
     }{
         db->close();
     }

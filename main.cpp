@@ -15,15 +15,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     Service *ser = Analyser::getAnalyser();
-
-
     w.show();
-    //    infoLogger.info_log("information!");
-    //    infoLogger.warning_log("warning");
-    //    infoLogger.severe_log("warning");
-    //    infoLogger.config_log("warning");
-    Logger infoLogger(constantsTools::FILE_REP);
 
+    Logger infoLogger;
+    infoLogger.setFile(QDir().homePath()+"/hello.txt");
     QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
     QObject::connect(ser,SIGNAL(error(QString,QString)),&w,SLOT(done()));
     QObject::connect(ser,SIGNAL(start_Error(QString)),&w,SLOT(done()));
