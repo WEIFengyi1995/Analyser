@@ -338,8 +338,8 @@
      </property>
      <property name="text">
       <string>Inspecting now, 
-please wait for about  
-7 hours... ...</string>
+please wait.  
+(This may take 7 hours... ...)</string>
      </property>
     </widget>
    </widget>
