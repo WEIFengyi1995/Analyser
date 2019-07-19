@@ -10,20 +10,17 @@
 Analyser * Analyser::instance = nullptr;
 
 
-Analyser::Analyser()
-{
-    this->shell = new ShellHandler();
-}
 Analyser::~Analyser(){
     delete this->shell;
     delete instance;
 }
 
-Analyser * Analyser::getAnalyser(){
-    if(instance == nullptr){
-        instance = new Analyser();
-    }
-    return instance;
+Analyser::Analyser(Logger &log)
+{
+    this->shell = new ShellHandler();
+    shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
+    this->log = &log;
+    this->log->setFile(constantsTools::FILE_REP);
 }
 
 
@@ -38,22 +35,35 @@ void Analyser::start(){
 
     }else{
         emit(info("","Intitialisation done, collecting client information"));
-        this->clientAction();
-        emit(info("","Start izone"));
-        this->ioZone3Action();
-        emit(info("","Start nmon "));
-        this->nmonAction();
-        emit(info("","Start backup "));
-        this->ventapDBBackupAction();
-        emit(info("","Service completed, clean up "));
+        if(this->clientAction()){
+            emit(info("","Start izone"));
+            this->ioZone3Action();
+            emit(info("","Start nmon "));
+            this->nmonAction();
+            emit(info("","Start backup "));
+            this->ventapDBBackupAction();
+            emit(info("","Service completed, clean up "));
+            this->doneAction();
+            emit(info("","Finished, you can close the window"));
+            emit(finish());
+        }
+        else{
+            this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
+            emit start_Error("");
+        }
     }
-
-    //this->doneAction();
 }
 
 
-//install
+Analyser * Analyser::getAnalyser(Logger &log){
+    if(instance == nullptr){
+        instance = new Analyser(log);
+    }
+    return instance;
 
+}
+
+//install
 int Analyser::initAction(){
     int sum = 0;
     int code;
@@ -62,9 +72,7 @@ int Analyser::initAction(){
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_DB, "exit code anormal, check the dir or your permission"));
     }
-    sum += code;
 
-    code = shell->doShell("mkdir -p "+constantsTools::PATH_REPORT,"");
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_REPORT, "exit code anormal, check the dir"));
     }
@@ -91,18 +99,20 @@ int Analyser::initAction(){
     return sum;
 }
 
-void Analyser::clientAction(){
+bool Analyser::clientAction(){
 
     emit info("client action","check client info ...");
     qDebug()<<"Start client Action";
     DBConnector* db=DBConnector::getDBConnector();
     if(!db->start()){
         emit error("open db","数据库连接失败");
+        return false;
     }
     try {
         QSqlQueryModel* result=db->executeQuery(db->CR_SQL);
         if(result->rowCount()<1){
             emit error("execute query","找不到pvalue");
+            return false;
         }
         QString cr= result->record(0).value("pvalue").toString();
         if(!cr.isEmpty()){
@@ -115,6 +125,7 @@ void Analyser::clientAction(){
         QSqlQueryModel* result2=db->executeQuery(db->DENO_SQL);
         if(result2->rowCount()<1){
             emit error("execute query","company  deno no found ");
+            return false;
         }
         QString deno= result->record(0).value("company").toString();
         if(!deno.isEmpty()){
@@ -129,6 +140,7 @@ void Analyser::clientAction(){
     }{
         db->close();
     }
+    return true;
 
 }
 
@@ -159,7 +171,7 @@ void Analyser::ventapDBBackupAction(){
 void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+*/"_"+
-                          QDate::currentDate().toString()+".tar.gz "+constantsTools::PATH_TMP);
+    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+
+                          QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP);
     sum += shell->doShell("rm -r "+constantsTools::PATH_TMP);
 }

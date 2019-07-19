@@ -3,13 +3,13 @@
 #include "service.h"
 #include "shellhandler.h"
 #include "dbconnector.h"
+#include "logger.h"
 
 class Analyser:public Service
 {
     Q_OBJECT
-
 public:
-    static Analyser *getAnalyser();
+    static Analyser *getAnalyser(Logger &log);
     ~Analyser();
 
 signals:
@@ -20,16 +20,15 @@ public slots:
 
 private:
     static Analyser *instance;
-    Analyser();
+    Analyser(Logger &log);
     int initAction();
-    void clientAction();
+    bool clientAction();
     void ioZone3Action();
     void nmonAction();
     void ventapDBBackupAction();
     void doneAction();
-    ShellHandler * shell=nullptr;
-
-
+    ShellHandler * shell = nullptr;
+    Logger * log;
 
 
 };

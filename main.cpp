@@ -14,16 +14,18 @@ int main(int argc, char *argv[])
     //password: analyser
     QApplication a(argc, argv);
     MainWindow w;
-    Service *ser = Analyser::getAnalyser();
+    Logger infoLogger;
+
+    Service *ser = Analyser::getAnalyser(infoLogger);
+    QObject::connect(ser,SIGNAL(finish()),&w,SLOT(done()));
+    QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
+    QObject::connect(ser,SIGNAL(start_Error(QString)),&w,SLOT(done()));
+    QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)));
+    QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));
+    QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)));
+    QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)));
     w.show();
 
-    Logger infoLogger;
-    infoLogger.setFile(QDir().homePath()+"/hello.txt");
-    QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()),Qt::DirectConnection);
-    QObject::connect(ser,SIGNAL(start_Error(QString)),&w,SLOT(done()),Qt::DirectConnection);
-    QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)),Qt::DirectConnection);
-    QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)),Qt::DirectConnection);
-    QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)),Qt::DirectConnection);
-    QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)),Qt::DirectConnection);
+
     return a.exec();
 }

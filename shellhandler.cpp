@@ -13,8 +13,6 @@ int ShellHandler::doShell(QString cmd, QString output){
     }
     proc->start(cmd);
     proc->waitForFinished();
-    if(proc->exitCode() != 0){
-    }
     return proc->exitCode();
 }
 
