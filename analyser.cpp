@@ -164,7 +164,7 @@ void Analyser::nmonAction(){
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
-    QThread::msleep((2*5+5)*1000);
+    QThread::msleep((constantsTools::SAMPLE*constantsTools::INTERVAL+5)*1000);
 
 }
 
