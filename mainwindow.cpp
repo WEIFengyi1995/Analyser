@@ -41,11 +41,17 @@ void MainWindow::exitBtnClicked(){
 }
 
 
-void MainWindow::done(){
+void MainWindow::done(QString error){
+    if(error.isNull()||error==""){
+        ui->errorText->clear();
+    }else{
+        ui->errorText->setText(error);
+    }
     ui->widget->hide();
     ui->runWidget->hide();
     ui->completWidget->show();
 }
+
 
 void MainWindow::closeBtnClicked(){
     this->close();

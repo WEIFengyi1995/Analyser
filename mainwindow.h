@@ -24,7 +24,7 @@ private slots:
     bool loginBtnClicked();
     void exitBtnClicked();
     void closeBtnClicked();
-    void done();
+    void done(QString error);
 };
 
 #endif // MAINWINDOW_H
