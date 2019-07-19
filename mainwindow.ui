@@ -314,10 +314,10 @@
    <widget class="QWidget" name="runWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>60</y>
-      <width>391</width>
-      <height>191</height>
+      <x>20</x>
+      <y>80</y>
+      <width>371</width>
+      <height>351</height>
      </rect>
     </property>
     <widget class="QLabel" name="label">
@@ -348,11 +348,11 @@ please wait for about
      <rect>
       <x>30</x>
       <y>140</y>
-      <width>211</width>
-      <height>141</height>
+      <width>301</width>
+      <height>291</height>
      </rect>
     </property>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="terminateText">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -368,14 +368,27 @@ please wait for about
     <widget class="QPushButton" name="closeButton">
      <property name="geometry">
       <rect>
-       <x>80</x>
-       <y>100</y>
+       <x>140</x>
+       <y>190</y>
        <width>113</width>
        <height>32</height>
       </rect>
      </property>
      <property name="text">
       <string>close</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="errorText">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>251</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>
