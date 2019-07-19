@@ -8,11 +8,10 @@ ShellHandler::ShellHandler()
 }
 
 int ShellHandler::doShell(QString cmd, QString output){
-    qDebug()<<cmd;
     if(!output.isEmpty()){
         proc->setStandardOutputFile(output);
     }
-    proc->start(cmd);
+
     proc->waitForFinished();
     return proc->exitCode();
 }
@@ -25,5 +24,5 @@ int ShellHandler::doShell(QString cmd){
 
 void ShellHandler::handProcError(QProcess::ProcessError error){
     qDebug()<<error;
-    exit(0);
+    //exit(0);
 }

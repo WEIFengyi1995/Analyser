@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "service.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,12 +18,13 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    Service *ser;
 signals:
     void loginSignal();
-
 private slots:
     bool loginBtnClicked();
     void exitBtnClicked();
+    void closeBtnClicked();
     void start();
     void done();
 };

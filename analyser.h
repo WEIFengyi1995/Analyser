@@ -6,10 +6,8 @@
 #include "logger.h"
 
 class Analyser:public Service
-
 {
-
-public slots:
+public slots :
     void start();
 public:
     static Analyser *getAnalyser(Logger &log);
@@ -20,13 +18,14 @@ private:
     static Analyser *instance;
     Analyser(Logger &log);
     int initAction();
-    void clientAction();
+    bool clientAction();
     void ioZone3Action();
     void nmonAction();
     void ventapDBBackupAction();
     void doneAction();
     ShellHandler * shell;
     Logger * log;
+
 
 
 };
