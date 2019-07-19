@@ -7,7 +7,7 @@
 #include "language.h"
 #include "logger.h"
 #include <QObject>
-
+#include<Qt>
 int main(int argc, char *argv[])
 {
     //username: arcsolu
@@ -16,15 +16,14 @@ int main(int argc, char *argv[])
     MainWindow w;
     Service *ser = Analyser::getAnalyser();
     w.show();
+
     Logger infoLogger;
     infoLogger.setFile(QDir().homePath()+"/hello.txt");
-    QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
-    QObject::connect(ser,SIGNAL(error(QString,QString)),&w,SLOT(done()));
-    QObject::connect(ser,SIGNAL(startError()),&w,SLOT(done()));
-    QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)));
-    QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));
-    QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)));
-    QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)));
-
+    QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()),Qt::DirectConnection);
+    QObject::connect(ser,SIGNAL(start_Error(QString)),&w,SLOT(done()),Qt::DirectConnection);
+    QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)),Qt::DirectConnection);
+    QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)),Qt::DirectConnection);
+    QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)),Qt::DirectConnection);
+    QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)),Qt::DirectConnection);
     return a.exec();
 }

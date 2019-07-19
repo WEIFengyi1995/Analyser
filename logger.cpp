@@ -15,6 +15,7 @@ void Logger::setFile(QString file1){
     }
     FileName=file1;
     file=new QFile(file1);
+    //QFile::setPermissions();
     if (!file->open(QIODevice::WriteOnly | QIODevice::Text)){
         qDebug()<<"error while opening "<<FileName;
         return;
@@ -36,21 +37,36 @@ void Logger::info(QString action,QString info){
 }
 
 void Logger::warning(QString action,QString warning){
-    QTextStream out(file);
-    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [warning] "<<action <<" : "<<warning<<"\n";
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_WARNNING<<" [warning] "<<COLOR_RESET<<action <<" : "<<warning<<"\n";
+    if(!file->isOpen()){
+        qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<< "log file not found ";
+        emit error("file not open!");
+    }else{
+        QTextStream out(file);
+        out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [warning] "<<action <<" : "<<warning<<"\n";
+        qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_WARNNING<<" [warning] "<<COLOR_RESET<<action <<" : "<<warning<<"\n";
+    }
 }
 
 void Logger::config(QString action,QString config){
-    QTextStream out(file);
-    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [config] "<<action <<" : "<<config<<"\n";
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_CONFIG<<" [config] "<<COLOR_RESET<<action <<" : "<<config<<"\n";
+    if(!file->isOpen()){
+        qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<< "log file not found ";
+        emit error("file not open!");}
+    else{
+        QTextStream out(file);
+        out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [config] "<<action <<" : "<<config<<"\n";
+        qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_CONFIG<<" [config] "<<COLOR_RESET<<action <<" : "<<config<<"\n";
+    }
 }
 
 void Logger::severe(QString action,QString severe){
-    QTextStream out(file);
-    out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [severe] "<<action <<" : "<<severe<<"\n";
-    qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<<action <<" : "<<severe<<"\n";
+    if(!file->isOpen()){
+        qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<< "log file not found ";
+        emit error("file not open!");}
+    else{
+        QTextStream out(file);
+        out << QDateTime().currentDateTime().toString(DATE_FORMAT)<<" [severe] "<<action <<" : "<<severe<<"\n";
+        qDebug()<<QDateTime().currentDateTime().toString(DATE_FORMAT)<<COLOR_SEVERE<<" [severe] "<<COLOR_RESET<<action <<" : "<<severe<<"\n";
+    }
 }
 
 void Logger::info_log(QString action,QString information){

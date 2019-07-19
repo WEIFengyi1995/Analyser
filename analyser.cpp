@@ -10,14 +10,32 @@
 Analyser * Analyser::instance = nullptr;
 
 
+Analyser::Analyser()
+{
+    this->shell = new ShellHandler();
+}
+Analyser::~Analyser(){
+    delete this->shell;
+    delete instance;
+}
+
+Analyser * Analyser::getAnalyser(){
+    if(instance == nullptr){
+        instance = new Analyser();
+    }
+    return instance;
+}
+
 
 void Analyser::start(){
     emit(info("","Analyser initialised"));
     if(this->initAction() !=0){
+
         emit(error("","can not start the service, check your log file to fix it"));
         qDebug()<<"can not strat the service, check log file";
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit startError();
+        emit start_Error("can not strat the service, check log file");
+
     }else{
         emit(info("","Intitialisation done, collecting client information"));
         this->clientAction();
@@ -33,22 +51,6 @@ void Analyser::start(){
     //this->doneAction();
 }
 
-Analyser::Analyser()
-{
-    this->shell = new ShellHandler();
-}
-Analyser::~Analyser(){
-    delete this->shell;
-    delete instance;
-}
-
-Analyser * Analyser::getAnalyser(){
-    if(instance == nullptr){
-        instance = new Analyser();
-    }
-    return instance;
-
-}
 
 //install
 

@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
 signals:
     void loginSignal();
 

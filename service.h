@@ -4,6 +4,7 @@
 class Service:public QObject
 {
     Q_OBJECT
+
 public slots:
     virtual void start() = 0;
 
