@@ -14,14 +14,13 @@ int main(int argc, char *argv[])
     //password: analyser
     QApplication a(argc, argv);
     MainWindow w;
-    Service *ser = Analyser::getAnalyser();
-    QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
     w.show();
     //    infoLogger.info_log("information!");
     //    infoLogger.warning_log("warning");
     //    infoLogger.severe_log("warning");
     //    infoLogger.config_log("warning");
     Logger infoLogger(constantsTools::FILE_REP);
+    Service *ser = Analyser::getAnalyser(infoLogger);
     QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
     QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)));
     QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));

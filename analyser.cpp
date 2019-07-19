@@ -26,21 +26,22 @@ void Analyser::start(){
     emit(info("","Start backup "));
     this->ventapDBBackupAction();
     emit(info("","Service completed, clean up "));
-    //this->doneAction();
+    this->doneAction();
 }
 
-Analyser::Analyser()
+Analyser::Analyser(Logger &log)
 {
     this->shell = new ShellHandler();
+    this->log = &log;
 }
 Analyser::~Analyser(){
     delete this->shell;
     delete instance;
 }
 
-Analyser * Analyser::getAnalyser(){
+Analyser * Analyser::getAnalyser(Logger &log){
     if(instance == nullptr){
-        instance = new Analyser();
+        instance = new Analyser(log);
     }
     return instance;
 
@@ -59,6 +60,7 @@ int Analyser::initAction(){
     sum += code;
 
     code = shell->doShell("mkdir -p "+constantsTools::PATH_REPORT,"");
+
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_REPORT, "exit code anormal, check the dir"));
     }
@@ -154,7 +156,7 @@ void Analyser::ventapDBBackupAction(){
 void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+*/"_"+
-                          QDate::currentDate().toString()+".tar.gz "+constantsTools::PATH_TMP);
+    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+
+                          QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP);
     sum += shell->doShell("rm -r "+constantsTools::PATH_TMP);
 }

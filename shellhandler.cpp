@@ -8,17 +8,17 @@ ShellHandler::ShellHandler()
 }
 
 int ShellHandler::doShell(QString cmd, QString output){
+    qDebug()<<cmd;
     if(!output.isEmpty()){
         proc->setStandardOutputFile(output);
     }
     proc->start(cmd);
     proc->waitForFinished();
-    if(proc->exitCode() != 0){
-    }
     return proc->exitCode();
 }
 
 int ShellHandler::doShell(QString cmd){
+    qDebug()<<cmd;
     int code = proc->execute(cmd);
     return code;
 }
