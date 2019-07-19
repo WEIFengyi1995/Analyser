@@ -23,9 +23,10 @@ int main(int argc, char *argv[])
     //    infoLogger.severe_log("warning");
     //    infoLogger.config_log("warning");
     Logger infoLogger(constantsTools::FILE_REP);
+
     QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
     QObject::connect(ser,SIGNAL(error(QString,QString)),&w,SLOT(done()));
-    QObject::connect(ser,SIGNAL(startError()),&w,SLOT(done()));
+    QObject::connect(ser,SIGNAL(start_Error(QString)),&w,SLOT(done()));
     QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)));
     QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));
     QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)));

@@ -9,31 +9,9 @@
 
 Analyser * Analyser::instance = nullptr;
 
-void Analyser::startError(){
 
-}
 
-void Analyser::start(){
-    emit(info("","Analyser initialised"));
-    if(this->initAction() !=0){
-        emit(error("","can not start the service, check your log file to fix it"));
-        qDebug()<<"can not strat the service, check log file";
-        this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit startError();
-    }else{
-        emit(info("","Intitialisation done, collecting client information"));
-        this->clientAction();
-        emit(info("","Start izone"));
-        this->ioZone3Action();
-        emit(info("","Start nmon "));
-        this->nmonAction();
-        emit(info("","Start backup "));
-        this->ventapDBBackupAction();
-        emit(info("","Service completed, clean up "));
-    }
 
-    //this->doneAction();
-}
 
 Analyser::Analyser()
 {
@@ -51,6 +29,29 @@ Analyser * Analyser::getAnalyser(){
     return instance;
 
 }
+
+void Analyser::start(){
+    emit(info("","Analyser initialised"));
+    if(this->initAction() !=0){
+        emit(error("","can not start the service, check your log file to fix it"));
+        qDebug()<<"can not strat the service, check log file";
+        this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
+        emit start_Error("can not strat the service, check log file");
+    }else{
+        emit(info("","Intitialisation done, collecting client information"));
+        this->clientAction();
+        emit(info("","Start izone"));
+        this->ioZone3Action();
+        emit(info("","Start nmon "));
+        this->nmonAction();
+        emit(info("","Start backup "));
+        this->ventapDBBackupAction();
+        emit(info("","Service completed, clean up "));
+    }
+
+    //this->doneAction();
+}
+
 
 //install
 
