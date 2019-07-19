@@ -325,7 +325,7 @@
       <rect>
        <x>20</x>
        <y>20</y>
-       <width>271</width>
+       <width>291</width>
        <height>131</height>
       </rect>
      </property>
@@ -337,7 +337,9 @@
       </font>
      </property>
      <property name="text">
-      <string>Inspecting now ... ...</string>
+      <string>Inspecting now, 
+please wait for about  
+7 hours... ...</string>
      </property>
     </widget>
    </widget>

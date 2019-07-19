@@ -1,6 +1,6 @@
 #include "analyser.h"
 #include "constantstools.h"
-//#include "dbconnector.h"
+#include "language.h"
 #include <QtDebug>
 #include <QThread>
 #include <QDate>
@@ -30,7 +30,7 @@ void Analyser::start(){
     if(this->initAction() !=0){
         emit(error("Initialisation","can not start the service"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit start_Error("can not strat the service, check "+constantsTools::FILE_REP);
+        emit finish("can not start the service, check "+constantsTools::FILE_REP);
     }else{
         emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
@@ -47,12 +47,12 @@ void Analyser::start(){
             this->doneAction();
             emit(info("Compress","done"));
             emit(info("Analyser","finished, you can close the window"));
-            emit(finish());
+            emit(finish("Sucessfull"));
         }
         else{
             emit(error("Client"," failed"));
             this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-            emit start_Error("Client not found, check your log file");
+            emit finish("Client not found, check your log file");
         }
     }
 }
@@ -109,10 +109,10 @@ bool Analyser::clientAction(){
     DBConnector* db=DBConnector::getDBConnector();
     if(!db->start()){
         emit error("open db","数据库连接失败");
-        return false;
+        //return false;
     }
     try {
-        QSqlQueryModel* result=db->executeQuery(db->CR_SQL);
+        QSqlQueryModel* result=db->executeQuery(DBConnector::CR_SQL);
         if(result->rowCount()<1){
             emit error("execute query","找不到pvalue");
             //return false;
@@ -125,7 +125,7 @@ bool Analyser::clientAction(){
         }
         DBConnector::setInfoCr(cr);
 
-        QSqlQueryModel* result2=db->executeQuery(db->DENO_SQL);
+        QSqlQueryModel* result2=db->executeQuery(DBConnector::DENO_SQL);
         if(result2->rowCount()<1){
             emit error("execute query","company  deno no found ");
             //return false;
@@ -170,7 +170,29 @@ void Analyser::nmonAction(){
 
 void Analyser::ventapDBBackupAction(){
     qDebug()<<"Start backup action";
+    int i=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
+                         +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP,constantsTools::FILE_GBAK);
+    if(i==1){
+       emit info("gbak db_ventap",language::info.value("A211"));
+    }else if(i==0){
+        emit warning("gbak db_ventap"," db backup warning? ");
+    }else{
+        emit error("gbak db_ventap"," db backup error");
+    }
+
+    int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
+                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT, constantsTools::FILE_GBAK);
+    if(j==1){
+       emit info("gbak db_AUDIT"," sucess");
+    }else if(j==0){
+        emit warning("gbak db_AUDIT"," db backup warning? ");
+    }else{
+        emit error("gbak db_AUDIT"," db backup error");
+    }
+
+
 }
+
 void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
