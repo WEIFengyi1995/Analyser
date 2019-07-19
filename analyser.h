@@ -24,6 +24,9 @@ private:
     void nmonAction();
     void ventapDBBackupAction();
     void doneAction();
+    void dbTest();
+    void verifyDB();
+    void fixDB(int type);
     ShellHandler * shell = nullptr;
     Logger * log;
 

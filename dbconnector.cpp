@@ -1,13 +1,14 @@
 #include "dbconnector.h"
 #include<QSqlQuery>
 #include <QDebug>
+#include <QSqlDatabase>
 DBConnector::DBConnector()
 {
 }
 DBConnector* DBConnector::dbConnector=nullptr;
 QString DBConnector::info_cr="";
 QString DBConnector::info_deno="";
-
+QSqlDatabase DBConnector::db;
 const QString DBConnector::ISC_USER="SYSDBA";
 const QString DBConnector::ISC_PASSWORD="masterkey";
 const QString DBConnector::URL="127.0.0.1";
@@ -24,7 +25,7 @@ DBConnector* DBConnector::getDBConnector(){
 }
 
 bool DBConnector::start(){
-    db=QSqlDatabase::addDatabase(dbType,"db");
+    db=QSqlDatabase::addDatabase(dbType,constantsTools::FILE_DB_VENTAP);
     db.setUserName(ISC_USER);
     db.setPassword(ISC_PASSWORD);
     db.setHostName(URL);
@@ -35,6 +36,9 @@ bool DBConnector::start(){
     return ok;
 }
 
+bool DBConnector::containsDb(QString name){
+    return db.contains(name);
+}
 void DBConnector::close(){
     db.close();
 }
@@ -53,7 +57,7 @@ void DBConnector::setInfoDeno(QString deno){
 }
 
 QSqlQueryModel* DBConnector::executeQuery(QString query){
-    QSqlQuery sql(QSqlDatabase::database("db"));
+    QSqlQuery sql(QSqlDatabase::database(constantsTools::FILE_DB_VENTAP));
     if(!sql.exec(query)){
         qDebug()<<"exec query failed!";
     }
