@@ -30,10 +30,10 @@ Analyser * Analyser::getAnalyser(){
 void Analyser::start(){
     emit(info("","Analyser initialised"));
     if(this->initAction() !=0){
-        emit(error("","can not start the service, check your log file to fix it"));
-        qDebug()<<"can not strat the service, check log file";
-        this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit start_Error("can not strat the service, check log file");
+       emit(error("","can not start the service, check your log file to fix it"));
+       qDebug()<<"can not strat the service, check log file";
+       this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
+       emit start_Error("can not strat the service, check log file");
     }else{
         emit(info("","Intitialisation done, collecting client information"));
         this->clientAction();
@@ -154,6 +154,7 @@ void Analyser::nmonAction(){
 void Analyser::ventapDBBackupAction(){
     qDebug()<<"Start backup action";
 }
+
 void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
