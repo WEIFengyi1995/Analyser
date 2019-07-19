@@ -7,6 +7,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+
+
 bool MainWindow::loginBtnClicked(){
     QString name=this->ui->username->text();
     QString password=this->ui->password->text();
@@ -57,7 +60,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
     ui->setupUi(this);
     this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
     ui->runWidget->hide();

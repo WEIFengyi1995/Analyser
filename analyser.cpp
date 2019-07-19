@@ -10,6 +10,19 @@
 Analyser * Analyser::instance = nullptr;
 
 
+Analyser::~Analyser(){
+    delete this->shell;
+    delete instance;
+}
+
+Analyser::Analyser(Logger &log)
+{
+    this->shell = new ShellHandler();
+    shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
+    this->log = &log;
+    this->log->setFile(constantsTools::FILE_REP);
+}
+
 
 void Analyser::start(){
     emit(info("","Analyser initialised"));
@@ -17,7 +30,7 @@ void Analyser::start(){
         emit(error("","can not start the service, check your log file to fix it"));
         qDebug()<<"can not strat the service, check log file";
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit startError();
+        emit start_Error("can not strat the service, check log file");
     }else{
         emit(info("","Intitialisation done, collecting client information"));
         if(this->clientAction()){
@@ -34,22 +47,11 @@ void Analyser::start(){
         }
         else{
             this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-            emit startError();
+            emit start_Error("");
         }
     }
 }
 
-Analyser::Analyser(Logger &log)
-{
-    this->shell = new ShellHandler();
-    shell->doShell("mkdir -p "+constantsTools::PATH_REPORT,"");
-    this->log = &log;
-    this->log->setFile(constantsTools::FILE_REP);
-}
-Analyser::~Analyser(){
-    delete this->shell;
-    delete instance;
-}
 
 Analyser * Analyser::getAnalyser(Logger &log){
     if(instance == nullptr){
@@ -60,7 +62,6 @@ Analyser * Analyser::getAnalyser(Logger &log){
 }
 
 //install
-
 int Analyser::initAction(){
     int sum = 0;
     int code;

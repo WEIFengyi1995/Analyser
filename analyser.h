@@ -7,12 +7,16 @@
 
 class Analyser:public Service
 {
-public slots :
-    void start();
+    Q_OBJECT
 public:
     static Analyser *getAnalyser(Logger &log);
     ~Analyser();
 
+signals:
+   void start_Error(QString error);
+
+public slots:
+    void start();
 
 private:
     static Analyser *instance;
@@ -23,9 +27,8 @@ private:
     void nmonAction();
     void ventapDBBackupAction();
     void doneAction();
-    ShellHandler * shell;
+    ShellHandler * shell = nullptr;
     Logger * log;
-
 
 
 };

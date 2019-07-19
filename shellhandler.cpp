@@ -11,13 +11,12 @@ int ShellHandler::doShell(QString cmd, QString output){
     if(!output.isEmpty()){
         proc->setStandardOutputFile(output);
     }
-
+    proc->start(cmd);
     proc->waitForFinished();
     return proc->exitCode();
 }
 
 int ShellHandler::doShell(QString cmd){
-    qDebug()<<cmd;
     int code = proc->execute(cmd);
     return code;
 }

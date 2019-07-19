@@ -18,7 +18,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    Service *ser;
 signals:
     void loginSignal();
 private slots:

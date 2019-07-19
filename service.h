@@ -4,6 +4,7 @@
 class Service:public QObject
 {
     Q_OBJECT
+
 public slots:
     virtual void start() = 0;
 
@@ -13,7 +14,6 @@ signals:
     void config(QString action,QString config);
     void warning(QString action,QString warning);
     void error(QString action,QString error);
-    void startError();
     void finish();
 
 };
