@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QTime>
+
 
 MainWindow::~MainWindow()
 {
@@ -29,6 +31,10 @@ bool MainWindow::loginBtnClicked(){
         ui->widget->hide();
         ui->completWidget->hide();
         ui->runWidget->show();
+        QTime dieTime=QTime::currentTime().addSecs(2);
+        while( QTime::currentTime() < dieTime ){
+             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+        }
         emit loginSignal();
         return true;
     }
