@@ -1,6 +1,6 @@
 #include "analyser.h"
 #include "constantstools.h"
-//#include "dbconnector.h"
+#include "language.h"
 #include <QtDebug>
 #include <QThread>
 #include <QDate>
@@ -33,7 +33,8 @@ void Analyser::start(){
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit start_Error("can not strat the service, check log file");
 
-    }else{
+    }
+    {
         emit(info("","Intitialisation done, collecting client information"));
         if(this->clientAction()){
             emit(info("","Start izone"));
@@ -109,7 +110,7 @@ bool Analyser::clientAction(){
         return false;
     }
     try {
-        QSqlQueryModel* result=db->executeQuery(db->CR_SQL);
+        QSqlQueryModel* result=db->executeQuery(DBConnector::CR_SQL);
         if(result->rowCount()<1){
             emit error("execute query","找不到pvalue");
             return false;
@@ -122,7 +123,7 @@ bool Analyser::clientAction(){
         }
         DBConnector::setInfoCr(cr);
 
-        QSqlQueryModel* result2=db->executeQuery(db->DENO_SQL);
+        QSqlQueryModel* result2=db->executeQuery(DBConnector::DENO_SQL);
         if(result2->rowCount()<1){
             emit error("execute query","company  deno no found ");
             return false;
@@ -159,7 +160,7 @@ void Analyser::nmonAction(){
     int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -t -s "+QString::number(2)+" -c "+
                              QString::number(5));
     if(code != 0){
-        emit(warning("nmon","exit code anmorl"));
+        emit(warning("nmon","exit code anormal"));
     }
     QThread::msleep((2*5+5)*1000);
 
@@ -167,6 +168,29 @@ void Analyser::nmonAction(){
 
 void Analyser::ventapDBBackupAction(){
     qDebug()<<"Start backup action";
+    int i=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
+                         +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP+" | tee -a "
+                         +constantsTools::FILE_GBAK);
+    if(i==1){
+       emit info("gbak db_ventap",language::info.value("A211"));
+    }else if(i==0){
+        emit warning("gbak db_ventap"," db backup warning? ");
+    }else{
+        emit error("gbak db_ventap"," db backup error");
+    }
+
+    int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
+                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT+" | tee -a "
+                         +constantsTools::FILE_GBAK);
+    if(j==1){
+       emit info("gbak db_AUDIT"," sucess");
+    }else if(j==0){
+        emit warning("gbak db_AUDIT"," db backup warning? ");
+    }else{
+        emit error("gbak db_AUDIT"," db backup error");
+    }
+
+
 }
 void Analyser::doneAction(){
     int sum = 0;
