@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
 <<<<<<< HEAD
+<!-- Written by QtCreator 4.6.0, 2019-07-19T13:37:26. -->
+=======
+<<<<<<< HEAD
 <!-- Written by QtCreator 4.9.1, 2019-07-18T17:30:23. -->
 =======
 <!-- Written by QtCreator 4.9.1, 2019-07-19T14:00:09. -->
 >>>>>>> 20f1380ff1750f37c5e2d02ef6ae40dcfc8c275b
+>>>>>>> e7f4997c493e367b8ced37dc763d7ed6d812b338
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -357,12 +361,16 @@
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">analyser.pro</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory"></value>
+<<<<<<< HEAD
+    <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory.default">/home/arcsolu/build-analyser-Desktop_Qt_5_9_3_GCC_64bit-Debug</value>
+=======
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory.default"></value>
 >>>>>>> 46a96053c752431d3287eb0620a89047a2a7a4b7
 =======
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/Users/fengyiwei/Desktop/Analyser/analyser.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
 >>>>>>> 20f1380ff1750f37c5e2d02ef6ae40dcfc8c275b
+>>>>>>> e7f4997c493e367b8ced37dc763d7ed6d812b338
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>

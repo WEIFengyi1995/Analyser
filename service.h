@@ -14,7 +14,7 @@ signals:
     void config(QString action,QString config);
     void warning(QString action,QString warning);
     void error(QString action,QString error);
-    void finish();
+    void finish(QString str);
 
 };
 #endif // SERCICE_H

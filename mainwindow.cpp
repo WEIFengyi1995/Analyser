@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QTime>
+
 
 MainWindow::~MainWindow()
 {
@@ -21,7 +23,7 @@ bool MainWindow::loginBtnClicked(){
         QMessageBox::information(this,"","Please input password.");
         return false;
     }
-    if(name=="arcsolu"||password=="analyser"){
+    if(name=="arcsolu"&&password=="analyser"){
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
         ui->username->setEnabled(false);
@@ -29,6 +31,10 @@ bool MainWindow::loginBtnClicked(){
         ui->widget->hide();
         ui->completWidget->hide();
         ui->runWidget->show();
+        QTime dieTime=QTime::currentTime().addSecs(2);
+        while( QTime::currentTime() < dieTime ){
+             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+        }
         emit loginSignal();
         return true;
     }
@@ -47,6 +53,7 @@ void MainWindow::done(QString error){
     }else{
         ui->errorText->setText(error);
     }
+
     ui->widget->hide();
     ui->runWidget->hide();
     ui->completWidget->show();
@@ -63,6 +70,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
+    ui->errorText->adjustSize();
+    ui->errorText->setGeometry(QRect(10,70,251,27*4));
+    ui->errorText->setWordWrap(true);
+    ui->errorText->setAlignment(Qt::AlignLeft);
     ui->runWidget->hide();
     ui->completWidget->hide();
     ui->widget->show();

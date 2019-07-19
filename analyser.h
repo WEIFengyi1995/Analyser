@@ -12,9 +12,6 @@ public:
     static Analyser *getAnalyser(Logger &log);
     ~Analyser();
 
-signals:
-   void start_Error(QString error);
-
 public slots:
     void start();
 
