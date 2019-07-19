@@ -30,6 +30,7 @@ void Analyser::start(){
     if(this->initAction() !=0){
         emit(error("Initialisation","can not start the service"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
+
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
     }else{
         emit(info("Iniatialisation","successfull, collecting client information"));

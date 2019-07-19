@@ -21,7 +21,7 @@ bool MainWindow::loginBtnClicked(){
         QMessageBox::information(this,"","Please input password.");
         return false;
     }
-    if(name=="arcsolu"&&password=="arcsolu"){
+    if(name=="arcsolu"&&password=="analyser"){
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
         ui->username->setEnabled(false);
@@ -47,6 +47,7 @@ void MainWindow::done(QString error){
     }else{
         ui->errorText->setText(error);
     }
+
     ui->widget->hide();
     ui->runWidget->hide();
     ui->completWidget->show();
@@ -64,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
     ui->errorText->adjustSize();
-    ui->errorText->setGeometry(QRect(328, 240, 329, 27*4));
+    ui->errorText->setGeometry(QRect(10,70,251,27*4));
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
     ui->runWidget->hide();
