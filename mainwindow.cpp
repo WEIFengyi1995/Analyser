@@ -2,6 +2,9 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QTime>
+#include "constantstools.h"
+#include <QFile>
+#include <QDebug>
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -15,6 +18,7 @@ void MainWindow::continueBtnClicked(){
     ui->password->setEnabled(false);
     ui->loginWidget->hide();
     ui->completWidget->hide();
+    ui->crashWidget->hide();
     ui->runWidget->show();
     //todo
 
@@ -70,12 +74,12 @@ bool MainWindow::loginBtnClicked(){
         ui->password->setEnabled(false);
         ui->loginWidget->hide();
         ui->completWidget->hide();
-        ui->runWidget->show();
-       /* QTime dieTime=QTime::currentTime().addSecs(1);
-        while( QTime::currentTime() < dieTime ){
-             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-        }*/
-        emit loginSignal();
+        if(newService){
+             ui->runWidget->show();
+             emit loginSignal();
+        }else{
+             ui->crashWidget->show();
+        }
         return true;
     }
     QMessageBox::information(this,"","密码或用户名错误.");
@@ -119,9 +123,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->errorText->setGeometry(QRect(10,70,251,27*4));
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
-    bool newService=false;
 
+    QFile *file=new QFile(constantsTools::FILE_INI);
+    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)){
+        newService=true;
+    }else{
+        newService=false;
+    }
+    qDebug()<<newService;
     ui->runWidget->hide();
+    ui->crashWidget->hide();
     ui->completWidget->hide();
     ui->loginWidget->show();
 
@@ -130,7 +141,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
     connect(ui->runCloseButton,SIGNAL(clicked()),this,SLOT(runCloseBtnClicked()));
     connect(ui->continueButton, SIGNAL(clicked()),this,SLOT(continueBtnClicked()));
-    connect(ui->recheckButton, SIGNAL(clicked()),this,SLOT(recheckBtnClickeds()));
+    connect(ui->recheckButton, SIGNAL(clicked()),this,SLOT(recheckBtnClicked()));
 
 
 }

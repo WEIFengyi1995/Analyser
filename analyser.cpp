@@ -6,6 +6,7 @@
 #include <QDate>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
+#include "tool.h"
 
 
 Analyser * Analyser::instance = nullptr;
@@ -25,11 +26,10 @@ Analyser::Analyser(Logger &log)
 
 }
 
-
+//ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
     emit(info("Initialisation","analyser initialised"));
     if(this->initAction() !=0){
-
         emit(error("","can not start the service, check your log file to fix it"));
         qDebug()<<"can not strat the service, check log file";
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
@@ -37,20 +37,20 @@ void Analyser::start(){
     }else{
         emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
-            emit(info("ioZone","initialisation..."));
+            emit(info("gfix","Start testing Database "));
+            this->dbTest();
+            emit info("gifix","test done ");
+            emit(info("","Start backup "));
+            emit(info("DBBackup","initialisation..."));
+            this->ventapDBBackupAction();
+            emit(info("DBBAckup","done"));
+            emit(info("ioZone","initi""alisation..."));
             this->ioZone3Action();
             emit(info("ioZone","done"));
             emit(info("nmon","initialisation..."));
             this->nmonAction();
             emit(info("nmon","done"));
-            emit(info("gfix","Start testing Database "));
-            this->dbTest();
-            emit info("gifix","test done ");
 
-            emit(info("","Start backup "));
-            emit(info("DBBackup","initialisation..."));
-            this->ventapDBBackupAction();
-            emit(info("DBBAckup","done"));
             emit(info("Compress","initialisation..."));
             this->doneAction();
             emit(info("Compress","done"));
@@ -121,44 +121,33 @@ bool Analyser::clientAction(){
         //return false;
     }
     try {
-        QSqlQueryModel* result=db->executeQuery(DBConnector::CR_SQL);
-        if(result->rowCount()<1){
+        bool cr=  DBConnector::searchCR();
+        bool deno = DBConnector::searchDENO();
+
+        if(!cr){
             emit error("execute query","找不到pvalue");
             //emit finish(language::severe.value("A230"));
             //return false;
         }
-        QString cr= result->record(0).value("pvalue").toString();
-        if(!cr.isEmpty()){
+        else{
             emit config("find pvalue!","configuration ok");
             emit config("ok!",language::config.value("A100"));
-        }else{
-            emit warning("pvalue error","empty!");
-            //emit finish(language::severe.value("A230"));
-            //return false;
+        }
 
-        }
-        DBConnector::setInfoCr(cr);
-        QSqlQueryModel* result2=db->executeQuery(DBConnector::DENO_SQL);
-        if(result2->rowCount()<1){
+        if(deno){
             emit error("execute query","company  deno no found ");
-            //emit finish(language::severe.value("A230"));
-            //return false;
-        }
-        QString deno= result->record(0).value("company").toString();
-        if(!deno.isEmpty()){
+            emit finish(language::severe.value("A230"));
+        }else{
             emit config("find deno ","configuration ok");
             emit config("ok!",language::config.value("A101"));
-        }else{
-            emit warning("deno error ","empty!");
-            //emit finish(language::severe.value("A230"));
-            //return false;
         }
-        DBConnector::setInfoCr(deno);
+        emit config("hello ",DBConnector::getInfoCr());
     } catch (...) {
         emit error("error","A230");
         emit finish(language::severe.value("A230"));
-        return false;
         shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
+        return false;
+
     }{
         db->close();
         emit info("DB",language::info.value("A210"));
@@ -181,14 +170,32 @@ void Analyser::ioZone3Action(){
 }
 void Analyser::nmonAction(){
     qDebug()<<"Start nmon Action";
-
-    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -t -s "+QString::number(constantsTools::SAMPLE)+" -c "+
-                             QString::number(constantsTools::INTERVAL));
-
+    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+
+                              QString::number(constantsTools::INTERVAL));
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
-    QThread::msleep((constantsTools::SAMPLE*constantsTools::INTERVAL+5)*1000);
+    //more 100 ms delay
+    QThread::msleep((unsigned long) ((constantsTools::INTERVAL)*1000+100));
+
+    for(int i=1;i<constantsTools::SAMPLE;i++){
+        QString error;
+        QString tmpFile=constantsTools::PATH_REPORT+"tmp";
+        //create a tmp file or truncate this file
+        if(!create(tmpFile,error)){
+            emit warning("create tmp file",error);
+        }
+        int code = shell->doShell("nmon -F "+tmpFile);
+        if(code != 0){
+            emit(warning("nmon","exit code anormal"));
+        }
+
+        if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
+            emit(warning("move result ",error));
+        }
+        QThread::msleep((unsigned long)(constantsTools::INTERVAL)*1000+100);
+    }
+
 
 }
 
@@ -319,7 +326,7 @@ void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
     sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+
-                          QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP);
+                                                                                                                  QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP);
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }

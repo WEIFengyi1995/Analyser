@@ -6,10 +6,15 @@
 #include <QDebug>
 #include "language.h"
 #include "logger.h"
+
+#include <QObject>
+#include<Qt>
+#include"tool.h"
 #include "singleinstance.h"
 
 int main(int argc, char *argv[])
 {
+
     //username: arcsolu
     //password: analyser
            QApplication a(argc, argv);
@@ -24,4 +29,5 @@ int main(int argc, char *argv[])
                 QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)),Qt::DirectConnection);
                 w.show();
             return a.exec();
+
 }

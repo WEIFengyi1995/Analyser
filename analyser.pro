@@ -31,6 +31,7 @@ SOURCES += \
         mainwindow.cpp \
     analyser.cpp \
     shellhandler.cpp \
+    tool.cpp\
     singleinstance.cpp
 
 HEADERS += \
@@ -42,6 +43,7 @@ HEADERS += \
         analyser.h \
         service.h \
         shellhandler.h \
+        tool.h \
     singleinstance.h
 
 

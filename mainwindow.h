@@ -22,6 +22,8 @@ private:
     Ui::MainWindow *ui;
     QStringList strList;
     QStandardItemModel * standardItemModel;
+    bool newService;
+
 signals:
     void loginSignal();
     void continueSignal();

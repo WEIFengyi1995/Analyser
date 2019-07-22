@@ -339,7 +339,7 @@
      <property name="text">
       <string>正在检查, 
 请稍候.  
-(检查时间共约七小时,请勿关机)</string>
+(检查时间可能较长,请勿关机)</string>
      </property>
     </widget>
     <widget class="QListView" name="infoList">
