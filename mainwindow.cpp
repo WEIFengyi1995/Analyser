@@ -44,7 +44,7 @@ bool MainWindow::loginBtnClicked(){
         QMessageBox::information(this,"","Please input password.");
         return false;
     }
-    if(name=="arcsolu"&&password=="analyser"){
+    if(name=="*"&&password=="*"){
         QApplication::setQuitOnLastWindowClosed(false);
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
@@ -53,9 +53,8 @@ bool MainWindow::loginBtnClicked(){
         ui->widget->hide();
         ui->completWidget->hide();
         ui->runWidget->show();
-       /* QTime dieTime=QTime::currentTime().addSecs(1);
-        while( QTime::currentTime() < dieTime ){
-<<<<<<< HEAD
+        QTime dieTime=QTime::currentTime().addSecs(1);
+        /*while( QTime::currentTime() < dieTime ){
              QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
         }*/
         emit loginSignal();

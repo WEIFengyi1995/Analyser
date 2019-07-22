@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include <QApplication>
 #include "service.h"
 #include "analyser.h"
 #include "constantstools.h"
@@ -7,6 +6,8 @@
 #include "language.h"
 #include "logger.h"
 #include "singleinstance.h"
+#include "myapplication.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -16,7 +17,7 @@ int main(int argc, char *argv[])
                 qDebug()<<"exist";
         }
         else{
-            QApplication a(argc, argv);
+            MyApplication a(argc,argv);
             MainWindow w;
             SingleInstance instance(w,constantsTools::SERVER_NAME);
             if(instance.listen()){
@@ -28,6 +29,10 @@ int main(int argc, char *argv[])
                 QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));
                 QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)));
                 QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)));
+                QObject::connect(ser,SIGNAL(info(QString,QString)),&w,SLOT(recvInfo(QString,QString)));
+                ser->moveToThread(a.getThread());
+                infoLogger.moveToThread(a.getThread());
+                a.getThread()->start();
                 w.show();
             }
 

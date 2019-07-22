@@ -31,14 +31,14 @@ void Analyser::start(){
     if(this->initAction() !=0){
 
         emit(error("","can not start the service, check your log file to fix it"));
-        qDebug()<<"can not strat the service, check log file";
+        qDebug()<<"can not start the service, check log file";
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
     }else{
         emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
             emit(info("ioZone","initialisation..."));
-            this->ioZone3Action();
+            //this->ioZone3Action();
             emit(info("ioZone","done"));
             emit(info("nmon","initialisation..."));
             this->nmonAction();
@@ -81,33 +81,44 @@ int Analyser::initAction(){
     int code;
     code = shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
     sum += code;
+    qDebug()<<code;
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_DB, "exit code anormal, check your permission"));
     }
 
     code = shell->doShell("mkdir -p "+constantsTools::PATH_REPORT);
+    qDebug()<<code;
+
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_REPORT, "exit code anormal, check your permission"));
     }
     sum += code;
 
     code = shell->doShell("apt update","");
+    qDebug()<<code;
+
     if(code != 0){
         emit(error("apt update ", "exit code anormal, check your permission"));
     }
     sum += code;
 
     code = shell->doShell("apt install -y -f iozone3","");
+    qDebug()<<code;
+
     if(code != 0){
         emit(error("apt install -y -f iozone3","can not install iozone3"));
     }
     sum += code;
 
     code = shell->doShell("apt install -y -f nmon","");
+    qDebug()<<code;
+
     if(code != 0){
         emit(error("apt install -y -f nmon","can not install nmon"));
     }
     sum += code;
+    qDebug()<<code;
+
 
     return sum;
 }

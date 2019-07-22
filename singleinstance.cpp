@@ -5,7 +5,7 @@
 SingleInstance::SingleInstance(MainWindow &w, QString name){
     this->w = &w;
     this->name = name;
-    QObject::connect(&server,SIGNAL(newConnection()),this,SLOT(newConnection()));
+    QObject::connect(&server,SIGNAL(newConnection()),this,SLOT(newConnection()),Qt::DirectConnection);
 }
 
 SingleInstance::~SingleInstance(){
@@ -36,10 +36,12 @@ bool SingleInstance::listen(){
 }
 
 void SingleInstance::newConnection(){
+    qDebug()<<"show window";
     this->client = this->server.nextPendingConnection();
-    connect(client,SIGNAL(readyRead()),this,SLOT(show()));
+    this->w->show();
 }
 
 void SingleInstance::show(){
+    qDebug()<<"show window";
     this->w->show();
 }
