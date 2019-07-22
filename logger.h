@@ -14,14 +14,52 @@ class Logger:public QObject
     Q_OBJECT
 public:
     Logger();
+    /*!
+      print logger to file
+     * @brief setFile
+     * @param file
+     */
     void setFile(QString file);
     ~Logger();
 public slots:
+    /*!
+
+     * \brief info_log
+     *  type [info]
+     * \param action
+     * \param info
+     */
     void info_log(QString action,QString info);
+    /*!
+
+     * \brief warning_log
+     * type[warning]
+     * \param action
+     * \param warning
+     */
     void warning_log(QString action,QString warning );
+    /*!
+     * \brief severe_log
+     * type[severe]
+     * \param action
+     * \param severe
+     */
     void severe_log(QString action,QString severe);
+    /*!
+     * \brief config_log
+     * type[config]
+     * \param action
+     * \param config
+     */
     void config_log(QString action,QString config );
+
+
 signals:
+    /*!
+     * \brief error
+     * error messages
+     * \param error
+     */
     void error(QString error);
 
 private:

@@ -26,11 +26,35 @@ private:
     static QSqlDatabase db;
 
 public:
+    /*!
+     * \brief getDBConnector
+     * get the singleton instance
+     * \return
+     */
     static DBConnector* getDBConnector();
+    /*!
+     * \brief start
+     * config connextion
+     * \return
+     */
     static bool start();
+    /*!
+     * \brief containsDb
+     * \param name
+     * \return true if conatins database named name
+     */
     static bool containsDb(QString name);
     static void close();
+    /*!
+     * \brief getInfoCr
+     * get information client reference
+     * \return
+     */
     static QString getInfoCr();
+    /*!
+     * \brief getInfoDeno
+     * \return
+     */
     static QString getInfoDeno();
     const static QString ISC_USER;
     const static QString ISC_PASSWORD;
@@ -38,7 +62,6 @@ public:
     const static int PORT;
     const static QString LCC_CTYPE;
     const static QString dbType;
-
     static bool searchCR();
     static bool searchDENO();
 };

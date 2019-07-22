@@ -141,11 +141,13 @@ bool Analyser::clientAction(){
             emit config("find deno ","configuration ok");
             emit config("ok!",language::config.value("A101"));
         }
+        emit config("hello ",DBConnector::getInfoCr());
     } catch (...) {
         emit error("error","A230");
         emit finish(language::severe.value("A230"));
-        return false;
         shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
+        return false;
+
     }{
         db->close();
         emit info("DB",language::info.value("A210"));
@@ -174,7 +176,7 @@ void Analyser::nmonAction(){
         emit(warning("nmon","exit code anormal"));
     }
     //more 100 ms delay
-    QThread::msleep((constantsTools::INTERVAL)*1000+100);
+    QThread::msleep((unsigned long) ((constantsTools::INTERVAL)*1000+100));
 
     for(int i=1;i<constantsTools::SAMPLE;i++){
         QString error;
@@ -191,7 +193,7 @@ void Analyser::nmonAction(){
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
-        QThread::msleep((constantsTools::INTERVAL)*1000+100);
+        QThread::msleep((unsigned long)(constantsTools::INTERVAL)*1000+100);
     }
 
 
