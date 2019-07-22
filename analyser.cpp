@@ -26,7 +26,7 @@ Analyser::Analyser(Logger &log)
 
 }
 
-
+//ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
     emit(info("Initialisation","analyser initialised"));
     if(this->initAction() !=0){
@@ -37,20 +37,20 @@ void Analyser::start(){
     }else{
         emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
-            emit(info("ioZone","initialisation..."));
+            emit(info("gfix","Start testing Database "));
+            this->dbTest();
+            emit info("gifix","test done ");
+            emit(info("","Start backup "));
+            emit(info("DBBackup","initialisation..."));
+            this->ventapDBBackupAction();
+            emit(info("DBBAckup","done"));
+            emit(info("ioZone","initi""alisation..."));
             this->ioZone3Action();
             emit(info("ioZone","done"));
             emit(info("nmon","initialisation..."));
             this->nmonAction();
             emit(info("nmon","done"));
-            emit(info("gfix","Start testing Database "));
-            this->dbTest();
-            emit info("gifix","test done ");
 
-            emit(info("","Start backup "));
-            emit(info("DBBackup","initialisation..."));
-            this->ventapDBBackupAction();
-            emit(info("DBBAckup","done"));
             emit(info("Compress","initialisation..."));
             this->doneAction();
             emit(info("Compress","done"));
