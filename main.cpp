@@ -23,8 +23,12 @@ int main(int argc, char *argv[])
     QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));
     QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)));
     QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)));
-
+    QObject::connect(ser,SIGNAL(info(QString,QString)),&w,SLOT(recvInfo(QString,QString)));
+    QObject::connect(ser,SIGNAL(warning(QString,QString)),&w,SLOT(recvInfo(QString,QString)));
+    QObject::connect(ser,SIGNAL(error(QString,QString)),&w,SLOT(recvInfo(QString,QString)));
+    QObject::connect(ser,SIGNAL(config(QString,QString)),&w,SLOT(recvInfo(QString,QString)));
     w.show();
+
 
     return a.exec();
 }

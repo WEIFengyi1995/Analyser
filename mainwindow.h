@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "service.h"
+#include <QStandardItemModel>
+
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +20,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QStringList strList;
+    QStandardItemModel * standardItemModel;
 signals:
     void loginSignal();
 private slots:
@@ -25,6 +29,8 @@ private slots:
     void exitBtnClicked();
     void closeBtnClicked();
     void done(QString error);
+    void runCloseBtnClicked();
+    void recvInfo(QString action,QString info);
 };
 
 #endif // MAINWINDOW_H
