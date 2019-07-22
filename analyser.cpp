@@ -33,7 +33,7 @@ void Analyser::start(){
         emit(error("","can not start the service, check your log file to fix it"));
         qDebug()<<"can not strat the service, check log file";
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit finish("can not strat the service, check log file");
+        emit finish("can not start the service, check "+constantsTools::FILE_REP);
     }else{
         emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
@@ -239,7 +239,7 @@ void Analyser::verifyDB(){
             else if (i==1){
                 count++;
                 emit error("check database ",language::severe.value("A330"));
-                emit info("fix databse ","trying to fix db for the "+QString(count) +" time" );
+                emit info("fix databse ","trying to fix db for the "+QString::number(count) +" time" );
                 fixDB(0);
             }
             else{
@@ -274,7 +274,7 @@ void Analyser::verifyDB(){
             else if (i==1){
                 count++;
                 emit error("check database ",language::severe.value("A330"));
-                emit info("fix databse ","trying to fix db for the "+QString(count) +" time" );
+                emit info("fix databse ","trying to fix db for the "+QString::number(count) +" time" );
                 fixDB(0);
             }
             else{

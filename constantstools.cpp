@@ -2,6 +2,7 @@
 
 
 const QString constantsTools::PRODUCT="ventap";
+const QString constantsTools::SERVER_NAME = "singleService";
 const QString constantsTools::PATH_DB=QString(QDir::separator())+"var"+QString(QDir::separator())+"lib"+QString(QDir::separator())+"firebird"
         +QString(QDir::separator())+"2.5"+QString(QDir::separator())+"data"+QString(QDir::separator());
 //const QString constantsTools::PATH_VENTAP_HOME=QString(QDir::separator())+"home"+QString(QDir::separator())+PRODUCT+QString(QDir::separator());
@@ -22,6 +23,7 @@ const QString constantsTools::FILE_IOZONE=PATH_REPORT+"io.log";
 const QString constantsTools::FILE_GFIX=PATH_REPORT+"gf.log";
 const QString constantsTools::FILE_GBAK=PATH_REPORT+"gb.log";
 const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
+const int constantsTools::DAY =(60*60*24)*1000;
 
 const int constantsTools::SAMPLE  = 1;
 const int constantsTools::INTERVAL = 2;

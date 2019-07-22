@@ -4,8 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
-
+QT       += core gui sql network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = analyser
@@ -31,7 +30,8 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     analyser.cpp \
-    shellhandler.cpp
+    shellhandler.cpp \
+    singleinstance.cpp
 
 HEADERS += \
         constantstools.h \
@@ -41,7 +41,8 @@ HEADERS += \
         mainwindow.h\
         analyser.h \
         service.h \
-        shellhandler.h
+        shellhandler.h \
+    singleinstance.h
 
 
 FORMS += \
