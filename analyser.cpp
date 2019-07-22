@@ -33,7 +33,7 @@ void Analyser::start(){
         emit(error("","can not start the service, check your log file to fix it"));
         qDebug()<<"can not strat the service, check log file";
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit finish("can not strat the service, check log file");
+        emit finish("can not start the service, check "+constantsTools::FILE_REP);
     }else{
         emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
@@ -117,7 +117,8 @@ bool Analyser::clientAction(){
     DBConnector* db=DBConnector::getDBConnector();
     if(!db->start()){
         emit error("open db","数据库连接失败");
-        emit finish(language::severe.value("A230"));
+        //emit finish(language::severe.value("A230"));
+        //return false;
     }
     try {
         bool cr=  DBConnector::searchCR();
@@ -125,7 +126,8 @@ bool Analyser::clientAction(){
 
         if(!cr){
             emit error("execute query","找不到pvalue");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
         }
         else{
             emit config("find pvalue!","configuration ok");
@@ -142,6 +144,7 @@ bool Analyser::clientAction(){
     } catch (...) {
         emit error("error","A230");
         emit finish(language::severe.value("A230"));
+        return false;
         shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
     }{
         db->close();
@@ -170,8 +173,8 @@ void Analyser::nmonAction(){
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
-    //200 ms delay
-    QThread::msleep((constantsTools::INTERVAL)*1000+200);
+    //more 100 ms delay
+    QThread::msleep((constantsTools::INTERVAL)*1000+100);
 
     for(int i=1;i<constantsTools::SAMPLE;i++){
         QString error;
@@ -188,8 +191,9 @@ void Analyser::nmonAction(){
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
-        QThread::msleep((constantsTools::INTERVAL)*1000+200);
+        QThread::msleep((constantsTools::INTERVAL)*1000+100);
     }
+
 
 }
 
