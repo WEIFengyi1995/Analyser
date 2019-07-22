@@ -28,7 +28,7 @@ private:
     void verifyDB();
     void fixDB(int type);
     ShellHandler * shell = nullptr;
-    Logger * log;
+        Logger * log;
 
 
 };

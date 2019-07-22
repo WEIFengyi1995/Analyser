@@ -23,7 +23,7 @@ const QString constantsTools::FILE_GFIX=PATH_REPORT+"gf.log";
 const QString constantsTools::FILE_GBAK=PATH_REPORT+"gb.log";
 const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
 
-const int constantsTools::SAMPLE  = 1;
+const int constantsTools::SAMPLE  = 10;
 const int constantsTools::INTERVAL = 2;
 
 constantsTools::constantsTools()

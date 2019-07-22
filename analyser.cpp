@@ -6,6 +6,7 @@
 #include <QDate>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
+#include "tool.h"
 
 
 Analyser * Analyser::instance = nullptr;
@@ -29,7 +30,6 @@ Analyser::Analyser(Logger &log)
 void Analyser::start(){
     emit(info("Initialisation","analyser initialised"));
     if(this->initAction() !=0){
-
         emit(error("","can not start the service, check your log file to fix it"));
         qDebug()<<"can not strat the service, check log file";
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
@@ -120,35 +120,25 @@ bool Analyser::clientAction(){
         emit finish(language::severe.value("A230"));
     }
     try {
-        QSqlQueryModel* result=db->executeQuery(DBConnector::CR_SQL);
-        if(result->rowCount()<1){
+        bool cr=  DBConnector::searchCR();
+        bool deno = DBConnector::searchDENO();
+
+        if(!cr){
             emit error("execute query","找不到pvalue");
             emit finish(language::severe.value("A230"));
         }
-        QString cr= result->record(0).value("pvalue").toString();
-        if(!cr.isEmpty()){
+        else{
             emit config("find pvalue!","configuration ok");
             emit config("ok!",language::config.value("A100"));
-        }else{
-            emit warning("pvalue error","empty!");
-            emit finish(language::severe.value("A230"));
-
         }
-        DBConnector::setInfoCr(cr);
-        QSqlQueryModel* result2=db->executeQuery(DBConnector::DENO_SQL);
-        if(result2->rowCount()<1){
+
+        if(deno){
             emit error("execute query","company  deno no found ");
             emit finish(language::severe.value("A230"));
-        }
-        QString deno= result->record(0).value("company").toString();
-        if(!deno.isEmpty()){
+        }else{
             emit config("find deno ","configuration ok");
             emit config("ok!",language::config.value("A101"));
-        }else{
-            emit warning("deno error ","empty!");
-            emit finish(language::severe.value("A230"));
         }
-        DBConnector::setInfoCr(deno);
     } catch (...) {
         emit error("error","A230");
         emit finish(language::severe.value("A230"));
@@ -175,14 +165,31 @@ void Analyser::ioZone3Action(){
 }
 void Analyser::nmonAction(){
     qDebug()<<"Start nmon Action";
-
-    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -t -s "+QString::number(constantsTools::SAMPLE)+" -c "+
-                             QString::number(constantsTools::INTERVAL));
-
+    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+
+                              QString::number(constantsTools::INTERVAL));
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
-    QThread::msleep((2*5+5)*1000);
+    //200 ms delay
+    QThread::msleep((constantsTools::INTERVAL)*1000+200);
+
+    for(int i=1;i<constantsTools::SAMPLE;i++){
+        QString error;
+        QString tmpFile=constantsTools::PATH_REPORT+"tmp";
+        //create a tmp file or truncate this file
+        if(!create(tmpFile,error)){
+            emit warning("create tmp file",error);
+        }
+        int code = shell->doShell("nmon -F "+tmpFile);
+        if(code != 0){
+            emit(warning("nmon","exit code anormal"));
+        }
+
+        if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
+            emit(warning("move result ",error));
+        }
+        QThread::msleep((constantsTools::INTERVAL)*1000+200);
+    }
 
 }
 
@@ -239,7 +246,7 @@ void Analyser::verifyDB(){
             else if (i==1){
                 count++;
                 emit error("check database ",language::severe.value("A330"));
-                emit info("fix databse ","trying to fix db for the "+QString(count) +" time" );
+                emit info("fix databse ","trying to fix db for the "+QString::number(count) +" time" );
                 fixDB(0);
             }
             else{
@@ -274,7 +281,7 @@ void Analyser::verifyDB(){
             else if (i==1){
                 count++;
                 emit error("check database ",language::severe.value("A330"));
-                emit info("fix databse ","trying to fix db for the "+QString(count) +" time" );
+                emit info("fix databse ","trying to fix db for the "+QString::number(count) +" time" );
                 fixDB(0);
             }
             else{
@@ -313,7 +320,7 @@ void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
     sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+
-                          QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP);
+                                                                                                                  QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP);
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }
