@@ -5,25 +5,28 @@
 #include <QDebug>
 #include "language.h"
 #include "logger.h"
+
+#include <QObject>
+#include<Qt>
+#include"tool.h"
 #include "singleinstance.h"
 #include "myapplication.h"
 
 
 int main(int argc, char *argv[])
 {
+
     //username: arcsolu
     //password: analyser
         if(SingleInstance::checkInstance(constantsTools::SERVER_NAME)){
                 qDebug()<<"exist";
         }
         else{
-            MyApplication a(argc,argv);
-            MainWindow w;
-            SingleInstance instance(w,constantsTools::SERVER_NAME);
-            if(instance.listen()){
+                MyApplication a(argc,argv);
+                MainWindow w;
                 Logger infoLogger;
                 Service *ser = Analyser::getAnalyser(infoLogger);
-                QObject::connect(ser,SIGNAL(finish(QString)),&w,SLOT(done(QString)));
+                QObject::connect(ser,SIGNAL(finish(QString)),&w,SLOT(done(QString)),Qt::DirectConnection);
                 QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
                 QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)));
                 QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));
@@ -34,9 +37,7 @@ int main(int argc, char *argv[])
                 infoLogger.moveToThread(a.getThread());
                 a.getThread()->start();
                 w.show();
-            }
+                  return a.exec();
 
-            return a.exec();
-        }
-
+    }
 }

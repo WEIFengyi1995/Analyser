@@ -56,16 +56,29 @@ void DBConnector::setInfoDeno(QString deno){
     info_deno=deno;
 }
 
-QSqlQueryModel* DBConnector::executeQuery(QString query){
+bool DBConnector::searchCR(){
     QSqlQuery sql(QSqlDatabase::database(constantsTools::FILE_DB_VENTAP));
-    if(!sql.exec(query)){
+    if(!sql.exec(CR_SQL)){
         qDebug()<<"exec query failed!";
     }
-    QSqlQueryModel* result=new QSqlQueryModel();
-    result->setQuery(sql);
-    return result;
+    if(sql.next()){
+        setInfoCr(sql.value("pvalue").toString());
+        return true;
+    }
+    return false;
 }
 
+bool DBConnector::searchDENO(){
+    QSqlQuery sql(QSqlDatabase::database(constantsTools::FILE_DB_VENTAP));
+    if(!sql.exec(DENO_SQL)){
+        qDebug()<<"exec query failed!";
+    }
+    if(sql.next()){
+        setInfoCr(sql.value("company").toString());
+        return true;
+    }
+    return false;
+}
 
 
 

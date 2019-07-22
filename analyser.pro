@@ -5,7 +5,9 @@
 #-------------------------------------------------
 
 QT       += core gui sql network
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4):
+
+QT += widgets
 
 TARGET = analyser
 TEMPLATE = app
@@ -31,8 +33,9 @@ SOURCES += \
         mainwindow.cpp \
     analyser.cpp \
     shellhandler.cpp \
-    singleinstance.cpp \
-    myapplication.cpp
+    myapplication.cpp\
+    tool.cpp\
+    singleinstance.cpp
 
 HEADERS += \
         constantstools.h \
@@ -45,6 +48,7 @@ HEADERS += \
         shellhandler.h \
     singleinstance.h \
     myapplication.h
+        tool.h \
 
 
 FORMS += \

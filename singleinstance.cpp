@@ -12,6 +12,7 @@ SingleInstance::~SingleInstance(){
     server.removeServer(name);
     this->server.close();
 }
+
 bool SingleInstance::checkInstance(QString name){
     QLocalSocket client;
     client.connectToServer(name,QLocalSocket::ReadWrite);

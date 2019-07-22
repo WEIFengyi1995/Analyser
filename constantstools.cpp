@@ -26,7 +26,7 @@ const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
 const QString constantsTools::FILE_INI = PATH_REPORT+"trace.ini";
 const int constantsTools::DAY =(60*60*24)*1000;
 
-const int constantsTools::SAMPLE  = 1;
+const int constantsTools::SAMPLE  = 10;
 const int constantsTools::INTERVAL = 2;
 
 constantsTools::constantsTools()
