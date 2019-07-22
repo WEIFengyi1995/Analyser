@@ -7,8 +7,31 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::recvInfo(QString action, QString info){
+    QString line;
+    if(action==""){
+        line=info;
+    }else{
+        line=action+" "+info;
+    }
+    standardItemModel=new QStandardItemModel(this);
+    strList.append(line);
+    int nCount=strList.size();
+    for(int i=0;i<nCount;i++){
+        QString string=static_cast<QString>(strList.at(i));
+        QStandardItem *item = new QStandardItem(string);
+        item->setBackground(Qt::white);
+        standardItemModel -> appendRow(item);
+    }
+    ui->infoList->setModel(standardItemModel);
+
+}
 
 
+void MainWindow::runCloseBtnClicked(){
+    QMessageBox::information(this,"Attention","Please don't close your computer until the inspection is done.");
+    this->hide();
+}
 
 bool MainWindow::loginBtnClicked(){
     QString name=this->ui->username->text();
@@ -21,7 +44,8 @@ bool MainWindow::loginBtnClicked(){
         QMessageBox::information(this,"","Please input password.");
         return false;
     }
-    if(name=="*"&&password=="*"){
+    if(name=="arcsolu"&&password=="analyser"){
+        QApplication::setQuitOnLastWindowClosed(false);
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
         ui->username->setEnabled(false);
@@ -31,6 +55,7 @@ bool MainWindow::loginBtnClicked(){
         ui->runWidget->show();
        /* QTime dieTime=QTime::currentTime().addSecs(1);
         while( QTime::currentTime() < dieTime ){
+<<<<<<< HEAD
              QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
         }*/
         emit loginSignal();
@@ -46,15 +71,20 @@ void MainWindow::exitBtnClicked(){
 
 
 void MainWindow::done(QString error){
+    QTime dieTime=QTime::currentTime().addSecs(2);
+    while( QTime::currentTime() < dieTime ){
+         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
+    }
     if(error.isNull()||error==""){
         ui->errorText->clear();
     }else{
         ui->errorText->setText(error);
     }
-
+    this->show();
     ui->widget->hide();
     ui->runWidget->hide();
     ui->completWidget->show();
+    QApplication::setQuitOnLastWindowClosed(true);
 }
 
 
@@ -78,4 +108,5 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
     connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
+    connect(ui->runCloseButton,SIGNAL(clicked()),this,SLOT(runCloseBtnClicked()));
 }

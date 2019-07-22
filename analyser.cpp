@@ -117,13 +117,15 @@ bool Analyser::clientAction(){
     DBConnector* db=DBConnector::getDBConnector();
     if(!db->start()){
         emit error("open db","数据库连接失败");
-        emit finish(language::severe.value("A230"));
+        //emit finish(language::severe.value("A230"));
+        //return false;
     }
     try {
         QSqlQueryModel* result=db->executeQuery(DBConnector::CR_SQL);
         if(result->rowCount()<1){
             emit error("execute query","找不到pvalue");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
         }
         QString cr= result->record(0).value("pvalue").toString();
         if(!cr.isEmpty()){
@@ -131,14 +133,16 @@ bool Analyser::clientAction(){
             emit config("ok!",language::config.value("A100"));
         }else{
             emit warning("pvalue error","empty!");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
 
         }
         DBConnector::setInfoCr(cr);
         QSqlQueryModel* result2=db->executeQuery(DBConnector::DENO_SQL);
         if(result2->rowCount()<1){
             emit error("execute query","company  deno no found ");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
         }
         QString deno= result->record(0).value("company").toString();
         if(!deno.isEmpty()){
@@ -146,12 +150,14 @@ bool Analyser::clientAction(){
             emit config("ok!",language::config.value("A101"));
         }else{
             emit warning("deno error ","empty!");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
         }
         DBConnector::setInfoCr(deno);
     } catch (...) {
         emit error("error","A230");
         emit finish(language::severe.value("A230"));
+        return false;
         shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
     }{
         db->close();

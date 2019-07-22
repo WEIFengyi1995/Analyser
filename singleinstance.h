@@ -12,7 +12,7 @@ public:
     ~SingleInstance();
 
     static bool checkInstance(QString name);
-    void listen();
+    bool listen();
 
 private:
     MainWindow *w;

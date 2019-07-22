@@ -23,6 +23,7 @@ const QString constantsTools::FILE_IOZONE=PATH_REPORT+"io.log";
 const QString constantsTools::FILE_GFIX=PATH_REPORT+"gf.log";
 const QString constantsTools::FILE_GBAK=PATH_REPORT+"gb.log";
 const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
+const QString constantsTools::FILE_INI = PATH_REPORT+"trace.ini";
 const int constantsTools::DAY =(60*60*24)*1000;
 
 const int constantsTools::SAMPLE  = 1;

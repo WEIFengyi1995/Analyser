@@ -9,8 +9,8 @@ SingleInstance::SingleInstance(MainWindow &w, QString name){
 }
 
 SingleInstance::~SingleInstance(){
-    //delete w;
     server.removeServer(name);
+    this->server.close();
 }
 bool SingleInstance::checkInstance(QString name){
     QLocalSocket client;
@@ -25,9 +25,14 @@ bool SingleInstance::checkInstance(QString name){
     }
 }
 
-void SingleInstance::listen(){
+bool SingleInstance::listen(){
     this->server.removeServer(name);
-    this->server.listen(name);
+    if(this->server.listen(name)){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 void SingleInstance::newConnection(){
