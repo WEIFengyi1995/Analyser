@@ -31,7 +31,7 @@ void MainWindow::recvInfo(QString action, QString info){
 
 
 void MainWindow::runCloseBtnClicked(){
-    QMessageBox::information(this,"Attention","Please don't close your computer until the inspection is done.");
+    QMessageBox::information(this,"请注意","检查在后台运行，请检查结束前不要关闭电脑，谢谢.");
     this->hide();
 }
 
@@ -39,11 +39,11 @@ bool MainWindow::loginBtnClicked(){
     QString name=this->ui->username->text();
     QString password=this->ui->password->text();
     if(name==""||name.isNull()){
-        QMessageBox::information(this,"","Please input username.");
+        QMessageBox::information(this,"","请输入用户名.");
         return false;
     }
     if(password==""||password.isNull()){
-        QMessageBox::information(this,"","Please input password.");
+        QMessageBox::information(this,"","请输入密码.");
         return false;
     }
     if(name=="arcsolu"&&password=="analyser"){
@@ -52,7 +52,7 @@ bool MainWindow::loginBtnClicked(){
         ui->exit->setEnabled(false);
         ui->username->setEnabled(false);
         ui->password->setEnabled(false);
-        ui->widget->hide();
+        ui->loginWidget->hide();
         ui->completWidget->hide();
         ui->runWidget->show();
         QTime dieTime=QTime::currentTime().addSecs(2);
@@ -62,7 +62,7 @@ bool MainWindow::loginBtnClicked(){
         emit loginSignal();
         return true;
     }
-    QMessageBox::information(this,"","Wrong username or wrong password.");
+    QMessageBox::information(this,"","密码或用户名错误.");
     return false;
 }
 
@@ -82,7 +82,7 @@ void MainWindow::done(QString error){
         ui->errorText->setText(error);
     }
     this->show();
-    ui->widget->hide();
+    ui->loginWidget->hide();
     ui->runWidget->hide();
     ui->completWidget->show();
     QApplication::setQuitOnLastWindowClosed(true);
@@ -93,7 +93,7 @@ void MainWindow::closeBtnClicked(){
     this->close();
 }
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent,bool newService) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -103,9 +103,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->errorText->setGeometry(QRect(10,70,251,27*4));
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
-    ui->runWidget->hide();
-    ui->completWidget->hide();
-    ui->widget->show();
+
+    if(newService){
+        ui->runWidget->hide();
+        ui->completWidget->hide();
+        ui->loginWidget->show();
+    }else{
+        ui->runWidget->hide();
+        ui->completWidget->hide();
+        ui->loginWidget->hide();
+        QMessageBox message(QMessageBox::Warning,"注意","上次检查意外退出，是否继续？ ",QMessageBox::Yes|QMessageBox::No);
+    }
+
+
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
     connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));

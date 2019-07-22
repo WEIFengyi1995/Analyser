@@ -14,7 +14,7 @@
    <string>Annual Inspection Arcsolu</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="loginWidget" native="true">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -337,9 +337,9 @@
       </font>
      </property>
      <property name="text">
-      <string>Inspecting now, 
-Please wait.  
-(This may take 7 hours... ...)</string>
+      <string>正在检查, 
+请稍候.  
+(检查时间共约七小时,请勿关机)</string>
      </property>
     </widget>
     <widget class="QListView" name="infoList">
@@ -385,7 +385,7 @@ Please wait.
       </rect>
      </property>
      <property name="text">
-      <string>Inspection terminates.</string>
+      <string>检查已经结束。</string>
      </property>
     </widget>
     <widget class="QPushButton" name="closeButton">
@@ -398,7 +398,7 @@ Please wait.
       </rect>
      </property>
      <property name="text">
-      <string>close</string>
+      <string>完成</string>
      </property>
     </widget>
     <widget class="QLabel" name="errorText">
