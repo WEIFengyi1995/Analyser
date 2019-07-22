@@ -33,7 +33,7 @@ void Analyser::start(){
         emit(error("","can not start the service, check your log file to fix it"));
         qDebug()<<"can not strat the service, check log file";
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit finish("can not strat the service, check log file");
+        emit finish("can not start the service, check "+constantsTools::FILE_REP);
     }else{
         emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
@@ -117,13 +117,15 @@ bool Analyser::clientAction(){
     DBConnector* db=DBConnector::getDBConnector();
     if(!db->start()){
         emit error("open db","数据库连接失败");
-        emit finish(language::severe.value("A230"));
+        //emit finish(language::severe.value("A230"));
+        //return false;
     }
     try {
         QSqlQueryModel* result=db->executeQuery(DBConnector::CR_SQL);
         if(result->rowCount()<1){
             emit error("execute query","找不到pvalue");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
         }
         QString cr= result->record(0).value("pvalue").toString();
         if(!cr.isEmpty()){
@@ -131,14 +133,16 @@ bool Analyser::clientAction(){
             emit config("ok!",language::config.value("A100"));
         }else{
             emit warning("pvalue error","empty!");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
 
         }
         DBConnector::setInfoCr(cr);
         QSqlQueryModel* result2=db->executeQuery(DBConnector::DENO_SQL);
         if(result2->rowCount()<1){
             emit error("execute query","company  deno no found ");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
         }
         QString deno= result->record(0).value("company").toString();
         if(!deno.isEmpty()){
@@ -146,12 +150,14 @@ bool Analyser::clientAction(){
             emit config("ok!",language::config.value("A101"));
         }else{
             emit warning("deno error ","empty!");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
+            //return false;
         }
         DBConnector::setInfoCr(deno);
     } catch (...) {
         emit error("error","A230");
         emit finish(language::severe.value("A230"));
+        return false;
         shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
     }{
         db->close();
@@ -182,7 +188,7 @@ void Analyser::nmonAction(){
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
-    QThread::msleep((2*5+5)*1000);
+    QThread::msleep((constantsTools::SAMPLE*constantsTools::INTERVAL+5)*1000);
 
 }
 
@@ -239,7 +245,7 @@ void Analyser::verifyDB(){
             else if (i==1){
                 count++;
                 emit error("check database ",language::severe.value("A330"));
-                emit info("fix databse ","trying to fix db for the "+QString(count) +" time" );
+                emit info("fix databse ","trying to fix db for the "+QString::number(count) +" time" );
                 fixDB(0);
             }
             else{
@@ -274,7 +280,7 @@ void Analyser::verifyDB(){
             else if (i==1){
                 count++;
                 emit error("check database ",language::severe.value("A330"));
-                emit info("fix databse ","trying to fix db for the "+QString(count) +" time" );
+                emit info("fix databse ","trying to fix db for the "+QString::number(count) +" time" );
                 fixDB(0);
             }
             else{

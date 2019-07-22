@@ -2,11 +2,27 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QTime>
-
-
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::continueBtnClicked(){
+    QApplication::setQuitOnLastWindowClosed(false);
+    ui->Login->setEnabled(false);
+    ui->exit->setEnabled(false);
+    ui->username->setEnabled(false);
+    ui->password->setEnabled(false);
+    ui->loginWidget->hide();
+    ui->completWidget->hide();
+    ui->runWidget->show();
+    //todo
+
+    emit continueSignal();
+}
+
+void MainWindow::recheckBtnClicked(){
+    emit restartSignal();
 }
 
 void MainWindow::recvInfo(QString action, QString info){
@@ -55,10 +71,10 @@ bool MainWindow::loginBtnClicked(){
         ui->loginWidget->hide();
         ui->completWidget->hide();
         ui->runWidget->show();
-        QTime dieTime=QTime::currentTime().addSecs(2);
+       /* QTime dieTime=QTime::currentTime().addSecs(1);
         while( QTime::currentTime() < dieTime ){
-             QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
-        }
+             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+        }*/
         emit loginSignal();
         return true;
     }
@@ -93,7 +109,7 @@ void MainWindow::closeBtnClicked(){
     this->close();
 }
 
-MainWindow::MainWindow(QWidget *parent,bool newService) :
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -103,21 +119,18 @@ MainWindow::MainWindow(QWidget *parent,bool newService) :
     ui->errorText->setGeometry(QRect(10,70,251,27*4));
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
+    bool newService=false;
 
-    if(newService){
-        ui->runWidget->hide();
-        ui->completWidget->hide();
-        ui->loginWidget->show();
-    }else{
-        ui->runWidget->hide();
-        ui->completWidget->hide();
-        ui->loginWidget->hide();
-        QMessageBox message(QMessageBox::Warning,"注意","上次检查意外退出，是否继续？ ",QMessageBox::Yes|QMessageBox::No);
-    }
-
+    ui->runWidget->hide();
+    ui->completWidget->hide();
+    ui->loginWidget->show();
 
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
     connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
     connect(ui->runCloseButton,SIGNAL(clicked()),this,SLOT(runCloseBtnClicked()));
+    connect(ui->continueButton, SIGNAL(clicked()),this,SLOT(continueBtnClicked()));
+    connect(ui->recheckButton, SIGNAL(clicked()),this,SLOT(recheckBtnClickeds()));
+
+
 }
