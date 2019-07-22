@@ -23,7 +23,7 @@ Analyser::Analyser(Logger &log)
     shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
     this->log = &log;
     this->log->setFile(constantsTools::FILE_REP);
-
+    this->log->setFile(constantsTools::FILE_INI);
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
