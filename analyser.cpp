@@ -115,6 +115,7 @@ int Analyser::initAction(){
 bool Analyser::clientAction(){
     emit info("client action","check client info ...");
     DBConnector* db=DBConnector::getDBConnector();
+
     if(!db->start()){
         emit error("open db","数据库连接失败");
         //emit finish(language::severe.value("A230"));
@@ -176,9 +177,13 @@ void Analyser::nmonAction(){
         emit(warning("nmon","exit code anormal"));
     }
     //more 100 ms delay
-    QThread::msleep((unsigned long) ((constantsTools::INTERVAL)*1000+100));
+   // QThread::msleep((unsigned long) ((constantsTools::INTERVAL)*1000+100));
 
     for(int i=1;i<constantsTools::SAMPLE;i++){
+        emit info("collecting sample","( "+QString::number(i+1)+"/"+constantsTools::SAMPLE+" )");
+        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+100);
+        while(time>QTime().currentTime()){
+        }
         QString error;
         QString tmpFile=constantsTools::PATH_REPORT+"tmp";
         //create a tmp file or truncate this file
@@ -189,14 +194,11 @@ void Analyser::nmonAction(){
         if(code != 0){
             emit(warning("nmon","exit code anormal"));
         }
-
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
-        QThread::msleep((unsigned long)(constantsTools::INTERVAL)*1000+100);
+        //QThread::msleep((unsigned long)(constantsTools::INTERVAL)*1000+100);
     }
-
-
 }
 
 void Analyser::ventapDBBackupAction(){
@@ -325,8 +327,8 @@ void Analyser::fixDB(int type){
 void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+
-                                                                                                                  QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP);
+    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP);
+    shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz ");
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }

@@ -76,6 +76,7 @@ bool MainWindow::loginBtnClicked(){
         ui->completWidget->hide();
         if(newService){
              ui->runWidget->show();
+
              emit loginSignal();
         }else{
              ui->crashWidget->show();
