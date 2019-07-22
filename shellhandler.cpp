@@ -1,9 +1,12 @@
 #include "shellhandler.h"
 #include "constantstools.h"
+#include "myapplication.h"
 
 ShellHandler::ShellHandler()
 {
     this->proc = new QProcess();
+    proc->moveToThread(MyApplication::getThread());
+    //proc->moveToThread(QCoreApplication::instance()->thread());
     //QObject::connect(proc,SIGNAL(errorOccurred(QProcess::ProcessError)),this,SLOT(handProcError(QProcess::ProcessError)));
 }
 
