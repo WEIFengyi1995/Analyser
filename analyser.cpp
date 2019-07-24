@@ -171,7 +171,9 @@ void Analyser::nmonAction(){
     }
 
     QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-    while(time>QTime().currentTime()){}
+    while(time>QTime().currentTime()){
+            QCoreApplication::processEvents();   //处理事件
+    }
 
     for(int i=1;i<constantsTools::SAMPLE;i++){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
@@ -182,7 +184,9 @@ void Analyser::nmonAction(){
             emit(warning("nmon","exit code anormal"));
         }
         QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-        while(time>QTime().currentTime()){}
+        while(time>QTime().currentTime()){
+            QCoreApplication::processEvents();   //处理事件
+        }
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }

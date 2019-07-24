@@ -7,11 +7,13 @@
 
 Logger::Logger()
 {
-    file = nullptr;
+    file=nullptr;
 }
 
 void Logger::setFile(QString file1){
-    if(file != nullptr && file->isOpen()){
+
+
+    if(file!=nullptr&&file->isOpen()){
         file->close();
     }
     FileName = file1;
