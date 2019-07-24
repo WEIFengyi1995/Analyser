@@ -195,7 +195,8 @@
                </sizepolicy>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color:rgb(242,246,248) ;</string>
+               <string notr="true">background-color:rgb(242,246,248) ;
+color:black;</string>
               </property>
              </widget>
             </item>
@@ -221,7 +222,8 @@
                </sizepolicy>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color:rgb(242,246,248) ;</string>
+               <string notr="true">background-color:rgb(242,246,248) ;
+color:black;</string>
               </property>
               <property name="echoMode">
                <enum>QLineEdit::Password</enum>
