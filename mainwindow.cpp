@@ -106,7 +106,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     //this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint| Qt::WindowMinimizeButtonHint);
-    this-> setWindowFlags(windowFlags()&~ (Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint));
+    this-> setWindowFlags(windowFlags()&~ (Qt::WindowMinMaxButtonsHint));
     this->setFixedSize(392,481);
     ui->errorText->adjustSize();
     ui->errorText->setGeometry(QRect(10,80,371,281));
