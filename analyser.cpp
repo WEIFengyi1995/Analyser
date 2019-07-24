@@ -29,8 +29,9 @@ Analyser::Analyser(Logger &log)
     this->log->setFile(constantsTools::FILE_REP);
     this->initState = false;
     this->ioZoneState = false;
-    this->nmonState = 0;
+    this->nmonState = false;
     this->DBState = false;
+    this->nmonCount = 0 ;
 
 }
 
@@ -222,20 +223,24 @@ void Analyser::ioZone3Action(){
     }
 
 }
-void Analyser::nmonAction(){
-    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+
-                              QString::number(constantsTools::INTERVAL));
-    if(code != 0){
-        emit(warning("nmon","exit code anormal"));
-    }
-    //more 100 ms delay
-    MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
+void Analyser::nmonAction(QSettings & save){
 
-    for(int i=1;i<constantsTools::SAMPLE;i++){
-        emit info("collecting sample","( "+QString::number(i+1)+"/"+constantsTools::SAMPLE+" )");
-        //        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+100);
-        //        while(time>QTime().currentTime()){
-        //        }
+    if(nmonCount==0){
+        emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
+        int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
+        if(code != 0){
+            emit(warning("nmon","exit code anormal"));
+        }
+        //more 100 ms delay
+        // MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
+
+        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+        while(time>QTime().currentTime()){}
+        nmonCount++;
+        save.setValue("nmonCount",nmonCount);
+    }
+    for(int i=nmonCount;i<constantsTools::SAMPLE;i++){
+        emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
         QString error;
         QString tmpFile=constantsTools::PATH_REPORT+"tmp";
         //create a tmp file or truncate this file
@@ -244,7 +249,10 @@ void Analyser::nmonAction(){
         if(code != 0){
             emit(warning("nmon","exit code anormal"));
         }
-        MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
+        nmonCount++;
+        save.setValue("nmonCount",nmonCount);
+        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+        while(time>QTime().currentTime()){}
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
@@ -391,7 +399,7 @@ void Analyser::startSave(){
     }
     if(save.contains("ioZone3Action")){
         this->ioZoneState = true;
-                  qDebug()<<"iozone done";
+        qDebug()<<"iozone done";
     }
     if(save.contains("nmonAction")){
         this->nmonState = true;

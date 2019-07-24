@@ -4,6 +4,7 @@
 #include "shellhandler.h"
 #include "dbconnector.h"
 #include "logger.h"
+#include <QSettings>
 
 class Analyser:public Service
 {
@@ -26,11 +27,12 @@ private:
     bool initState;
     bool ioZoneState;
     bool DBState;
-    int nmonState;
+    bool nmonState;
+    int nmonCount;
     int initAction();
     bool clientAction();
     void ioZone3Action();
-    void nmonAction();
+    void nmonAction(QSettings & save );
     void ventapDBBackupAction();
     void doneAction();
     void dbTest();
