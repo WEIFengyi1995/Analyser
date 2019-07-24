@@ -1,6 +1,7 @@
 #include "shellhandler.h"
 #include "constantstools.h"
 #include "myapplication.h"
+#include <QDebug>
 
 ShellHandler::ShellHandler()
 {
