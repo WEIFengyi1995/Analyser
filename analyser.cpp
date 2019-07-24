@@ -27,69 +27,23 @@ Analyser::Analyser(Logger &log)
     shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
     this->log = &log;
     this->log->setFile(constantsTools::FILE_REP);
-    this->initState = false;
-    this->ioZoneState = false;
-    this->nmonState = false;
-    this->DBState = false;
-    this->nmonCount = 0 ;
+
 
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
-    QSettings save(constantsTools::SAVE_INI,QSettings::IniFormat);
-    save.beginGroup("SAVE");
-    save.sync();
-    if(!this->initState){
-        emit(info("Initialisation","analyser initialised"));
-        if(this->initAction() !=0){
-            emit(error("","can not start the service, check your log file to fix it"));
-            this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-            emit finish("can not start the service, check "+constantsTools::FILE_REP);
-        }else{
-            save.setValue("initAction","done");
-            save.sync();
-            emit(info("Iniatialisation","successfull, collecting client information"));
-            if(this->clientAction()){
-                save.setValue("clientAction","done");
-                save.sync();
-                emit(info("gfix","Start testing Database "));
-                this->dbTest();
-                emit info("gifix","test done ");
-                emit(info("","Start backup "));
-                emit(info("DBBackup","initialisation..."));
-                this->ventapDBBackupAction();
-                emit(info("DBBAckup","done"));
-                save.setValue("DBAction","done");
-                save.sync();
-                emit(info("ioZone","initi""alisation..."));
-                this->ioZone3Action();
-                emit(info("ioZone","done"));
-                save.setValue("ioZone3Action","done");
-                emit(info("nmon","initialisation..."));
-                this->nmonAction();
-                emit(info("nmon","done"));
-                save.setValue("nmonAction","done");
-                emit(info("Compress","initialisation..."));
-                this->doneAction();
-                emit(info("Compress","done"));
-                save.setValue("DoneAction","done");
-                emit(info("Analyser","finished, you can close the window"));
-                emit(finish("Sucessfull"));
-            }
 
-            else{
-                emit(error("Client"," failed"));
-                this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-                emit finish("Client not found, check your log file");
-            }
-        }
-    }
-    else{
-        save.setValue("initAction","done");
-        emit(info("Iniatialisation","done in previous session"));
+    emit(info("Initialisation","analyser initialised"));
+    if(this->initAction() !=0){
+        emit(error("","can not start the service, check your log file to fix it"));
+        this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
+        emit finish("can not start the service, check "+constantsTools::FILE_REP);
+    }else{
+
+        emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
-            save.setValue("clientAction","done");
+
             emit(info("gfix","Start testing Database "));
             this->dbTest();
             emit info("gifix","test done ");
@@ -97,19 +51,17 @@ void Analyser::start(){
             emit(info("DBBackup","initialisation..."));
             this->ventapDBBackupAction();
             emit(info("DBBAckup","done"));
-            save.setValue("DBAction","done");
+
             emit(info("ioZone","initi""alisation..."));
             this->ioZone3Action();
             emit(info("ioZone","done"));
-            save.setValue("ioZone3Action","done");
+
             emit(info("nmon","initialisation..."));
             this->nmonAction();
             emit(info("nmon","done"));
-            save.setValue("nmonAction","done");
             emit(info("Compress","initialisation..."));
             this->doneAction();
             emit(info("Compress","done"));
-            save.setValue("DoneAction","done");
             emit(info("Analyser","finished, you can close the window"));
             emit(finish("Sucessfull"));
         }
@@ -121,7 +73,7 @@ void Analyser::start(){
         }
 
     }
-    save.endGroup();
+
 }
 
 
@@ -223,23 +175,20 @@ void Analyser::ioZone3Action(){
     }
 
 }
-void Analyser::nmonAction(QSettings & save){
+void Analyser::nmonAction(){
 
-    if(nmonCount==0){
-        emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
-        int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
-        if(code != 0){
-            emit(warning("nmon","exit code anormal"));
-        }
-        //more 100 ms delay
-        // MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
-
-        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-        while(time>QTime().currentTime()){}
-        nmonCount++;
-        save.setValue("nmonCount",nmonCount);
+    emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
+    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
+    if(code != 0){
+        emit(warning("nmon","exit code anormal"));
     }
-    for(int i=nmonCount;i<constantsTools::SAMPLE;i++){
+    //more 100 ms delay
+    // MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
+
+    QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+    while(time>QTime().currentTime()){}
+
+    for(int i=1;i<constantsTools::SAMPLE;i++){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
         QString error;
         QString tmpFile=constantsTools::PATH_REPORT+"tmp";
@@ -249,8 +198,6 @@ void Analyser::nmonAction(QSettings & save){
         if(code != 0){
             emit(warning("nmon","exit code anormal"));
         }
-        nmonCount++;
-        save.setValue("nmonCount",nmonCount);
         QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
         while(time>QTime().currentTime()){}
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
@@ -390,21 +337,4 @@ void Analyser::doneAction(){
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }
 
-void Analyser::startSave(){
-    QSettings save(constantsTools::SAVE_INI,QSettings::IniFormat);
-    save.beginGroup("SAVE");
-    if(save.contains("initAction")){
-        this->initState = true;
-        qDebug()<<"init done";
-    }
-    if(save.contains("ioZone3Action")){
-        this->ioZoneState = true;
-        qDebug()<<"iozone done";
-    }
-    if(save.contains("nmonAction")){
-        this->nmonState = true;
-    }
-    this->start();
-    save.clear();
 
-}
