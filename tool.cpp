@@ -58,6 +58,5 @@ QFile* create(QString filename,QString &error){
         error=file.errorString();
         qDebug()<<file.errorString();
     }
-    //TODO:???
     return f1;
 }

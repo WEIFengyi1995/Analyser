@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
-#include <QTime>
 #include "constantstools.h"
 #include <QDir>
 #include <QDebug>
@@ -84,10 +83,6 @@ void MainWindow::exitBtnClicked(){
 
 
 void MainWindow::done(QString error){
-    /*QTime dieTime=QTime::currentTime().addSecs(2);
-    while( QTime::currentTime() < dieTime ){
-         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
-    }*/
     if(error.isNull()||error==""){
         ui->errorText->clear();
     }else{
@@ -110,14 +105,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
+    //this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint| Qt::WindowMinimizeButtonHint);
+    this-> setWindowFlags(windowFlags()&~ (Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint));
+    this->setFixedSize(392,481);
     ui->errorText->adjustSize();
     ui->errorText->setGeometry(QRect(10,80,371,281));
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
     bool tmp = !QDir(constantsTools::PATH_TMP).exists();
-    qDebug()<<constantsTools::PATH_TMP;
-    qDebug()<<tmp;
     if (tmp){
         newService=true;
     }else{
@@ -127,12 +122,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->crashWidget->hide();
     ui->completWidget->hide();
     ui->loginWidget->show();
-
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
     connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
     connect(ui->runCloseButton,SIGNAL(clicked()),this,SLOT(runCloseBtnClicked()));
     connect(ui->recheckButton, SIGNAL(clicked()),this,SLOT(recheckBtnClicked()));
-
-
 }
