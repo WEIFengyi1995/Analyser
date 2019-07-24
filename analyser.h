@@ -14,10 +14,19 @@ public:
 
 public slots:
     void start();
+    void startSave();
 
 private:
     static Analyser *instance;
     Analyser(Logger &log);
+    ShellHandler * shell = nullptr;
+    Logger * log;
+
+    //actions states
+    bool initState;
+    bool ioZoneState;
+    bool DBState;
+    int nmonState;
     int initAction();
     bool clientAction();
     void ioZone3Action();
@@ -27,8 +36,6 @@ private:
     void dbTest();
     void verifyDB();
     void fixDB(int type);
-    ShellHandler * shell = nullptr;
-        Logger * log;
 
 
 };

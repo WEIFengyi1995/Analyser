@@ -3,8 +3,9 @@
 #include <QMessageBox>
 #include <QTime>
 #include "constantstools.h"
-#include <QFile>
+#include <QDir>
 #include <QDebug>
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -21,12 +22,13 @@ void MainWindow::continueBtnClicked(){
     ui->crashWidget->hide();
     ui->runWidget->show();
     //todo
-
     emit continueSignal();
 }
 
 void MainWindow::recheckBtnClicked(){
-    emit restartSignal();
+    ui->crashWidget->hide();
+    ui->runWidget->show();
+    emit loginSignal();
 }
 
 void MainWindow::recvInfo(QString action, QString info){
@@ -46,7 +48,6 @@ void MainWindow::recvInfo(QString action, QString info){
         standardItemModel -> appendRow(item);
     }
     ui->infoList->setModel(standardItemModel);
-
 }
 
 
@@ -66,7 +67,7 @@ bool MainWindow::loginBtnClicked(){
         QMessageBox::information(this,"","请输入密码.");
         return false;
     }
-    if(name=="*"&&password=="*"){
+    if(name=="*"||password=="*"){
         QApplication::setQuitOnLastWindowClosed(false);
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
@@ -77,7 +78,6 @@ bool MainWindow::loginBtnClicked(){
 
         if(newService){
              ui->runWidget->show();
-
              emit loginSignal();
         }else{
              ui->crashWidget->show();
@@ -94,10 +94,10 @@ void MainWindow::exitBtnClicked(){
 
 
 void MainWindow::done(QString error){
-    QTime dieTime=QTime::currentTime().addSecs(2);
+    /*QTime dieTime=QTime::currentTime().addSecs(2);
     while( QTime::currentTime() < dieTime ){
          QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
-    }
+    }*/
     if(error.isNull()||error==""){
         ui->errorText->clear();
     }else{
@@ -125,14 +125,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->errorText->setGeometry(QRect(10,70,251,27*4));
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
-
-    QFile *file=new QFile(constantsTools::FILE_INI);
-    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)){
+    bool tmp = !QDir(constantsTools::PATH_TMP).exists();
+    qDebug()<<constantsTools::PATH_TMP;
+    qDebug()<<tmp;
+    if (tmp){
         newService=true;
     }else{
         newService=false;
     }
-    qDebug()<<newService;
     ui->runWidget->hide();
     ui->crashWidget->hide();
     ui->completWidget->hide();

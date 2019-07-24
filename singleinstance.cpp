@@ -1,6 +1,5 @@
 #include "singleinstance.h"
 #include <QtNetwork/QLocalSocket>
-#include <QtDebug>
 
 SingleInstance::SingleInstance(MainWindow &w, QString name){
     this->w = &w;
@@ -19,11 +18,9 @@ bool SingleInstance::checkInstance(QString name){
     client.connectToServer(name,QLocalSocket::ReadWrite);
 
     if(client.waitForConnected(1000)){
-        qDebug()<<"connected";
         return true;
     }
     else{
-        qDebug()<<client.errorString();
         return false;
     }
 }
@@ -39,12 +36,6 @@ bool SingleInstance::listen(){
 }
 
 void SingleInstance::newConnection(){
-    qDebug()<<"show window";
     this->client = this->server.nextPendingConnection();
-    this->w->show();
-}
-
-void SingleInstance::show(){
-    qDebug()<<"show window";
     this->w->show();
 }

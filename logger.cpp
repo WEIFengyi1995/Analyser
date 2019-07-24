@@ -10,12 +10,11 @@ Logger::Logger()
 }
 
 void Logger::setFile(QString file1){
-    if(file==nullptr&&file->isOpen()){
+    if(file!=nullptr&&file->isOpen()){
         file->close();
     }
     FileName=file1;
     file=new QFile(file1);
-    //QFile::setPermissions();
     if (!file->open(QIODevice::WriteOnly | QIODevice::Text)){
         qDebug()<<"error while opening "<<file1<<file->errorString();
         return;
