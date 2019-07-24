@@ -192,8 +192,6 @@ void Analyser::nmonAction(){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
         QString error;
         QString tmpFile=constantsTools::PATH_REPORT+"tmp";
-        //create a tmp file or truncate this file
-        create(tmpFile,error);
         int code = shell->doShell("nmon -F "+tmpFile);
         if(code != 0){
             emit(warning("nmon","exit code anormal"));

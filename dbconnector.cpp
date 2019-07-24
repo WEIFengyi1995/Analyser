@@ -9,6 +9,8 @@ DBConnector* DBConnector::dbConnector=nullptr;
 QString DBConnector::info_cr="";
 QString DBConnector::info_deno="";
 QSqlDatabase DBConnector::db;
+QSqlDatabase DBConnector::dbAudit;
+
 const QString DBConnector::ISC_USER="SYSDBA";
 const QString DBConnector::ISC_PASSWORD="masterkey";
 const QString DBConnector::URL="127.0.0.1";

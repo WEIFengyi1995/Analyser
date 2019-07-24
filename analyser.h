@@ -15,7 +15,6 @@ public:
 
 public slots:
     void start();
-    void startSave();
 
 private:
     static Analyser *instance;
