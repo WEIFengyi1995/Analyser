@@ -28,7 +28,6 @@ Analyser::Analyser(Logger &log)
     this->log = &log;
     this->log->setFile(constantsTools::FILE_REP);
 
-
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon

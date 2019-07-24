@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 
     //username: arcsolu
     //password: analyser
+
     if(SingleInstance::checkInstance(constantsTools::SERVER_NAME)){
         return 0;
     }
