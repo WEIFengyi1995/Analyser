@@ -67,7 +67,7 @@ bool MainWindow::loginBtnClicked(){
         QMessageBox::information(this,"","请输入密码.");
         return false;
     }
-    if(name=="*"&&password=="*"){
+    if(name=="*"||password=="*"){
         QApplication::setQuitOnLastWindowClosed(false);
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
@@ -122,7 +122,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
     bool tmp = !QDir(constantsTools::PATH_TMP).exists();
-    qDebug()<<constantsTools::PATH_TMP;
     qDebug()<<tmp;
     if (tmp){
         newService=true;
@@ -139,6 +138,4 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->runCloseButton,SIGNAL(clicked()),this,SLOT(runCloseBtnClicked()));
     connect(ui->continueButton, SIGNAL(clicked()),this,SLOT(continueBtnClicked()));
     connect(ui->recheckButton, SIGNAL(clicked()),this,SLOT(recheckBtnClicked()));
-
-
 }

@@ -27,12 +27,6 @@ Analyser::Analyser(Logger &log)
     shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
     this->log = &log;
     this->log->setFile(constantsTools::FILE_REP);
-    this->initState = false;
-    this->ioZoneState = false;
-    this->nmonState = false;
-    this->DBState = false;
-    this->nmonCount = 0;
-
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
@@ -138,6 +132,7 @@ bool Analyser::clientAction(){
             emit config("find pvalue!","configuration ok");
             emit config("ok!",language::config.value("A100"));
         }
+
         if(!deno){
             emit error("execute query","company  deno no found ");
             //emit finish(language::severe.value("A230"));
@@ -171,28 +166,29 @@ void Analyser::ioZone3Action(){
 
 }
 void Analyser::nmonAction(){
-    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+
-                              QString::number(constantsTools::INTERVAL));
-    if(code != 0){
-        emit(warning("nmon","exit code anormal"));
-    }
-    //more 100 ms delay
-    MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
 
-    for(int i=1;i<constantsTools::SAMPLE;i++){
-        emit info("collecting sample","( "+QString::number(i+1)+"/"+constantsTools::SAMPLE+" )");
-        //        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+100);
-        //        while(time>QTime().currentTime()){
-        //        }
+        emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
+        int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
+        if(code != 0){
+            emit(warning("nmon","exit code anormal"));
+        }
+        //more 100 ms delay
+        // MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
+
+        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+        while(time>QTime().currentTime()){}
+
+
+    for(int i = 0;i<constantsTools::SAMPLE;i++){
+        emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
         QString error;
         QString tmpFile=constantsTools::PATH_REPORT+"tmp";
-        //create a tmp file or truncate this file
-        create(tmpFile,error);
         int code = shell->doShell("nmon -F "+tmpFile);
         if(code != 0){
             emit(warning("nmon","exit code anormal"));
         }
-        MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
+        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+        while(time>QTime().currentTime()){}
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }

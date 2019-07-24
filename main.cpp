@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
                 infoLogger.moveToThread(a.getThread());
                 a.getThread()->start();
                 w.show();
-                  return a.exec();
-
+                return a.exec();
     }
 }

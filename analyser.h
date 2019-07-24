@@ -4,6 +4,7 @@
 #include "shellhandler.h"
 #include "dbconnector.h"
 #include "logger.h"
+#include <QSettings>
 
 
 class Analyser:public Service
@@ -21,7 +22,6 @@ private:
     Analyser(Logger &log);
     ShellHandler * shell = nullptr;
     Logger * log;
-
 
     int initAction();
     bool clientAction();
