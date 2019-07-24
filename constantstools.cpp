@@ -27,6 +27,7 @@ const int constantsTools::DAY =(60*60*24)*1000;
 
 const int constantsTools::SAMPLE  = 10;
 const int constantsTools::INTERVAL = 2;
+const QString DATE_FORMAT="yyyy-MM-dd HH:mm:ss.zzz";
 
 constantsTools::constantsTools()
 {
