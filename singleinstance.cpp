@@ -15,7 +15,9 @@ SingleInstance::~SingleInstance(){
 
 bool SingleInstance::checkInstance(QString name){
     QLocalSocket client;
+
     client.connectToServer(name,QLocalSocket::ReadWrite);
+
     if(client.waitForConnected(1000)){
         qDebug()<<"connected";
         return true;

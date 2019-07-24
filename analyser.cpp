@@ -24,6 +24,8 @@ Analyser::Analyser(Logger &log)
     shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
     this->log = &log;
     this->log->setFile(constantsTools::FILE_REP);
+    qDebug()<<"quit";
+
 
 }
 
@@ -153,7 +155,7 @@ bool Analyser::clientAction(){
             emit config("ok!",language::config.value("A100"));
         }
 
-        if(deno){
+        if(!deno){
             emit error("execute query","company  deno no found ");
             emit finish(language::severe.value("A230"));
         }else{
