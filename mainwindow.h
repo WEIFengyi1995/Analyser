@@ -26,7 +26,6 @@ private:
 
 signals:
     void loginSignal();
-    void continueSignal();
     void restartSignal();
 private slots:
     bool loginBtnClicked();
@@ -35,7 +34,6 @@ private slots:
     void done(QString error);
     void runCloseBtnClicked();
     void recvInfo(QString action,QString info);
-    void continueBtnClicked();
     void recheckBtnClicked();
 };
 

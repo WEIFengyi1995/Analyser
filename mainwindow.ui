@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>392</width>
-    <height>483</height>
+    <height>481</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,6 +23,9 @@
       <height>481</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(73,122,196) ;</string>
+    </property>
     <widget class="QWidget" name="verticalLayoutWidget">
      <property name="geometry">
       <rect>
@@ -32,7 +35,10 @@
        <height>481</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,8,1,1,2">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="1,20,1,10">
+      <property name="bottomMargin">
+       <number>25</number>
+      </property>
       <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
@@ -62,9 +68,9 @@
          </spacer>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,1,9">
+         <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="4,1,10">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1,1,1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="3,5,3,5,1">
             <item>
              <spacer name="verticalSpacer_4">
               <property name="orientation">
@@ -85,6 +91,16 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>15</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color:rgb(242,246,248) ;</string>
               </property>
               <property name="text">
                <string>Username</string>
@@ -111,6 +127,16 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>15</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color:rgb(242,246,248) ;</string>
               </property>
               <property name="text">
                <string>Password</string>
@@ -146,7 +172,7 @@
            </spacer>
           </item>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,1,1,1,1">
+           <layout class="QVBoxLayout" name="verticalLayout_5" stretch="3,5,3,5,1">
             <item>
              <spacer name="verticalSpacer_5">
               <property name="orientation">
@@ -163,10 +189,13 @@
             <item>
              <widget class="QLineEdit" name="username">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color:rgb(242,246,248) ;</string>
               </property>
              </widget>
             </item>
@@ -186,10 +215,16 @@
             <item>
              <widget class="QLineEdit" name="password">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color:rgb(242,246,248) ;</string>
+              </property>
+              <property name="echoMode">
+               <enum>QLineEdit::Password</enum>
               </property>
              </widget>
             </item>
@@ -239,7 +274,7 @@
        </spacer>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,4,4,4,0,4">
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
@@ -255,6 +290,17 @@
         </item>
         <item>
          <widget class="QPushButton" name="Login">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color:rgb(53,108,190);
+background-color:rgb(242,246,248) ;</string>
+          </property>
           <property name="text">
            <string>Login</string>
           </property>
@@ -275,10 +321,34 @@
         </item>
         <item>
          <widget class="QPushButton" name="exit">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color:rgb(53,108,190);
+background-color:rgb(242,246,248) ;</string>
+          </property>
           <property name="text">
            <string>Exit</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <spacer name="horizontalSpacer_2">
@@ -295,46 +365,40 @@
         </item>
        </layout>
       </item>
-      <item>
-       <spacer name="verticalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
      </layout>
     </widget>
    </widget>
    <widget class="QWidget" name="runWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>371</width>
-      <height>431</height>
+      <x>0</x>
+      <y>0</y>
+      <width>391</width>
+      <height>481</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(242,246,248) ;</string>
     </property>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>290</y>
-       <width>211</width>
-       <height>61</height>
+       <y>320</y>
+       <width>271</width>
+       <height>101</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>10</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:rgb(53,108,190);
+background-color:rgb(242,246,248) ;</string>
      </property>
      <property name="text">
       <string>正在检查, 
@@ -345,21 +409,29 @@
     <widget class="QListView" name="infoList">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>40</y>
-       <width>321</width>
-       <height>221</height>
+       <width>371</width>
+       <height>271</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:rgb(73,122,196);
+background-color: rgb(220,222,226);</string>
      </property>
     </widget>
     <widget class="QPushButton" name="runCloseButton">
      <property name="geometry">
       <rect>
        <x>250</x>
-       <y>300</y>
+       <y>360</y>
        <width>113</width>
        <height>41</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(53,108,190);
+color:rgb(242,246,248) ;</string>
      </property>
      <property name="text">
       <string>close</string>
@@ -369,33 +441,61 @@
    <widget class="QWidget" name="completWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>40</y>
-      <width>311</width>
-      <height>381</height>
+      <x>0</x>
+      <y>0</y>
+      <width>391</width>
+      <height>481</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(242,246,248) ;</string>
     </property>
     <widget class="QLabel" name="terminateText">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>151</width>
-       <height>51</height>
+       <x>0</x>
+       <y>0</y>
+       <width>391</width>
+       <height>71</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(53,108,190);
+color:rgb(242,246,248) ;</string>
      </property>
      <property name="text">
       <string>检查已经结束。</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
     <widget class="QPushButton" name="closeButton">
      <property name="geometry">
       <rect>
-       <x>180</x>
-       <y>300</y>
-       <width>113</width>
-       <height>32</height>
+       <x>152</x>
+       <y>390</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>13</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(53,108,190);
+color:rgb(242,246,248) ;</string>
      </property>
      <property name="text">
       <string>完成</string>
@@ -405,10 +505,15 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
-       <width>251</width>
-       <height>91</height>
+       <y>80</y>
+       <width>371</width>
+       <height>281</height>
       </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:rgb(73,122,196);
+background-color: rgb(220,222,226);
+</string>
      </property>
      <property name="text">
       <string/>
@@ -418,50 +523,67 @@
    <widget class="QWidget" name="crashWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>321</width>
-      <height>331</height>
+      <x>0</x>
+      <y>0</y>
+      <width>391</width>
+      <height>481</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgb(242,246,248) ;</string>
     </property>
     <widget class="QLabel" name="crashText">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>30</y>
-       <width>251</width>
-       <height>141</height>
+       <x>0</x>
+       <y>0</y>
+       <width>391</width>
+       <height>321</height>
       </rect>
      </property>
-     <property name="text">
-      <string>上次检查意外退出
-是否从上次中断处继续检查？</string>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
      </property>
-    </widget>
-    <widget class="QPushButton" name="continueButton">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>250</y>
-       <width>113</width>
-       <height>32</height>
-      </rect>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(53,108,190);
+color:rgb(242,246,248) ;</string>
      </property>
      <property name="text">
-      <string>继续上次检查</string>
+      <string>    检测到上次检查意外退出
+
+    请在检查期间不要关闭电脑
+
+    点击开始进行检测
+</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
      </property>
     </widget>
     <widget class="QPushButton" name="recheckButton">
      <property name="geometry">
       <rect>
-       <x>170</x>
-       <y>250</y>
-       <width>113</width>
-       <height>32</height>
+       <x>150</x>
+       <y>390</y>
+       <width>101</width>
+       <height>41</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(53,108,190);
+color:rgb(242,246,248) ;</string>
+     </property>
      <property name="text">
-      <string>开始新检查</string>
+      <string>开始</string>
      </property>
     </widget>
    </widget>

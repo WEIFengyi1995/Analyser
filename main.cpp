@@ -18,10 +18,7 @@ int main(int argc, char *argv[])
 
     //username: arcsolu
     //password: analyser
-        if(SingleInstance::checkInstance(constantsTools::SERVER_NAME)){
-                qDebug()<<"exist";
-        }
-        else{
+
                 MyApplication a(argc,argv);
                 MainWindow w;
                 Logger infoLogger;
@@ -38,6 +35,4 @@ int main(int argc, char *argv[])
                 a.getThread()->start();
                 w.show();
                   return a.exec();
-
-    }
 }
