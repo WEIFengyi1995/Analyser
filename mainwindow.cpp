@@ -11,22 +11,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::continueBtnClicked(){
-    QApplication::setQuitOnLastWindowClosed(false);
-    ui->Login->setEnabled(false);
-    ui->exit->setEnabled(false);
-    ui->username->setEnabled(false);
-    ui->password->setEnabled(false);
-    ui->loginWidget->hide();
-    ui->completWidget->hide();
-    ui->crashWidget->hide();
-    ui->runWidget->show();
-    //todo
-    emit continueSignal();
-}
-
 void MainWindow::recheckBtnClicked(){
+    newService=true;
+    ui->recheckButton->setEnabled(false);
     ui->crashWidget->hide();
+    ui->loginWidget->hide();
+    ui->runWidget->hide();
+    ui->completWidget->hide();
     ui->runWidget->show();
     emit loginSignal();
 }
@@ -75,7 +66,6 @@ bool MainWindow::loginBtnClicked(){
         ui->password->setEnabled(false);
         ui->loginWidget->hide();
         ui->completWidget->hide();
-
         if(newService){
              ui->runWidget->show();
              emit loginSignal();
@@ -118,11 +108,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     this->setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
     ui->errorText->adjustSize();
-    ui->errorText->setGeometry(QRect(10,70,251,27*4));
+    ui->errorText->setGeometry(QRect(10,80,371,281));
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
     bool tmp = !QDir(constantsTools::PATH_TMP).exists();
-    qDebug()<<tmp;
     if (tmp){
         newService=true;
     }else{
@@ -136,6 +125,5 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
     connect(ui->runCloseButton,SIGNAL(clicked()),this,SLOT(runCloseBtnClicked()));
-    connect(ui->continueButton, SIGNAL(clicked()),this,SLOT(continueBtnClicked()));
     connect(ui->recheckButton, SIGNAL(clicked()),this,SLOT(recheckBtnClicked()));
 }

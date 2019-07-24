@@ -25,7 +25,7 @@ const QString constantsTools::FILE_GBAK=PATH_REPORT+"gb.log";
 const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
 const int constantsTools::DAY =(60*60*24)*1000;
 
-const int constantsTools::SAMPLE  = 3;
+const int constantsTools::SAMPLE  = 10;
 const int constantsTools::INTERVAL = 2;
 
 constantsTools::constantsTools()
