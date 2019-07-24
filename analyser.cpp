@@ -6,6 +6,7 @@
 #include <QDate>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
+#include <QSettings>
 #include "tool.h"
 #include "myapplication.h"
 
@@ -14,7 +15,9 @@ Analyser * Analyser::instance = nullptr;
 
 
 Analyser::~Analyser(){
+    qDebug()<<"free shell";
     delete this->shell;
+    qDebug()<<"free instance";
     delete instance;
 }
 
@@ -24,26 +27,68 @@ Analyser::Analyser(Logger &log)
     shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
     this->log = &log;
     this->log->setFile(constantsTools::FILE_REP);
+    this->initState = false;
+    this->ioZoneState = false;
+    this->nmonState = 0;
+    this->DBState = false;
 
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
-    emit(info("Initialisation","analyser initialised"));
-    if(this->initAction() !=0){
-        emit(error("","can not start the service, check your log file to fix it"));
-        qDebug()<<"can not start the service, check log file";
-        this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
-        emit finish("can not start the service, check "+constantsTools::FILE_REP);
-    }else{
-        emit(info("Iniatialisation","successfull, collecting client information"));
+    QSettings save(constantsTools::SAVE_INI,QSettings::IniFormat);
+    save.beginGroup("SAVE");
+    save.sync();
+    if(!this->initState){
+        emit(info("Initialisation","analyser initialised"));
+        if(this->initAction() !=0){
+            emit(error("","can not start the service, check your log file to fix it"));
+            this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
+            emit finish("can not start the service, check "+constantsTools::FILE_REP);
+        }else{
+            save.setValue("initAction","done");
+            save.sync();
+            emit(info("Iniatialisation","successfull, collecting client information"));
+            if(this->clientAction()){
+                save.setValue("clientAction","done");
+                save.sync();
+                emit(info("gfix","Start testing Database "));
+                this->dbTest();
+                emit info("gifix","test done ");
+                emit(info("","Start backup "));
+                emit(info("DBBackup","initialisation..."));
+                this->ventapDBBackupAction();
+                emit(info("DBBAckup","done"));
+                save.setValue("DBAction","done");
+                save.sync();
+                emit(info("ioZone","initi""alisation..."));
+                this->ioZone3Action();
+                emit(info("ioZone","done"));
+                save.setValue("ioZone3Action","done");
+                emit(info("nmon","initialisation..."));
+                this->nmonAction();
+                emit(info("nmon","done"));
+                save.setValue("nmonAction","done");
+                emit(info("Compress","initialisation..."));
+                this->doneAction();
+                emit(info("Compress","done"));
+                save.setValue("DoneAction","done");
+                emit(info("Analyser","finished, you can close the window"));
+                emit(finish("Sucessfull"));
+            }
+
+            else{
+                emit(error("Client"," failed"));
+                this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
+                emit finish("Client not found, check your log file");
+            }
+        }
+    }
+    else{
+        save.setValue("initAction","done");
+        emit(info("Iniatialisation","done in previous session"));
         if(this->clientAction()){
-            emit(info("ioZone","initialisation..."));
-            //this->ioZone3Action();
-            emit(info("ioZone","done"));
-            emit(info("nmon","initialisation..."));
-            this->nmonAction();
-            emit(info("nmon","done"));
+            save.setValue("clientAction","done");
             emit(info("gfix","Start testing Database "));
             this->dbTest();
             emit info("gifix","test done ");
@@ -51,16 +96,19 @@ void Analyser::start(){
             emit(info("DBBackup","initialisation..."));
             this->ventapDBBackupAction();
             emit(info("DBBAckup","done"));
+            save.setValue("DBAction","done");
             emit(info("ioZone","initi""alisation..."));
             this->ioZone3Action();
             emit(info("ioZone","done"));
+            save.setValue("ioZone3Action","done");
             emit(info("nmon","initialisation..."));
             this->nmonAction();
             emit(info("nmon","done"));
-
+            save.setValue("nmonAction","done");
             emit(info("Compress","initialisation..."));
             this->doneAction();
             emit(info("Compress","done"));
+            save.setValue("DoneAction","done");
             emit(info("Analyser","finished, you can close the window"));
             emit(finish("Sucessfull"));
         }
@@ -70,7 +118,9 @@ void Analyser::start(){
             this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
             emit finish("Client not found, check your log file");
         }
+
     }
+    save.endGroup();
 }
 
 
@@ -88,45 +138,32 @@ int Analyser::initAction(){
     int code;
     code = shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
     sum += code;
-    qDebug()<<code;
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_DB, "exit code anormal, check your permission"));
     }
 
     code = shell->doShell("mkdir -p "+constantsTools::PATH_REPORT);
-    qDebug()<<code;
-
     if(code != 0){
+
         emit(error("mkdir -p "+constantsTools::PATH_REPORT, "exit code anormal, check your permission"));
     }
     sum += code;
 
     code = shell->doShell("apt update","");
-    qDebug()<<code;
-
     if(code != 0){
         emit(error("apt update ", "exit code anormal, check your permission"));
     }
     sum += code;
-
     code = shell->doShell("apt install -y -f iozone3","");
-    qDebug()<<code;
-
     if(code != 0){
         emit(error("apt install -y -f iozone3","can not install iozone3"));
     }
     sum += code;
-
     code = shell->doShell("apt install -y -f nmon","");
-    qDebug()<<code;
-
     if(code != 0){
         emit(error("apt install -y -f nmon","can not install nmon"));
     }
     sum += code;
-    qDebug()<<code;
-
-
     return sum;
 }
 
@@ -152,15 +189,13 @@ bool Analyser::clientAction(){
             emit config("find pvalue!","configuration ok");
             emit config("ok!",language::config.value("A100"));
         }
-
-        if(deno){
+        if(!deno){
             emit error("execute query","company  deno no found ");
-            emit finish(language::severe.value("A230"));
+            //emit finish(language::severe.value("A230"));
         }else{
             emit config("find deno ","configuration ok");
             emit config("ok!",language::config.value("A101"));
         }
-        emit config("hello ",DBConnector::getInfoCr());
     } catch (...) {
         emit error("error","A230");
         emit finish(language::severe.value("A230"));
@@ -176,7 +211,6 @@ bool Analyser::clientAction(){
 }
 
 void Analyser::ioZone3Action(){
-    qDebug()<<"Start ioZone3 Action";
     emit info("iozone",language::info.value("A215"));
 
     int code = shell->doShell("iozone -R -l 5 -u 5 -r 4k -s 100m -F "+constantsTools::PATH_TMP+"f1 "+constantsTools::PATH_TMP+"f2 "+
@@ -188,21 +222,19 @@ void Analyser::ioZone3Action(){
 
 }
 void Analyser::nmonAction(){
-    qDebug()<<"Start nmon Action";
     int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+
                               QString::number(constantsTools::INTERVAL));
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
     //more 100 ms delay
-    // QThread::msleep((unsigned long) ((constantsTools::INTERVAL)*1000+100));
+    MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
 
     for(int i=1;i<constantsTools::SAMPLE;i++){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+constantsTools::SAMPLE+" )");
         //        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+100);
         //        while(time>QTime().currentTime()){
         //        }
-        MyApplication::getThread()->msleep(constantsTools::INTERVAL*1000+100);
         QString error;
         QString tmpFile=constantsTools::PATH_REPORT+"tmp";
         //create a tmp file or truncate this file
@@ -211,15 +243,14 @@ void Analyser::nmonAction(){
         if(code != 0){
             emit(warning("nmon","exit code anormal"));
         }
+        MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
-        //QThread::msleep((unsigned long)(constantsTools::INTERVAL)*1000+100);
     }
 }
 
 void Analyser::ventapDBBackupAction(){
-    qDebug()<<"Start backup action";
     int i=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP,constantsTools::FILE_GBAK);
     if(i==1){
@@ -344,8 +375,27 @@ void Analyser::fixDB(int type){
 void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP);
-    shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz ");
+    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP,"");
+    //shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz ");
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
+}
+
+void Analyser::startSave(){
+    QSettings save(constantsTools::SAVE_INI,QSettings::IniFormat);
+    save.beginGroup("SAVE");
+    if(save.contains("initAction")){
+        this->initState = true;
+        qDebug()<<"init done";
+    }
+    if(save.contains("ioZone3Action")){
+        this->ioZoneState = true;
+                  qDebug()<<"iozone done";
+    }
+    if(save.contains("nmonAction")){
+        this->nmonState = true;
+    }
+    this->start();
+    save.clear();
+
 }

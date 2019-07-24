@@ -22,8 +22,6 @@ private:
 
 private slots:
     void newConnection();
-    void show();
-
 };
 
 #endif // SINGLEINSTANCE_H
