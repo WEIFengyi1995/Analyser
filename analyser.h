@@ -5,6 +5,7 @@
 #include "dbconnector.h"
 #include "logger.h"
 
+
 class Analyser:public Service
 {
     Q_OBJECT
@@ -14,7 +15,6 @@ public:
 
 public slots:
     void start();
-    void startSave();
 
 private:
     static Analyser *instance;
@@ -22,11 +22,7 @@ private:
     ShellHandler * shell = nullptr;
     Logger * log;
 
-    //actions states
-    bool initState;
-    bool ioZoneState;
-    bool DBState;
-    int nmonState;
+
     int initAction();
     bool clientAction();
     void ioZone3Action();
@@ -36,7 +32,6 @@ private:
     void dbTest();
     void verifyDB();
     void fixDB(int type);
-
 
 };
 

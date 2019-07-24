@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
                 QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)));
                 QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)));
                 QObject::connect(ser,SIGNAL(info(QString,QString)),&w,SLOT(recvInfo(QString,QString)));
-                QObject::connect(&w,SIGNAL(continueSignal()),ser,SLOT(startSave()));
                 ser->moveToThread(a.getThread());
                 infoLogger.moveToThread(a.getThread());
                 a.getThread()->start();

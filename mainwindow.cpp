@@ -94,10 +94,6 @@ void MainWindow::exitBtnClicked(){
 
 
 void MainWindow::done(QString error){
-    /*QTime dieTime=QTime::currentTime().addSecs(2);
-    while( QTime::currentTime() < dieTime ){
-         QCoreApplication::processEvents(QEventLoop::AllEvents, 1000);
-    }*/
     if(error.isNull()||error==""){
         ui->errorText->clear();
     }else{
@@ -137,7 +133,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->crashWidget->hide();
     ui->completWidget->hide();
     ui->loginWidget->show();
-
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
     connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));

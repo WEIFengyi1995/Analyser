@@ -17,13 +17,12 @@ const QString constantsTools::FILE_DB_VENTAP=PATH_DB+"ventap.fdb";
 const QString constantsTools::FILE_DB_AUDIT=PATH_DB+"audit.fdb";
 const QString constantsTools::FILE_DBK_VENTAP=PATH_DBK+"ventap.fbk";
 const QString constantsTools::FILE_DBK_AUDIT=PATH_DBK+"audit.fbk";
-const QString constantsTools::FILE_REP=PATH_VENTAP_DOC+"report.log";
+const QString constantsTools::FILE_REP = PATH_VENTAP_DOC+"report.log";
 const QString constantsTools::FILE_NMON=PATH_REPORT+"nm.log";
 const QString constantsTools::FILE_IOZONE=PATH_REPORT+"io.log";
 const QString constantsTools::FILE_GFIX=PATH_REPORT+"gf.log";
 const QString constantsTools::FILE_GBAK=PATH_REPORT+"gb.log";
 const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
-const QString constantsTools::SAVE_INI = PATH_REPORT+"trace.ini";
 const int constantsTools::DAY =(60*60*24)*1000;
 
 const int constantsTools::SAMPLE  = 3;
