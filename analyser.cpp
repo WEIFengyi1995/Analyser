@@ -21,11 +21,13 @@ Analyser::~Analyser(){
 Analyser::Analyser(Logger &log)
 {
     this->shell = new ShellHandler();
+
     this->log = &log;
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
+
     if(this->initAction() !=0){
         emit(error("","can not start the service, check your log file to fix it"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
@@ -312,10 +314,11 @@ void Analyser::fixDB(int type){
 
 }
 void Analyser::doneAction(){
+
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP,"");
-    //shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz ");
+    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP,"");
+    shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz ");
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }
