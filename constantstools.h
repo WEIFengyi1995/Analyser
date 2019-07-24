@@ -25,8 +25,8 @@ public:
     const static QString FILE_GBAK;
     const static QString FILE_TERM;
     const static QString SERVER_NAME;
-    const static QString SAVE_INI;
     const static QString DATE_FORMAT;
+
     const static int SAMPLE;
     const static int INTERVAL;
     const static int DAY;

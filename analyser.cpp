@@ -6,7 +6,6 @@
 #include <QDate>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
-#include <QSettings>
 #include "tool.h"
 #include "myapplication.h"
 
@@ -15,24 +14,20 @@ Analyser * Analyser::instance = nullptr;
 
 
 Analyser::~Analyser(){
-    qDebug()<<"free shell";
     delete this->shell;
-    qDebug()<<"free instance";
     delete instance;
 }
 
 Analyser::Analyser(Logger &log)
 {
     this->shell = new ShellHandler();
-   // shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
-    this->log = &log;
-    this->log->setFile(constantsTools::FILE_REP);
 
+    this->log = &log;
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
-    emit(info("Initialisation","analyser initialised"));
+
     if(this->initAction() !=0){
         emit(error("","can not start the service, check your log file to fix it"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
@@ -41,7 +36,6 @@ void Analyser::start(){
 
         emit(info("Iniatialisation","successfull, collecting client information"));
         if(this->clientAction()){
-
             emit(info("gfix","Start testing Database "));
             this->dbTest();
             emit info("gifix","test done ");
@@ -49,11 +43,9 @@ void Analyser::start(){
             emit(info("DBBackup","initialisation..."));
             this->ventapDBBackupAction();
             emit(info("DBBAckup","done"));
-
-            emit(info("ioZone","initi""alisation..."));
+            emit(info("ioZone","initialisation..."));
             this->ioZone3Action();
             emit(info("ioZone","done"));
-
             emit(info("nmon","initialisation..."));
             this->nmonAction();
             emit(info("nmon","done"));
@@ -63,15 +55,12 @@ void Analyser::start(){
             emit(info("Analyser","finished, you can close the window"));
             emit(finish("Sucessfull"));
         }
-
         else{
             emit(error("Client"," failed"));
             this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
             emit finish("Client not found, check your log file");
         }
-
-    }
-
+  }
 }
 
 
@@ -87,17 +76,20 @@ Analyser * Analyser::getAnalyser(Logger &log){
 int Analyser::initAction(){
     int sum = 0;
     int code;
+    code = shell->doShell("mkdir -p "+constantsTools::PATH_REPORT);
+    if(code != 0){
+        emit finish("Can not create "+constantsTools::PATH_REPORT+", check your permission");
+        return -1;
+     }
+    this->log->setFile(constantsTools::FILE_REP);
+    emit(info("Initialisation","analyser initialised"));
     code = shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
     sum += code;
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_DB, "exit code anormal, check your permission"));
     }
 
-    code = shell->doShell("mkdir -p "+constantsTools::PATH_REPORT);
-    if(code != 0){
 
-        emit(error("mkdir -p "+constantsTools::PATH_REPORT, "exit code anormal, check your permission"));
-    }
     sum += code;
 
     code = shell->doShell("apt update","");
@@ -174,14 +166,11 @@ void Analyser::ioZone3Action(){
 
 }
 void Analyser::nmonAction(){
-
     emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
     int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
-    //more 100 ms delay
-    // MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
 
     QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
     while(time>QTime().currentTime()){
@@ -337,5 +326,3 @@ void Analyser::doneAction(){
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }
-
-

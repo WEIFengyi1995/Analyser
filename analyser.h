@@ -6,6 +6,7 @@
 #include "logger.h"
 #include <QSettings>
 
+
 class Analyser:public Service
 {
     Q_OBJECT
@@ -21,6 +22,7 @@ private:
     Analyser(Logger &log);
     ShellHandler * shell = nullptr;
     Logger * log;
+
     int initAction();
     bool clientAction();
     void ioZone3Action();
@@ -30,7 +32,6 @@ private:
     void dbTest();
     void verifyDB();
     void fixDB(int type);
-
 
 };
 
