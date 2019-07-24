@@ -27,7 +27,6 @@ Analyser::Analyser(Logger &log)
     shell->doShell("mkdir -p "+constantsTools::PATH_TMP,"");
     this->log = &log;
     this->log->setFile(constantsTools::FILE_REP);
-
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
@@ -185,9 +184,7 @@ void Analyser::nmonAction(){
     // MyApplication::getThread()->msleep((unsigned long)(constantsTools::INTERVAL)*1000+1000);
 
     QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-    while(time>QTime().currentTime()){
-            QCoreApplication::processEvents();   //处理事件
-    }
+    while(time>QTime().currentTime()){}
 
     for(int i=1;i<constantsTools::SAMPLE;i++){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
@@ -198,9 +195,7 @@ void Analyser::nmonAction(){
             emit(warning("nmon","exit code anormal"));
         }
         QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-        while(time>QTime().currentTime()){
-            QCoreApplication::processEvents();   //处理事件
-        }
+        while(time>QTime().currentTime()){}
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
