@@ -11,9 +11,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-<<<<<<< HEAD
-
-
 void MainWindow::recheckBtnClicked(){
     newService=true;
     ui->recheckButton->setEnabled(false);
@@ -21,24 +18,6 @@ void MainWindow::recheckBtnClicked(){
     ui->loginWidget->hide();
     ui->runWidget->hide();
     ui->completWidget->hide();
-=======
-void MainWindow::continueBtnClicked(){
-    QApplication::setQuitOnLastWindowClosed(false);
-    ui->Login->setEnabled(false);
-    ui->exit->setEnabled(false);
-    ui->username->setEnabled(false);
-    ui->password->setEnabled(false);
-    ui->loginWidget->hide();
-    ui->completWidget->hide();
-    ui->crashWidget->hide();
-    ui->runWidget->show();
-    //todo
-    emit continueSignal();
-}
-
-void MainWindow::recheckBtnClicked(){
-    ui->crashWidget->hide();
->>>>>>> a84169b9c6c3b8284beee7c104e3674a22db0549
     ui->runWidget->show();
     emit loginSignal();
 }

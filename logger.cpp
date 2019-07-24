@@ -10,6 +10,9 @@ Logger::Logger()
 }
 
 void Logger::setFile(QString file1){
+    qDebug()<<FileName<<"file!=null"<<(file!=nullptr);
+    qDebug()<<FileName<<"file==null"<<(file==nullptr);
+
     if(file!=nullptr&&file->isOpen()){
         file->close();
     }

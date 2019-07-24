@@ -15,24 +15,16 @@ public:
 
 public slots:
     void start();
-    void startSave();
 
 private:
     static Analyser *instance;
     Analyser(Logger &log);
     ShellHandler * shell = nullptr;
     Logger * log;
-
-    //actions states
-    bool initState;
-    bool ioZoneState;
-    bool DBState;
-    bool nmonState;
-    int nmonCount;
     int initAction();
     bool clientAction();
     void ioZone3Action();
-    void nmonAction(QSettings & save );
+    void nmonAction();
     void ventapDBBackupAction();
     void doneAction();
     void dbTest();
