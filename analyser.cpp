@@ -49,7 +49,6 @@ void Analyser::start(){
             emit(info("nmon","done"));
             emit(info("Compress","initialisation..."));
             this->doneAction();
-            emit(info("Compress","done"));
             emit(info("Analyser","finished, you can close the window"));
             emit(finish("Sucessfull"));
         }
@@ -318,8 +317,8 @@ void Analyser::fixDB(int type){
 void Analyser::doneAction(){
     int sum = 0;
     sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+/*DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+*/+"repport.tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP,"");
-    //shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz ");
+    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP,"");
+    shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz ");
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }
