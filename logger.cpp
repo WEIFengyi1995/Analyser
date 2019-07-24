@@ -7,6 +7,7 @@
 
 Logger::Logger()
 {
+    file=nullptr;
 }
 
 void Logger::setFile(QString file1){
