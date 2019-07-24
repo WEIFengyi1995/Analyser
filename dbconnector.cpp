@@ -30,17 +30,22 @@ bool DBConnector::start(){
     db.setPassword(ISC_PASSWORD);
     db.setHostName(URL);
     db.setDatabaseName(constantsTools::FILE_DB_VENTAP);
-    qDebug()<<URL<<constantsTools::FILE_DB_VENTAP;
-    qDebug()<<ISC_USER<<ISC_PASSWORD;
     bool ok=db.open();
-    return ok;
+    dbAudit=QSqlDatabase::addDatabase(dbType,constantsTools::FILE_DB_AUDIT);
+    dbAudit.setUserName(ISC_USER);
+    dbAudit.setPassword(ISC_PASSWORD);
+    dbAudit.setHostName(URL);
+    dbAudit.setDatabaseName(constantsTools::FILE_DB_AUDIT);
+    bool okAudit=dbAudit.open();
+    return ok&&okAudit;
 }
 
 bool DBConnector::containsDb(QString name){
-    return db.contains(name);
+    return QSqlDatabase::contains(name);
 }
 void DBConnector::close(){
     db.close();
+    dbAudit.close();
 }
 QString DBConnector::getInfoCr(){
     return info_cr;

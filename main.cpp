@@ -2,13 +2,10 @@
 #include "service.h"
 #include "analyser.h"
 #include "constantstools.h"
-#include <QDebug>
 #include "language.h"
 #include "logger.h"
-
 #include <QObject>
-#include<Qt>
-#include"tool.h"
+#include "tool.h"
 #include "singleinstance.h"
 #include "myapplication.h"
 
@@ -18,6 +15,7 @@ int main(int argc, char *argv[])
 
     //username: arcsolu
     //password: analyser
+<<<<<<< HEAD
 
                 MyApplication a(argc,argv);
                 MainWindow w;
@@ -35,4 +33,31 @@ int main(int argc, char *argv[])
                 a.getThread()->start();
                 w.show();
                   return a.exec();
+=======
+    if(SingleInstance::checkInstance(constantsTools::SERVER_NAME)){
+        return 0;
+    }
+    else{
+        MyApplication a(argc,argv);
+        MainWindow w;
+        SingleInstance instance(w,constantsTools::SERVER_NAME);
+        instance.listen();
+        Logger infoLogger;
+        Service *ser = Analyser::getAnalyser(infoLogger);
+        QObject::connect(ser,SIGNAL(finish(QString)),&w,SLOT(done(QString)),Qt::DirectConnection);
+        QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
+        QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)));
+        QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));
+        QObject::connect(ser,SIGNAL(config(QString,QString)),&infoLogger,SLOT(config_log(QString,QString)));
+        QObject::connect(ser,SIGNAL(info(QString,QString)),&infoLogger,SLOT(info_log(QString,QString)));
+        QObject::connect(ser,SIGNAL(info(QString,QString)),&w,SLOT(recvInfo(QString,QString)));
+        QObject::connect(&w,SIGNAL(continueSignal()),ser,SLOT(startSave()));
+        ser->moveToThread(a.getThread());
+        infoLogger.moveToThread(a.getThread());
+        a.getThread()->start();
+        w.show();
+        return a.exec();
+
+    }
+>>>>>>> a84169b9c6c3b8284beee7c104e3674a22db0549
 }

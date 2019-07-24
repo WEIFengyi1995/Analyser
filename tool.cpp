@@ -1,6 +1,6 @@
 #include"tool.h"
-#include<QDebug>
-#include<QTextStream>
+#include <QDebug>
+#include <QTextStream>
 
 bool cutFile(QString old , QString des,int n,int length,QString &error ){
     QFile file(old);
@@ -40,7 +40,6 @@ bool cutFile(QString old , QString des,int n,int length,QString &error ){
         return false;
     }
     QTextStream in(&destination);
-    in<<"hello";
     for(int i=0;i<info.size();i++){
         in<<info.at(i)<<"\n";
     }
@@ -54,9 +53,11 @@ bool cutFile(QString old , QString des,int n,int length,QString &error ){
 
 QFile* create(QString filename,QString &error){
     QFile file(filename);
+    QFile * f1=&file;
     if(!file.open(QIODevice::ReadWrite|QIODevice::Truncate)){
         error=file.errorString();
         qDebug()<<file.errorString();
     }
-    return &file;
+    //TODO:???
+    return f1;
 }
