@@ -176,6 +176,7 @@ void Analyser::nmonAction(){
         QCoreApplication::processEvents();   //处理事件
     }
 
+
     for(int i=1;i<constantsTools::SAMPLE;i++){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
         QString error;
@@ -185,9 +186,7 @@ void Analyser::nmonAction(){
             emit(warning("nmon","exit code anormal"));
         }
         QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-        while(time>QTime().currentTime()){
-            QCoreApplication::processEvents();   //处理事件
-        }
+        while(time>QTime().currentTime()){}
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
@@ -200,7 +199,7 @@ void Analyser::ventapDBBackupAction(){
     if(i==1){
         emit info("gbak db_ventap",language::info.value("A211"));
     }else if(i==0){
-        emit warning("gbak db_ventap"," db backup warning? ");
+        emit warning("gbak db_ventap"," db backup warning?");
     }else{
         emit error("gbak db_ventap"," db backup error");
     }
@@ -208,11 +207,12 @@ void Analyser::ventapDBBackupAction(){
     int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT+" >> "+constantsTools::FILE_GBAK);
     if(j==1){
-        emit info("gbak db_AUDIT"," success");
+
+        emit info("gbak db_audit",language::info.value("A311"));
     }else if(j==0){
-        emit warning("gbak db_AUDIT"," db backup warning? ");
+        emit warning("gbak db_audit"," db backup warning ");
     }else{
-        emit error("gbak db_AUDIT"," db backup error");
+        emit error("gbak db_audit"," db backup error");
     }
 
 
