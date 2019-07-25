@@ -34,26 +34,30 @@ void Analyser::start(){
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
     }else{
-        this->nmonAction();
-
-        emit(info("Initialisation","successful, collecting client information"));
+        emit(info("nmon","initialisation..."));
         if(this->clientAction()){
             emit(info("gfix","Start testing Database "));
-            //this->dbTest();
+            this->dbTest();
             emit info("gifix","test done ");
             emit(info("","Start backup "));
             emit(info("DBBackup","initialisation..."));
-            //this->ventapDBBackupAction();
+            this->ventapDBBackupAction();
             emit(info("DBBAckup","done"));
             emit(info("ioZone","initialisation..."));
-            //this->ioZone3Action();
+            this->ioZone3Action();
             emit(info("ioZone","done"));
-            emit(info("nmon","initialisation..."));
-            emit(info("nmon","done"));
             emit(info("Compress","initialisation..."));
-            this->doneAction();
-            emit(info("Analyser","finished, you can close the window"));
-            emit(finish("Successful"));
+            if(this->nmonAction()){
+                emit(info("nmon","done"));
+                emit(info("Initialisation","successful, collecting client information"));
+                this->doneAction();
+                emit(info("Analyser","finished, you can close the window"));
+                emit(finish("Successful"));
+            }
+            else{
+                emit finish("nmon failed, check "+constantsTools::FILE_REP);
+            }
+
         }
         else{
             emit(error("Client"," failed"));
@@ -88,10 +92,7 @@ int Analyser::initAction(){
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_DBK, "exit code anormal, check your permission"));
     }
-
-
     sum += code;
-
     code = shell->doShell("apt update","");
     if(code != 0){
         emit(error("apt update ", "exit code anormal, check your permission"));
@@ -107,6 +108,10 @@ int Analyser::initAction(){
         emit(error("apt install -y -f nmon","can not install nmon"));
     }
     sum += code;
+    QSettings setting(constantsTools::FILE_CONFIG,QSettings::IniFormat);
+    setting.beginGroup("nmon");
+    INTERVAL=setting.value("interval",3).toInt();
+    SAMPLE=setting.value("sample",5).toInt();
     return sum;
 }
 
@@ -116,8 +121,8 @@ bool Analyser::clientAction(){
 
     if(!db->start()){
         emit error("open db","数据库连接失败");
-        //emit finish(language::severe.value("A230"));
-        //return false;
+        emit finish(language::severe.value("A230"));
+        return false;
     }
     try {
         bool cr=  DBConnector::searchCR();
@@ -125,8 +130,8 @@ bool Analyser::clientAction(){
 
         if(!cr){
             emit error("execute query","找不到pvalue");
-            //emit finish(language::severe.value("A230"));
-            //return false;
+            emit finish(language::severe.value("A230"));
+            return false;
         }
         else{
             emit config("find pvalue!","configuration ok");
@@ -135,7 +140,8 @@ bool Analyser::clientAction(){
 
         if(!deno){
             emit error("execute query","company  deno no found ");
-            //emit finish(language::severe.value("A230"));
+            emit finish(language::severe.value("A230"));
+            return false;
         }else{
             emit config("find deno ","configuration ok");
             emit config("ok!",language::config.value("A101"));
@@ -164,72 +170,58 @@ void Analyser::ioZone3Action(){
         emit(warning("ioZone", "exit code anormal"));
     }
 }
-void Analyser::nmonAction(){
-    /*emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
-    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
-    if(code != 0){
-        emit(warning("nmon","exit code anormal"));
-    }
-    //QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-    //while(time>QTime().currentTime()){}
-
-<<<<<<< HEAD
-=======
-    QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-    while(time>QTime().currentTime()){
-        QCoreApplication::processEvents();   //处理事件
-    }
-
->>>>>>> 2c9cd3115a5e50c0010a977459ffe8e7c7484286
-
-    for(int i=1;i<constantsTools::SAMPLE;i++){
-        emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
-        QString error;
-        QString tmpFile=constantsTools::PATH_REPORT+"tmp";
-        int code = shell->doShell("nmon -F "+tmpFile);
-        if(code != 0){
-            emit(warning("nmon","exit code anormal"));
-        }
-
-        if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
-            emit(warning("move result ",error));
-        }
-    }*/
-    int code = this->shell->doShell("pgrep nmon","");
+bool Analyser::nmonAction(){
+    this->shell->doConnect();
+    int code;
+    code = this->shell->doShell("pgrep nmon","");
     if(code != 0){
         emit (warning("nmonAction","Can not check nmon process from starting"));
     }
     int nmonPid = this->shell->getnmonPid();
-    qDebug()<<nmonPid;
 
     if(nmonPid != 0){
-        this->shell->doShell("kill "+ nmonPid);
+        emit(info("nmonAction","find running nmon process, kill it "));
+        code = this->shell->doShell("kill -9 "+ QString::number(nmonPid));
+        if( code == 0){
+            emit info("nmonAction"," kill sucessfull");
+        }
+        else{
+            emit warning("nmonAction","Can not kill the running nmon");
+        }
     }
-    code = this->shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+constantsTools::SAMPLE
-                                +" -s "+constantsTools::INTERVAL);
-    code = this->shell->doShell("pgrep nmon","");
+    code = this->shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+QString::number(this->SAMPLE)
+                                +" -s "+QString::number(this->INTERVAL));
+    if(code != 0 ){
+        emit error("nmonAction","Can not start nmon process");
+        return false;
+    }
+    this->shell->doShell("pgrep nmon","");
     nmonPid = this->shell->getnmonPid();
     if( nmonPid == 0){
-        emit finish("nmonAction failed");
+        emit warning("nmonAction","can not get the current running nmon process, the inspectation may finished immediately but the nmon process is still running."
+                                  " Reboot your system to fix that ");
     }
     else{
-        for(int i =1; i<constantsTools::SAMPLE;i++){
-            QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000);
+        for(int i =0; i<this->SAMPLE;i++){
+            QTime time=QTime().currentTime().addMSecs(this->INTERVAL*1000+100);
             while(time>QTime().currentTime()){}
             code = this->shell->doShell("pgrep nmon","");
             if(nmonPid != this->shell->getnmonPid()){
-                if(constantsTools::SAMPLE - i > 10){
+                if(this->SAMPLE - i > 10){
                     emit(warning("nmonAction"," nmon finished but missed more than 10 captures"));
-                    i = constantsTools::SAMPLE;
+                    i = this->SAMPLE;
                 }
                 else{
                     emit (info("nmonAction","finished"));
-                    i = constantsTools::SAMPLE;
+                    i = this->SAMPLE;
                 }
             }
+            emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
         }
 
     }
+    this->shell->doDeconnect();
+    return true;
 }
 
 void Analyser::ventapDBBackupAction(){

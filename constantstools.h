@@ -26,10 +26,11 @@ public:
     const static QString FILE_TERM;
     const static QString SERVER_NAME;
     const static QString DATE_FORMAT;
-
     const static int SAMPLE;
     const static int INTERVAL;
     const static int WAIT_TIME;
+    const static QString FILE_CONFIG;
+    const static int DAY;
 };
 
 

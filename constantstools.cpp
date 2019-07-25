@@ -5,8 +5,8 @@ const QString constantsTools::PRODUCT="ventap";
 const QString constantsTools::SERVER_NAME = "singleService";
 const QString constantsTools::PATH_DB=QString(QDir::separator())+"var"+QString(QDir::separator())+"lib"+QString(QDir::separator())+"firebird"
         +QString(QDir::separator())+"2.5"+QString(QDir::separator())+"data"+QString(QDir::separator());
-//const QString constantsTools::PATH_VENTAP_HOME=QString(QDir::separator())+"home"+QString(QDir::separator())+PRODUCT+QString(QDir::separator());
-const QString constantsTools::PATH_VENTAP_HOME = QDir().homePath()+QDir::separator()+PRODUCT+QDir::separator();
+const QString constantsTools::PATH_VENTAP_HOME=QString(QDir::separator())+"home"+QString(QDir::separator())+PRODUCT+QString(QDir::separator());
+//const QString constantsTools::PATH_VENTAP_HOME = QDir().homePath()+QDir::separator()+PRODUCT+QDir::separator();
 const QString constantsTools:: PATH_VENTAP_DOC=PATH_VENTAP_HOME+"Documents"+QString(QDir::separator());
 const QString constantsTools::PATH_TMP=PATH_VENTAP_DOC+".tmp"+QString(QDir::separator());
 const QString constantsTools::PATH_DBK=PATH_TMP+"db"+QString(QDir::separator());
@@ -24,9 +24,10 @@ const QString constantsTools::FILE_GFIX=PATH_REPORT+"gf.log";
 const QString constantsTools::FILE_GBAK=PATH_REPORT+"gb.log";
 const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
 const int constantsTools::WAIT_TIME =(6000)*1000;
+const QString constantsTools::FILE_CONFIG=PATH_VENTAP_HOME+PRODUCT+QDir::separator()+"config_nmon.ini";
 
-const int constantsTools::SAMPLE  = 10;
-const int constantsTools::INTERVAL = 2;
+//const int constantsTools::SAMPLE  = 10;
+//const int constantsTools::INTERVAL = 2;
 const QString constantsTools::DATE_FORMAT="yyyy-MM-dd HH:mm:ss.zzz";
 
 constantsTools::constantsTools()

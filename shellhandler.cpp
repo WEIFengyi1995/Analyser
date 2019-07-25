@@ -7,6 +7,7 @@ ShellHandler::ShellHandler()
 {
     this->proc = new QProcess();
     proc->moveToThread(MyApplication::getThread());
+    this->nmonPid = 0;
     //proc->moveToThread(QCoreApplication::instance()->thread());
     //QObject::connect(proc,SIGNAL(errorOccurred(QProcess::ProcessError)),this,SLOT(handProcError(QProcess::ProcessError)));
 }
@@ -30,8 +31,12 @@ int ShellHandler::doShell(QString cmd){
     return code;
 }
 
-void ShellHandler::readStdout(){
-    this->nmonPid = this->proc->readAllStandardOutput().toInt();
+void ShellHandler::readProcPid(){
+    QString tmp = proc->readAllStandardOutput();
+    if(!tmp.isEmpty()){
+        tmp.remove(tmp.size()-1);
+    }
+    this->nmonPid = tmp.toInt();
 }
 
 int ShellHandler::getnmonPid(){
@@ -40,5 +45,9 @@ int ShellHandler::getnmonPid(){
 
 
 void ShellHandler::doConnect(){
-    QObject::connect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(readStdout()));
+    QObject::connect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(readProcPid()));
+}
+
+void ShellHandler::doDeconnect(){
+    QObject::disconnect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(readProcPid()));
 }

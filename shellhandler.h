@@ -10,12 +10,13 @@ public:
     int doShell(QString cmd,QString output);
     int doShell(QString cmd);
     void doConnect();
+    void doDeconnect();
     int  getnmonPid();
 private:
     QProcess *proc;
     int nmonPid;
-public slots:
-    void readStdout();
+private slots:
+    void readProcPid();
 };
 
 #endif // SHELLHANDLER_H

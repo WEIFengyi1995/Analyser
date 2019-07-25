@@ -22,11 +22,12 @@ private:
     Analyser(Logger &log);
     ShellHandler * shell = nullptr;
     Logger * log;
-
+    int INTERVAL;
+    int SAMPLE;
     int initAction();
     bool clientAction();
     void ioZone3Action();
-    void nmonAction();
+    bool nmonAction();
     void ventapDBBackupAction();
     void doneAction();
     void dbTest();
