@@ -210,7 +210,9 @@ bool Analyser::nmonAction(){
     else{
         for(int i =0; i<this->SAMPLE;i++){
             QTime time=QTime().currentTime().addMSecs(this->INTERVAL*1000+100);
-            while(time>QTime().currentTime()){}
+            while(time>QTime().currentTime()){
+                QCoreApplication::processEvents();
+            }
             code = this->shell->doShell("pgrep nmon","");
             if(nmonPid != this->shell->getnmonPid()){
                 if(this->SAMPLE - i > 10){
