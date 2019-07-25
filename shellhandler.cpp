@@ -29,3 +29,16 @@ int ShellHandler::doShell(QString cmd){
     int code = proc->execute(cmd);
     return code;
 }
+
+void ShellHandler::readStdout(){
+    this->nmonPid = this->proc->readAllStandardOutput().toInt();
+}
+
+int ShellHandler::getnmonPid(){
+    return this->nmonPid;
+}
+
+
+void ShellHandler::doConnect(){
+    QObject::connect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(readStdout()));
+}

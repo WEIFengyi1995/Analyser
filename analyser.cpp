@@ -24,43 +24,43 @@ Analyser::Analyser(Logger &log)
     this->shell = new ShellHandler();
 
     this->log = &log;
+
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
-
     if(this->initAction() !=0){
         emit(error("","can not start the service, check your log file to fix it"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
     }else{
+        this->nmonAction();
 
-        emit(info("Iniatialisation","successfull, collecting client information"));
+        emit(info("Initialisation","successful, collecting client information"));
         if(this->clientAction()){
             emit(info("gfix","Start testing Database "));
-            this->dbTest();
+            //this->dbTest();
             emit info("gifix","test done ");
             emit(info("","Start backup "));
             emit(info("DBBackup","initialisation..."));
-            this->ventapDBBackupAction();
+            //this->ventapDBBackupAction();
             emit(info("DBBAckup","done"));
             emit(info("ioZone","initialisation..."));
             //this->ioZone3Action();
             emit(info("ioZone","done"));
             emit(info("nmon","initialisation..."));
-            this->nmonAction();
             emit(info("nmon","done"));
             emit(info("Compress","initialisation..."));
             this->doneAction();
             emit(info("Analyser","finished, you can close the window"));
-            emit(finish("Sucessfull"));
+            emit(finish("Successful"));
         }
         else{
             emit(error("Client"," failed"));
             this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
             emit finish("Client not found, check your log file");
         }
-  }
+    }
 }
 
 
@@ -80,7 +80,7 @@ int Analyser::initAction(){
     if(code != 0){
         emit finish("Can not create "+constantsTools::PATH_REPORT+", check your permission");
         return -1;
-     }
+    }
     this->log->setFile(constantsTools::FILE_REP);
     emit(info("Initialisation","analyser initialised"));
     code = shell->doShell("mkdir -p "+constantsTools::PATH_DBK,"");
@@ -163,7 +163,6 @@ void Analyser::ioZone3Action(){
     if(code != 0){
         emit(warning("ioZone", "exit code anormal"));
     }
-
 }
 void Analyser::nmonAction(){
     /*emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
@@ -174,6 +173,14 @@ void Analyser::nmonAction(){
     //QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
     //while(time>QTime().currentTime()){}
 
+<<<<<<< HEAD
+=======
+    QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+    while(time>QTime().currentTime()){
+        QCoreApplication::processEvents();   //处理事件
+    }
+
+>>>>>>> 2c9cd3115a5e50c0010a977459ffe8e7c7484286
 
     for(int i=1;i<constantsTools::SAMPLE;i++){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
@@ -183,21 +190,46 @@ void Analyser::nmonAction(){
         if(code != 0){
             emit(warning("nmon","exit code anormal"));
         }
-        //QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-        //while(time>QTime().currentTime()){}
+
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
     }*/
-   /* QString tmpFile = constantsTools::PATH_REPORT+"tmp.pid";
-    int code = this->shell->doShell("pgrep nmon",tmpFile);
-    if( code != 0){
-        emit(warning("nmonAction","Can not check the nmon processus"));
+    int code = this->shell->doShell("pgrep nmon","");
+    if(code != 0){
+        emit (warning("nmonAction","Can not check nmon process from starting"));
     }
-    QFile pid(tmpFile);
-    pid*/
+    int nmonPid = this->shell->getnmonPid();
+    qDebug()<<nmonPid;
 
+    if(nmonPid != 0){
+        this->shell->doShell("kill "+ nmonPid);
+    }
+    code = this->shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+constantsTools::SAMPLE
+                                +" -s "+constantsTools::INTERVAL);
+    code = this->shell->doShell("pgrep nmon","");
+    nmonPid = this->shell->getnmonPid();
+    if( nmonPid == 0){
+        emit finish("nmonAction failed");
+    }
+    else{
+        for(int i =1; i<constantsTools::SAMPLE;i++){
+            QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000);
+            while(time>QTime().currentTime()){}
+            code = this->shell->doShell("pgrep nmon","");
+            if(nmonPid != this->shell->getnmonPid()){
+                if(constantsTools::SAMPLE - i > 10){
+                    emit(warning("nmonAction"," nmon finished but missed more than 10 captures"));
+                    i = constantsTools::SAMPLE;
+                }
+                else{
+                    emit (info("nmonAction","finished"));
+                    i = constantsTools::SAMPLE;
+                }
+            }
+        }
 
+    }
 }
 
 void Analyser::ventapDBBackupAction(){
@@ -206,19 +238,20 @@ void Analyser::ventapDBBackupAction(){
     if(i==1){
         emit info("gbak db_ventap",language::info.value("A211"));
     }else if(i==0){
-        emit warning("gbak db_ventap"," db backup warning? ");
+        emit warning("gbak db_ventap"," db backup warning?");
     }else{
         emit error("gbak db_ventap"," db backup error");
     }
 
     int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
-                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT, constantsTools::FILE_GBAK);
+                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT+" >> "+constantsTools::FILE_GBAK);
     if(j==1){
-        emit info("gbak db_AUDIT"," sucess");
+
+        emit info("gbak db_audit",language::info.value("A311"));
     }else if(j==0){
-        emit warning("gbak db_AUDIT"," db backup warning? ");
+        emit warning("gbak db_audit"," db backup warning ");
     }else{
-        emit error("gbak db_AUDIT"," db backup error");
+        emit error("gbak db_audit"," db backup error");
     }
 
 
@@ -239,32 +272,31 @@ void Analyser::verifyDB(){
                                  DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_VENTAP,
                                  constantsTools::FILE_GFIX);
             if(count==3&&i==0){
-                emit error("fix db failed after trying 3 times  : ",language::severe.value("A330"));
+                emit error("Fix db failed after trying 3 times  : ",language::severe.value("A330"));
                 break;
             }
             if(i==0){
-                emit info("check database ventap",": no problem.");
+                emit info("Check database ventap",": no problem.");
                 if(count>0){
-                    emit info("fix databse ",language::severe.value("A411"));
+                    emit info("Fix databse ",language::severe.value("A411"));
                 }
                 break;
             }
             else if (i==1){
                 count++;
-                emit error("check database ",language::severe.value("A330"));
-                emit info("fix databse ","trying to fix db for the "+QString::number(count) +" time" );
+                emit error("Check database ",language::severe.value("A330"));
+                emit info("Fix databse ","trying to fix db for the "+QString::number(count) +" time" );
                 fixDB(0);
             }
             else{
                 count++;
                 if(count==3){
-                    emit error("already fixed db 3 times ",language::severe.value("A132"));
+                    emit error("Already fixed db 3 times ",language::severe.value("A132"));
                 }
                 break;
             }
         }while(count<=3);
     }
-
     emit info("Verifying Audit Database"," Begin");
     if(!DBConnector::containsDb(constantsTools::FILE_DB_AUDIT)){
         emit error("Verifying Database","database not found !");
@@ -323,8 +355,6 @@ void Analyser::fixDB(int type){
 
 }
 void Analyser::doneAction(){
-
-
     shell->doShell("rm "+constantsTools::FILE_REP+".lck");
     shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz "+constantsTools::FILE_REP+" "+constantsTools::PATH_TMP,"");
     shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz ");
