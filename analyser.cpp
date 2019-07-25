@@ -231,6 +231,7 @@ bool Analyser::nmonAction(){
                     i = this->SAMPLE;
                 }
             }
+
             int bar=(float(i)/float(this->SAMPLE))*100;
             emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
             if(bar>=2){
@@ -321,7 +322,7 @@ void Analyser::verifyDB(){
                 break;
             }
             if(i==0){
-                emit info("gbak db_audit",language::info.value("A311"));
+                emit info("gix db_audit",language::info.value("A311"));
                 if(count>0){
                     emit info("fix databse ",language::severe.value("A411"));
                 }
@@ -367,6 +368,7 @@ void Analyser::fixDB(int type){
 }
 void Analyser::doneAction(){
     emit info("",language::info.value("A416"));
+
 
     //shell->doShell("rm "+constantsTools::FILE_REP+".lck");
     shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz "+constantsTools::FILE_REP+" "+constantsTools::PATH_TMP,"");

@@ -61,7 +61,7 @@ bool MainWindow::loginBtnClicked(){
         QMessageBox::information(this,"","请输入密码.");
         return false;
     }
-    if(name=="arcsolu"||password=="analyser"){
+    if(name=="arcsolu"&&password=="analyser"){
         QApplication::setQuitOnLastWindowClosed(false);
         ui->Login->setEnabled(false);
         ui->exit->setEnabled(false);
