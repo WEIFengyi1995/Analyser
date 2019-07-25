@@ -42,6 +42,7 @@ void MainWindow::recvInfo(QString action, QString info){
         standardItemModel -> appendRow(item);
     }
     ui->infoList->setModel(standardItemModel);
+
 }
 
 
