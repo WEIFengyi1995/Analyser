@@ -5,7 +5,7 @@
 #include "dbconnector.h"
 #include "logger.h"
 #include <QSettings>
-
+#include <QThread>
 
 class Analyser:public Service
 {
@@ -32,7 +32,6 @@ private:
     void dbTest();
     void verifyDB();
     void fixDB(int type);
-
 };
 
 #endif // ANALYSER_H

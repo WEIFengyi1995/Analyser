@@ -10,6 +10,7 @@
 #include "myapplication.h"
 
 
+
 Analyser * Analyser::instance = nullptr;
 
 
@@ -47,7 +48,7 @@ void Analyser::start(){
             //this->ioZone3Action();
             emit(info("ioZone","done"));
             emit(info("nmon","initialisation..."));
-            //this->nmonAction();
+            this->nmonAction();
             emit(info("nmon","done"));
             emit(info("Compress","initialisation..."));
             this->doneAction();
@@ -82,10 +83,10 @@ int Analyser::initAction(){
      }
     this->log->setFile(constantsTools::FILE_REP);
     emit(info("Initialisation","analyser initialised"));
-    code = shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
+    code = shell->doShell("mkdir -p "+constantsTools::PATH_DBK,"");
     sum += code;
     if(code != 0){
-        emit(error("mkdir -p "+constantsTools::PATH_DB, "exit code anormal, check your permission"));
+        emit(error("mkdir -p "+constantsTools::PATH_DBK, "exit code anormal, check your permission"));
     }
 
 
@@ -165,14 +166,14 @@ void Analyser::ioZone3Action(){
 
 }
 void Analyser::nmonAction(){
-    emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
+    /*emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
     int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
+    //QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+    //while(time>QTime().currentTime()){}
 
-    QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-    while(time>QTime().currentTime()){}
 
     for(int i=1;i<constantsTools::SAMPLE;i++){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
@@ -182,12 +183,21 @@ void Analyser::nmonAction(){
         if(code != 0){
             emit(warning("nmon","exit code anormal"));
         }
-        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-        while(time>QTime().currentTime()){}
+        //QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+        //while(time>QTime().currentTime()){}
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
+    }*/
+   /* QString tmpFile = constantsTools::PATH_REPORT+"tmp.pid";
+    int code = this->shell->doShell("pgrep nmon",tmpFile);
+    if( code != 0){
+        emit(warning("nmonAction","Can not check the nmon processus"));
     }
+    QFile pid(tmpFile);
+    pid*/
+
+
 }
 
 void Analyser::ventapDBBackupAction(){
@@ -314,10 +324,11 @@ void Analyser::fixDB(int type){
 }
 void Analyser::doneAction(){
 
-    int sum = 0;
-    sum += shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    sum += shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz "+constantsTools::PATH_TMP,"");
+
+    shell->doShell("rm "+constantsTools::FILE_REP+".lck");
+    shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz "+constantsTools::FILE_REP+" "+constantsTools::PATH_TMP,"");
     shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz ");
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }
+

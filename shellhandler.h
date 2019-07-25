@@ -9,6 +9,7 @@ public:
     ShellHandler();
     int doShell(QString cmd,QString output);
     int doShell(QString cmd);
+    int doShellReadStdout(QString cmd);
 private:
     QProcess *proc;
 };

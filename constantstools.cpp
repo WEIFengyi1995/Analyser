@@ -23,10 +23,10 @@ const QString constantsTools::FILE_IOZONE=PATH_REPORT+"io.log";
 const QString constantsTools::FILE_GFIX=PATH_REPORT+"gf.log";
 const QString constantsTools::FILE_GBAK=PATH_REPORT+"gb.log";
 const QString constantsTools::FILE_TERM=PATH_REPORT+"tm.log";
-const int constantsTools::DAY =(60*60*24)*1000;
+const int constantsTools::WAIT_TIME =(6000)*1000;
 
 const int constantsTools::SAMPLE  = 10;
-const int constantsTools::INTERVAL = 3;
+const int constantsTools::INTERVAL = 2;
 const QString constantsTools::DATE_FORMAT="yyyy-MM-dd HH:mm:ss.zzz";
 
 constantsTools::constantsTools()

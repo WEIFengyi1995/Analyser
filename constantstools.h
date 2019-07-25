@@ -29,7 +29,7 @@ public:
 
     const static int SAMPLE;
     const static int INTERVAL;
-    const static int DAY;
+    const static int WAIT_TIME;
 };
 
 

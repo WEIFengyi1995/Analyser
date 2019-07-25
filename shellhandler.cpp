@@ -17,7 +17,7 @@ int ShellHandler::doShell(QString cmd, QString output){
         proc->setStandardOutputFile(output);
     }
     proc->start(cmd);
-    proc->waitForFinished(constantsTools::DAY);
+    proc->waitForFinished(constantsTools::WAIT_TIME);
     proc->close();
     proc->setStandardOutputFile("");
     return proc->exitCode();
