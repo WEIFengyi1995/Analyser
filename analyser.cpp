@@ -238,7 +238,7 @@ void Analyser::ventapDBBackupAction(){
     if(i==1){
         emit info("gbak db_ventap",language::info.value("A314"));
     }else if(i==0){
-        emit warning("gbak db_ventap"," db backup warning");
+        emit warning("gbak db_ventap",language::info.value("A314"));
     }else{
         emit error("gbak db_ventap"," db backup error");
     }
@@ -248,7 +248,7 @@ void Analyser::ventapDBBackupAction(){
     if(j==1){
         emit info("gbak db_audit",language::info.value("A414"));
     }else if(j==0){
-        emit warning("gbak db_audit"," db backup warning ");
+        emit warning("gbak db_audit",language::info.value("A414"));
     }else{
         emit error("gbak db_audit"," db backup error");
     }
