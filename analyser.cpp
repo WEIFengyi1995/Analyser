@@ -248,7 +248,7 @@ void Analyser::ventapDBBackupAction(){
     }
 
     int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
-                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT+" >> "+constantsTools::FILE_GBAK);
+                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT,constantsTools::FILE_GBAK);
     if(j==1){
         emit info("gbak db_audit",language::info.value("A414"));
     }else if(j==0){
@@ -307,14 +307,14 @@ void Analyser::verifyDB(){
     }else{
         do{
             int i=shell->doShell("gfix -user "+ DBConnector::ISC_USER+" -password "+
-                                 DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT +">>"+
+                                 DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT ,
                                  constantsTools::FILE_GFIX);
             if(count==3&&i==0){
                 emit error("fix db failed after trying 3 times  : ",language::severe.value("A330"));
                 break;
             }
             if(i==0){
-                emit info("gbak db_audit",language::info.value("A311"));
+                emit info("gix db_audit",language::info.value("A311"));
                 if(count>0){
                     emit info("fix databse ",language::severe.value("A411"));
                 }
@@ -362,8 +362,8 @@ void Analyser::doneAction(){
     emit info("",language::info.value("A416"));
 
     shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz "+constantsTools::FILE_REP+" "+constantsTools::PATH_TMP,"");
-    shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz ");
+    shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+QDate::currentDate().toString(constantsTools::DATE_FORMAT).trimmed()+".tar.gz "+constantsTools::FILE_REP+" "+constantsTools::PATH_TMP,"");
+    shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT).trimmed()+".tar.gz ");
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }
