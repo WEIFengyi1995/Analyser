@@ -405,7 +405,7 @@ background-color:rgb(242,246,248) ;</string>
      <property name="text">
       <string>正在检查, 
 请稍候.  
-已经进行  
+已经完成  
 
 (检查时间可能较长,请勿关机)</string>
      </property>

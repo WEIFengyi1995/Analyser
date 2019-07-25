@@ -35,6 +35,7 @@ private slots:
     void runCloseBtnClicked();
     void recvInfo(QString action,QString info);
     void recheckBtnClicked();
+    void NmonProcess(QString);
 };
 
 #endif // MAINWINDOW_H

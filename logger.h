@@ -2,10 +2,10 @@
 #define LOGGER_H
 #include <QFile>
 #include <QObject>
-#define COLOR_CONFIG "\033[32;1m"
-#define COLOR_WARNNING "\033[35m"
-#define COLOR_INFO "\033[31;1m"
-#define COLOR_SEVERE "\033[34m"
+#define COLOR_CONFIG "\033[34;1m"
+#define COLOR_WARNNING "\033[33;1m"
+#define COLOR_INFO "\033[32;1m"
+#define COLOR_SEVERE "\033[31;1m"
 #define COLOR_RESET "\033[0m"
 
 

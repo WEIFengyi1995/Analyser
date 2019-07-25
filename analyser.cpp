@@ -224,7 +224,11 @@ bool Analyser::nmonAction(){
                     i = this->SAMPLE;
                 }
             }
+            double bar=(double(i)/this->SAMPLE)*100;
+            QString percent=QString::number(bar);
+            percent=percent+"%";
             emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
+            emit(processBar(percent));
         }
 
     }
