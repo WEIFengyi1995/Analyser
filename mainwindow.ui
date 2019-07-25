@@ -393,7 +393,7 @@ background-color:rgb(242,246,248) ;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <pointsize>10</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -423,6 +423,18 @@ background-color:rgb(242,246,248) ;</string>
       <string notr="true">color:rgb(73,122,196);
 background-color: rgb(220,222,226);</string>
      </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAsNeeded</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAsNeeded</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+     <property name="autoScroll">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QPushButton" name="runCloseButton">
      <property name="geometry">
@@ -441,14 +453,17 @@ color:rgb(242,246,248) ;</string>
       <string>close</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="timeBox">
+    <widget class="QProgressBar" name="progressBar">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>80</x>
        <y>360</y>
-       <width>113</width>
-       <height>31</height>
+       <width>118</width>
+       <height>23</height>
       </rect>
+     </property>
+     <property name="value">
+      <number>0</number>
      </property>
     </widget>
    </widget>
@@ -601,6 +616,10 @@ color:rgb(242,246,248) ;</string>
      </property>
     </widget>
    </widget>
+   <zorder>completWidget</zorder>
+   <zorder>crashWidget</zorder>
+   <zorder>loginWidget</zorder>
+   <zorder>runWidget</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

@@ -10,8 +10,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::NmonProcess(QString percent){
-    this->ui->timeBox->setText(percent);
+void MainWindow::NmonProcess(int percent){
+    this->ui->progressBar->setValue(percent);
 }
 
 void MainWindow::recheckBtnClicked(){
@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->errorText->setGeometry(QRect(10,80,371,281));
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
-    ui->timeBox->setText("0.1 %");
+    ui->progressBar->setMaximum(100);
     bool tmp = !QDir(constantsTools::PATH_TMP).exists();
     if (tmp){
         newService=true;

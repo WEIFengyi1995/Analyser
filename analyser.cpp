@@ -29,33 +29,40 @@ Analyser::Analyser(Logger &log)
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
+    //delete .tmp folder fist
+    this->shell->doShell("rm -rf "+constantsTools::PATH_TMP);
+
     if(this->initAction() !=0){
         emit(error("","can not start the service, check your log file to fix it"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
 
     }else{
+        emit processBar(1);
         emit(info("nmon","initialisation..."));
         if(this->clientAction()){
             emit(info("gfix","Start testing Database "));
             this->dbTest();
+            emit processBar(2);
             emit info("gifix","test done ");
-            emit(info("","Start backup "));
             emit(info("DBBackup","initialisation..."));
             this->ventapDBBackupAction();
+            emit processBar(3);
             emit(info("DBBAckup","done"));
             emit(info("ioZone","initialisation..."));
             this->ioZone3Action();
+            emit processBar(4);
             emit(info("ioZone","done"));
-            emit(info("Compress","initialisation..."));
-
             if(this->nmonAction()){
+                emit processBar(5);
                 emit(info("nmon","done"));
-                emit(info("Initialisation","successful, collecting client information"));
+                emit(info("Compress","initialisation..."));
                 this->doneAction();
                 emit info("",language::config.value("A117"));
                 emit(info("Analyser","finished, you can close the window"));
                 emit(finish("Successful"));
+                emit processBar(100);
+
             }
             else{
                 emit finish("nmon failed, check "+constantsTools::FILE_REP);
@@ -180,9 +187,9 @@ bool Analyser::nmonAction(){
     this->shell->doConnect();
     int code;
     code = this->shell->doShell("pgrep nmon","");
-    if(code != 0){
-        emit (warning("nmonAction","Can not check nmon process from starting"));
-    }
+
+
+
     int nmonPid = this->shell->getnmonPid();
 
     if(nmonPid != 0){
@@ -224,11 +231,9 @@ bool Analyser::nmonAction(){
                     i = this->SAMPLE;
                 }
             }
-            double bar=(double(i)/this->SAMPLE)*100;
-            QString percent=QString::number(bar);
-            percent=percent+"%";
+            int bar=(float(i)/float(this->SAMPLE))*100 + 5;
             emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
-            emit(processBar(percent));
+            emit(processBar(bar));
         }
 
     }
@@ -248,7 +253,7 @@ void Analyser::ventapDBBackupAction(){
     }
 
     int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
-                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT+" >> "+constantsTools::FILE_GBAK);
+                         +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT,constantsTools::FILE_GBAK);
     if(j==1){
         emit info("gbak db_audit",language::info.value("A414"));
     }else if(j==0){
@@ -307,7 +312,7 @@ void Analyser::verifyDB(){
     }else{
         do{
             int i=shell->doShell("gfix -user "+ DBConnector::ISC_USER+" -password "+
-                                 DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT +">>"+
+                                 DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT,
                                  constantsTools::FILE_GFIX);
             if(count==3&&i==0){
                 emit error("fix db failed after trying 3 times  : ",language::severe.value("A330"));
@@ -361,7 +366,7 @@ void Analyser::fixDB(int type){
 void Analyser::doneAction(){
     emit info("",language::info.value("A416"));
 
-    shell->doShell("rm "+constantsTools::FILE_REP+".lck");
+    //shell->doShell("rm "+constantsTools::FILE_REP+".lck");
     shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz "+constantsTools::FILE_REP+" "+constantsTools::PATH_TMP,"");
     shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz ");
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
