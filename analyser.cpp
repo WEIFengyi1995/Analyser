@@ -197,7 +197,7 @@ void Analyser::ventapDBBackupAction(){
     if(i==1){
         emit info("gbak db_ventap",language::info.value("A211"));
     }else if(i==0){
-        emit warning("gbak db_ventap"," db backup warning? ");
+        emit warning("gbak db_ventap"," db backup warning?");
     }else{
         emit error("gbak db_ventap"," db backup error");
     }
@@ -205,11 +205,11 @@ void Analyser::ventapDBBackupAction(){
     int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT, constantsTools::FILE_GBAK);
     if(j==1){
-        emit info("gbak db_AUDIT"," sucess");
+        emit info("gbak db_audit",language::info.value("A311"));
     }else if(j==0){
-        emit warning("gbak db_AUDIT"," db backup warning? ");
+        emit warning("gbak db_audit"," db backup warning ");
     }else{
-        emit error("gbak db_AUDIT"," db backup error");
+        emit error("gbak db_audit"," db backup error");
     }
 
 
