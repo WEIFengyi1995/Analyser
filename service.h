@@ -14,7 +14,7 @@ signals:
     void warning(QString action,QString warning);
     void error(QString action,QString error);
     void finish(QString str);
-    void processBar(QString percent);
+    void processBar(int percent);
 
 };
 #endif // SERCICE_H

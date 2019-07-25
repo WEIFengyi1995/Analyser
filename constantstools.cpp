@@ -28,7 +28,7 @@ const QString constantsTools::FILE_CONFIG=PATH_VENTAP_HOME+PRODUCT+QDir::separat
 
 //const int constantsTools::SAMPLE  = 10;
 //const int constantsTools::INTERVAL = 2;
-const QString constantsTools::DATE_FORMAT="yyyy-MM-dd HH:mm:ss.zzz";
+const QString constantsTools::DATE_FORMAT="yyyy-MM-dd";
 
 constantsTools::constantsTools()
 {
