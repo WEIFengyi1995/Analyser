@@ -234,7 +234,7 @@ bool Analyser::nmonAction(){
 
             int bar=(float(i)/float(this->SAMPLE))*100;
             emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
-            if(bar>=2){
+            if(bar>=5){
                  emit(processBar(bar));
             }
         }
