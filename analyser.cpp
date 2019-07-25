@@ -83,15 +83,13 @@ int Analyser::initAction(){
     }
     this->log->setFile(constantsTools::FILE_REP);
     emit(info("Initialisation","analyser initialised"));
-    code = shell->doShell("mkdir -p "+constantsTools::PATH_DB,"");
+    code = shell->doShell("mkdir -p "+constantsTools::PATH_DBK,"");
+
     sum += code;
     if(code != 0){
-        emit(error("mkdir -p "+constantsTools::PATH_DB, "exit code anormal, check your permission"));
+        emit(error("mkdir -p "+constantsTools::PATH_DBK, "exit code anormal, check your permission"));
     }
-
-
     sum += code;
-
     code = shell->doShell("apt update","");
     if(code != 0){
         emit(error("apt update ", "exit code anormal, check your permission"));
@@ -107,6 +105,10 @@ int Analyser::initAction(){
         emit(error("apt install -y -f nmon","can not install nmon"));
     }
     sum += code;
+    QSettings setting(constantsTools::FILE_CONFIG,QSettings::IniFormat);
+    setting.beginGroup("nmon");
+    INTERVAL=setting.value("interval").toInt();
+    SAMPLE=setting.value("sample").toInt();
     return sum;
 }
 
@@ -165,18 +167,18 @@ void Analyser::ioZone3Action(){
     }
 }
 void Analyser::nmonAction(){
-    emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
+    emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(SAMPLE)+" )");
     int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
     if(code != 0){
         emit(warning("nmon","exit code anormal"));
     }
 
-    QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
+    QTime time=QTime().currentTime().addMSecs(INTERVAL*1000+1000);
     while(time>QTime().currentTime()){
         QCoreApplication::processEvents();   //处理事件
     }
 
-
+/*
     for(int i=1;i<constantsTools::SAMPLE;i++){
         emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
         QString error;
@@ -190,7 +192,7 @@ void Analyser::nmonAction(){
         if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
             emit(warning("move result ",error));
         }
-    }
+    }*/
 }
 
 void Analyser::ventapDBBackupAction(){

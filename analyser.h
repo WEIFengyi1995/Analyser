@@ -22,7 +22,8 @@ private:
     Analyser(Logger &log);
     ShellHandler * shell = nullptr;
     Logger * log;
-
+    int INTERVAL;
+    int SAMPLE;
     int initAction();
     bool clientAction();
     void ioZone3Action();
