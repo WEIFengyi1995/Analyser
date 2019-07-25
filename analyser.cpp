@@ -32,7 +32,7 @@ void Analyser::start(){
         emit(error("","can not start the service, check your log file to fix it"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
-    }else{
+    }{
 
         emit(info("Initialisation","successful, collecting client information"));
         if(this->clientAction()){
@@ -52,6 +52,7 @@ void Analyser::start(){
             emit(info("Compress","initialisation..."));
             this->doneAction();
             emit(info("Compress","done"));
+            emit info("",language::config.value("A117"));
             emit(info("Analyser","finished, you can close the window"));
             emit(finish("Successful"));
         }
@@ -126,7 +127,7 @@ bool Analyser::clientAction(){
         bool deno = DBConnector::searchDENO();
 
         if(!cr){
-            emit error("execute query","找不到pvalue");
+            emit error("execute query","pvalue not found ");
             //emit finish(language::severe.value("A230"));
             //return false;
         }
@@ -158,14 +159,17 @@ bool Analyser::clientAction(){
 
 void Analyser::ioZone3Action(){
     emit info("iozone",language::info.value("A215"));
-
+    emit info("iozone",language::info.value("A116"));
     int code = shell->doShell("iozone -R -l 5 -u 5 -r 4k -s 100m -F "+constantsTools::PATH_TMP+"f1 "+constantsTools::PATH_TMP+"f2 "+
                               constantsTools::PATH_TMP+"f3 "+constantsTools::PATH_TMP+"f4 "+constantsTools::PATH_TMP+"f5 ",
                               constantsTools::FILE_IOZONE);
+    emit info("iozone",language::info.value("A216"));
+
     if(code != 0){
         emit(warning("ioZone", "exit code anormal"));
     }
 }
+
 void Analyser::nmonAction(){
     emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(SAMPLE)+" )");
     int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
@@ -199,10 +203,13 @@ void Analyser::nmonAction(){
 void Analyser::ventapDBBackupAction(){
     int i=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP,constantsTools::FILE_GBAK);
+
+    qDebug()<<"gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
+              +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP<<">>"<<constantsTools::FILE_GBAK;
     if(i==1){
-        emit info("gbak db_ventap",language::info.value("A211"));
+        emit info("gbak db_ventap",language::info.value("A314"));
     }else if(i==0){
-        emit warning("gbak db_ventap"," db backup warning?");
+        emit warning("gbak db_ventap"," db backup warning");
     }else{
         emit error("gbak db_ventap"," db backup error");
     }
@@ -210,8 +217,7 @@ void Analyser::ventapDBBackupAction(){
     int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT+" >> "+constantsTools::FILE_GBAK);
     if(j==1){
-
-        emit info("gbak db_audit",language::info.value("A311"));
+        emit info("gbak db_audit",language::info.value("A414"));
     }else if(j==0){
         emit warning("gbak db_audit"," db backup warning ");
     }else{
@@ -222,6 +228,7 @@ void Analyser::ventapDBBackupAction(){
 }
 
 void Analyser::dbTest(){
+    emit info("gbak db_ventap",language::info.value("A111"));
     verifyDB();
 }
 
@@ -240,7 +247,7 @@ void Analyser::verifyDB(){
                 break;
             }
             if(i==0){
-                emit info("Check database ventap",": no problem.");
+                emit info("gbak db_ventap",language::info.value("A211"));
                 if(count>0){
                     emit info("Fix databse ",language::severe.value("A411"));
                 }
@@ -267,14 +274,14 @@ void Analyser::verifyDB(){
     }else{
         do{
             int i=shell->doShell("gfix -user "+ DBConnector::ISC_USER+" -password "+
-                                 DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT,
+                                 DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT +">>"+
                                  constantsTools::FILE_GFIX);
             if(count==3&&i==0){
                 emit error("fix db failed after trying 3 times  : ",language::severe.value("A330"));
                 break;
             }
             if(i==0){
-                emit info("check database ventap",": no problem.");
+                emit info("gbak db_audit",language::info.value("A311"));
                 if(count>0){
                     emit info("fix databse ",language::severe.value("A411"));
                 }
@@ -319,6 +326,8 @@ void Analyser::fixDB(int type){
 
 }
 void Analyser::doneAction(){
+    emit info("",language::info.value("A416"));
+
     shell->doShell("rm "+constantsTools::FILE_REP+".lck");
     shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP,"");
     shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz ");
