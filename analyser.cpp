@@ -107,8 +107,8 @@ int Analyser::initAction(){
     sum += code;
     QSettings setting(constantsTools::FILE_CONFIG,QSettings::IniFormat);
     setting.beginGroup("nmon");
-    INTERVAL=setting.value("interval").toInt();
-    SAMPLE=setting.value("sample").toInt();
+    INTERVAL=setting.value("interval",60).toInt();
+    SAMPLE=setting.value("sample",360).toInt();
     return sum;
 }
 
