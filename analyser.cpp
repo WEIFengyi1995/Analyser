@@ -10,6 +10,7 @@
 #include "myapplication.h"
 
 
+
 Analyser * Analyser::instance = nullptr;
 
 
@@ -23,18 +24,18 @@ Analyser::Analyser(Logger &log)
     this->shell = new ShellHandler();
 
     this->log = &log;
+
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
-
     if(this->initAction() !=0){
         emit(error("","can not start the service, check your log file to fix it"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
-    }{
 
-        emit(info("Initialisation","successful, collecting client information"));
+    }else{
+        emit(info("nmon","initialisation..."));
         if(this->clientAction()){
             emit(info("gfix","Start testing Database "));
             this->dbTest();
@@ -46,15 +47,20 @@ void Analyser::start(){
             emit(info("ioZone","initialisation..."));
             this->ioZone3Action();
             emit(info("ioZone","done"));
-            emit(info("nmon","initialisation..."));
-            this->nmonAction();
-            emit(info("nmon","done"));
             emit(info("Compress","initialisation..."));
-            this->doneAction();
-            emit(info("Compress","done"));
-            emit info("",language::config.value("A117"));
-            emit(info("Analyser","finished, you can close the window"));
-            emit(finish("Successful"));
+
+            if(this->nmonAction()){
+                emit(info("nmon","done"));
+                emit(info("Initialisation","successful, collecting client information"));
+                this->doneAction();
+                emit info("",language::config.value("A117"));
+                emit(info("Analyser","finished, you can close the window"));
+                emit(finish("Successful"));
+            }
+            else{
+                emit finish("nmon failed, check "+constantsTools::FILE_REP);
+            }
+
         }
         else{
             emit(error("Client"," failed"));
@@ -85,7 +91,6 @@ int Analyser::initAction(){
     this->log->setFile(constantsTools::FILE_REP);
     emit(info("Initialisation","analyser initialised"));
     code = shell->doShell("mkdir -p "+constantsTools::PATH_DBK,"");
-
     sum += code;
     if(code != 0){
         emit(error("mkdir -p "+constantsTools::PATH_DBK, "exit code anormal, check your permission"));
@@ -108,8 +113,8 @@ int Analyser::initAction(){
     sum += code;
     QSettings setting(constantsTools::FILE_CONFIG,QSettings::IniFormat);
     setting.beginGroup("nmon");
-    INTERVAL=setting.value("interval",60).toInt();
-    SAMPLE=setting.value("sample",360).toInt();
+    INTERVAL=setting.value("interval",3).toInt();
+    SAMPLE=setting.value("sample",5).toInt();
     return sum;
 }
 
@@ -119,8 +124,8 @@ bool Analyser::clientAction(){
 
     if(!db->start()){
         emit error("open db","数据库连接失败");
-        //emit finish(language::severe.value("A230"));
-        //return false;
+        emit finish(language::severe.value("A230"));
+        return false;
     }
     try {
         bool cr=  DBConnector::searchCR();
@@ -128,8 +133,8 @@ bool Analyser::clientAction(){
 
         if(!cr){
             emit error("execute query","pvalue not found ");
-            //emit finish(language::severe.value("A230"));
-            //return false;
+            emit finish(language::severe.value("A230"));
+            return false;
         }
         else{
             emit config("find pvalue!","configuration ok");
@@ -138,7 +143,8 @@ bool Analyser::clientAction(){
 
         if(!deno){
             emit error("execute query","company  deno no found ");
-            //emit finish(language::severe.value("A230"));
+            emit finish(language::severe.value("A230"));
+            return false;
         }else{
             emit config("find deno ","configuration ok");
             emit config("ok!",language::config.value("A101"));
@@ -170,42 +176,63 @@ void Analyser::ioZone3Action(){
     }
 }
 
-void Analyser::nmonAction(){
-    emit info("collecting sample","( "+QString::number(1)+"/"+QString::number(SAMPLE)+" )");
-    int code = shell->doShell("nmon -F "+constantsTools::FILE_NMON);
+bool Analyser::nmonAction(){
+    this->shell->doConnect();
+    int code;
+    code = this->shell->doShell("pgrep nmon","");
     if(code != 0){
-        emit(warning("nmon","exit code anormal"));
+        emit (warning("nmonAction","Can not check nmon process from starting"));
     }
+    int nmonPid = this->shell->getnmonPid();
 
-
-    QTime time=QTime().currentTime().addMSecs(INTERVAL*1000+1000);
-    while(time>QTime().currentTime()){
-        QCoreApplication::processEvents();   //处理事件
+    if(nmonPid != 0){
+        emit(info("nmonAction","find running nmon process, kill it "));
+        code = this->shell->doShell("kill -9 "+ QString::number(nmonPid));
+        if( code == 0){
+            emit info("nmonAction"," kill sucessfull");
+        }
+        else{
+            emit warning("nmonAction","Can not kill the running nmon");
+        }
     }
+    code = this->shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+QString::number(this->SAMPLE)
+                                +" -s "+QString::number(this->INTERVAL));
+    if(code != 0 ){
+        emit error("nmonAction","Can not start nmon process");
+        return false;
+    }
+    this->shell->doShell("pgrep nmon","");
+    nmonPid = this->shell->getnmonPid();
+    if( nmonPid == 0){
+        emit warning("nmonAction","can not get the current running nmon process, the inspectation may finished immediately but the nmon process is still running."
+                                  " Reboot your system to fix that ");
+    }
+    else{
+        for(int i =0; i<this->SAMPLE;i++){
+            QTime time=QTime().currentTime().addMSecs(this->INTERVAL*1000+100);
+            while(time>QTime().currentTime()){}
+            code = this->shell->doShell("pgrep nmon","");
+            if(nmonPid != this->shell->getnmonPid()){
+                if(this->SAMPLE - i > 10){
+                    emit(warning("nmonAction"," nmon finished but missed more than 10 captures"));
+                    i = this->SAMPLE;
+                }
+                else{
+                    emit (info("nmonAction","finished"));
+                    i = this->SAMPLE;
+                }
+            }
+            emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
+        }
 
-/*
-    for(int i=1;i<constantsTools::SAMPLE;i++){
-        emit info("collecting sample","( "+QString::number(i+1)+"/"+QString::number(constantsTools::SAMPLE)+" )");
-        QString error;
-        QString tmpFile=constantsTools::PATH_REPORT+"tmp";
-        int code = shell->doShell("nmon -F "+tmpFile);
-        if(code != 0){
-            emit(warning("nmon","exit code anormal"));
-        }
-        QTime time=QTime().currentTime().addMSecs(constantsTools::INTERVAL*1000+1000);
-        while(time>QTime().currentTime()){}
-        if(!cutFile(tmpFile , constantsTools::FILE_NMON,i,1,error )){
-            emit(warning("move result ",error));
-        }
-    }*/
+    }
+    this->shell->doDeconnect();
+    return true;
 }
 
 void Analyser::ventapDBBackupAction(){
     int i=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP,constantsTools::FILE_GBAK);
-
-    qDebug()<<"gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
-              +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP<<">>"<<constantsTools::FILE_GBAK;
     if(i==1){
         emit info("gbak db_ventap",language::info.value("A314"));
     }else if(i==0){
@@ -329,8 +356,9 @@ void Analyser::doneAction(){
     emit info("",language::info.value("A416"));
 
     shell->doShell("rm "+constantsTools::FILE_REP+".lck");
-    shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString()+".tar.gz "+constantsTools::PATH_TMP+" "+constantsTools::FILE_REP,"");
+    shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz "+constantsTools::FILE_REP+" "+constantsTools::PATH_TMP,"");
     shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz ");
     shell->doShell("rm -r "+constantsTools::PATH_TMP);
     shell->doShell("rm -f "+constantsTools::FILE_REP);
 }
+
