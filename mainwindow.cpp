@@ -41,6 +41,7 @@ void MainWindow::recvInfo(QString action, QString info){
         item->setBackground(Qt::white);
         standardItemModel -> appendRow(item);
     }
+    ui->infoList->scrollToBottom();
     ui->infoList->setModel(standardItemModel);
 
 }
