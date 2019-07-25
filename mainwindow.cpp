@@ -117,6 +117,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->errorText->setWordWrap(true);
     ui->errorText->setAlignment(Qt::AlignLeft);
     ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue(2);
     bool tmp = !QDir(constantsTools::PATH_TMP).exists();
     if (tmp){
         newService=true;
