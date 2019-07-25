@@ -173,6 +173,7 @@ void Analyser::nmonAction(){
         emit(warning("nmon","exit code anormal"));
     }
 
+
     QTime time=QTime().currentTime().addMSecs(INTERVAL*1000+1000);
     while(time>QTime().currentTime()){
         QCoreApplication::processEvents();   //处理事件
