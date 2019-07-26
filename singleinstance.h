@@ -10,7 +10,21 @@ class SingleInstance: public QObject
 public:
     SingleInstance(MainWindow  & w, QString name);
     ~SingleInstance();
+    /*!
+     * \brief checkInstance
+     * check if there is a server listening to the name
+     * if yes, application is already runnning
+     * \param name
+     * \return
+     */
     static bool checkInstance(QString name);
+    /*!
+     * \brief listen
+     *
+     * let socket server listen to name
+     *
+     * \return
+     */
     bool listen();
 
 private:

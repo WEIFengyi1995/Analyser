@@ -5,6 +5,8 @@
 #include <QDir>
 #include <QDebug>
 #include <QAbstractItemView>
+#include <QShortcut>
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -130,9 +132,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->crashWidget->hide();
     ui->completWidget->hide();
     ui->loginWidget->show();
+    QShortcut *key=new QShortcut(QKeySequence(Qt::Key_Return),this);
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
     connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
     connect(ui->runCloseButton,SIGNAL(clicked()),this,SLOT(runCloseBtnClicked()));
     connect(ui->recheckButton, SIGNAL(clicked()),this,SLOT(recheckBtnClicked()));
+    connect(key,SIGNAL(activated()),this,SLOT(loginBtnClicked()));
 }
