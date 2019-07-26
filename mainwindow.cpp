@@ -4,7 +4,7 @@
 #include "constantstools.h"
 #include <QDir>
 #include <QDebug>
-
+#include <QAbstractItemView>
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -41,8 +41,8 @@ void MainWindow::recvInfo(QString action, QString info){
         item->setBackground(Qt::white);
         standardItemModel -> appendRow(item);
     }
-    ui->infoList->scrollToBottom();
     ui->infoList->setModel(standardItemModel);
+    ui->infoList->scrollToBottom();
 
 }
 
