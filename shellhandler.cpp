@@ -17,7 +17,6 @@ int ShellHandler::doShell(QString cmd, QString output){
     if(!output.isEmpty()){
         proc->setStandardOutputFile(output,QIODevice::Append);
     }
-
     proc->start(cmd);
     proc->waitForFinished(constantsTools::WAIT_TIME);
     proc->close();

@@ -10,7 +10,6 @@ class SingleInstance: public QObject
 public:
     SingleInstance(MainWindow  & w, QString name);
     ~SingleInstance();
-
     static bool checkInstance(QString name);
     bool listen();
 

@@ -9,7 +9,6 @@ class MyApplication: public QApplication
 {
 public:
     MyApplication(int &argc, char ** garv);
-
     static QThread *getThread();
 
 private:

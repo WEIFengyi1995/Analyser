@@ -48,6 +48,7 @@ private slots:
     void closeBtnClicked();
     /*!
      * \brief done
+     * finished!
      * \param error
      */
     void done(QString error);

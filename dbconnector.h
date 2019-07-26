@@ -21,8 +21,6 @@ private:
 
     static void setInfoCr(QString cr);
     static void setInfoDeno(QString deno);
-    //  const QString PROTOCOL="jdbc:firebird://";
-    // QString dbinfo=PROTOCOL+":"+QString(PORT)+"/"+constantsTools::FILE_DB_VENTAP+"?lc_ctype="+"&user_name="+ISC_USER+"&password="+ISC_PASSWORD;
     static QSqlDatabase db;
     static QSqlDatabase dbAudit;
 

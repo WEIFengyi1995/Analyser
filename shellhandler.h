@@ -11,10 +11,12 @@ public:
     int doShell(QString cmd);
     void doConnect();
     void doDeconnect();
-    int  getnmonPid();
+    int getnmonPid();
+
 private:
     QProcess *proc;
     int nmonPid;
+
 private slots:
     void readProcPid();
 };

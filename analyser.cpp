@@ -350,8 +350,6 @@ void Analyser::fixDB(int type){
 }
 void Analyser::doneAction(){
     emit info("",language::info.value("A416"));
-
-
     //shell->doShell("rm "+constantsTools::FILE_REP+".lck");
     shell->doShell("tar -zcvf "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz "+constantsTools::FILE_REP+" "+constantsTools::PATH_TMP,"");
     shell->doShell("chown ventap:ventap "+constantsTools::PATH_VENTAP_DOC+DBConnector::getInfoCr()+"_"+ QDate::currentDate().toString(constantsTools::DATE_FORMAT)+".tar.gz ");
