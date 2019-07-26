@@ -63,7 +63,15 @@ public:
     const static int PORT;
     const static QString LCC_CTYPE;
     const static QString dbType;
+    /*!
+     * \brief search Client Reference using query
+     * \return
+     */
     static bool searchCR();
+    /*!
+     * \brief search DENO search deNO using query
+     * \return
+     */
     static bool searchDENO();
 };
 

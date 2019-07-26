@@ -22,21 +22,17 @@ Analyser::~Analyser(){
 Analyser::Analyser(Logger &log)
 {
     this->shell = new ShellHandler();
-
     this->log = &log;
-
 }
 
 //ini->clientAction->gfix->gbackup->iozone->nmon
 void Analyser::start(){
     //delete .tmp folder fist
     this->shell->doShell("rm -rf "+constantsTools::PATH_TMP);
-
     if(this->initAction() !=0){
         emit(error("","can not start the service, check your log file to fix it"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
-
     }else{
         emit processBar(1);
         emit(info("nmon","initialisation..."));
@@ -62,12 +58,10 @@ void Analyser::start(){
                 emit(info("Analyser","finished, you can close the window"));
                 emit(finish("Successful"));
                 emit processBar(100);
-
             }
             else{
                 emit finish("nmon failed, check "+constantsTools::FILE_REP);
             }
-
         }
         else{
             emit(error("Client"," failed"));
@@ -83,24 +77,23 @@ Analyser * Analyser::getAnalyser(Logger &log){
         instance = new Analyser(log);
     }
     return instance;
-
 }
 
-//install
+//install + read ini file
 int Analyser::initAction(){
     int sum = 0;
     int code;
     code = shell->doShell("mkdir -p "+constantsTools::PATH_REPORT);
     if(code != 0){
-        emit finish("Can not create "+constantsTools::PATH_REPORT+", check your permission");
+        emit finish("Can not create "+constantsTools::PATH_REPORT+", pls check your permission");
         return -1;
     }
     this->log->setFile(constantsTools::FILE_REP);
-    emit(info("Initialisation","analyser initialised"));
+    emit(info("Initialisation","begin"));
     code = shell->doShell("mkdir -p "+constantsTools::PATH_DBK,"");
     sum += code;
     if(code != 0){
-        emit(error("mkdir -p "+constantsTools::PATH_DBK, "exit code anormal, check your permission"));
+        emit(error("mkdir -p "+constantsTools::PATH_DBK, "exit code anormal, pls check your permission"));
     }
     sum += code;
     code = shell->doShell("apt update","");
@@ -128,7 +121,6 @@ int Analyser::initAction(){
 bool Analyser::clientAction(){
     emit info("client action","check client info ...");
     DBConnector* db=DBConnector::getDBConnector();
-
     if(!db->start()){
         emit error("open db","数据库连接失败");
         emit finish(language::severe.value("A230"));
@@ -137,23 +129,18 @@ bool Analyser::clientAction(){
     try {
         bool cr=  DBConnector::searchCR();
         bool deno = DBConnector::searchDENO();
-
         if(!cr){
-            emit error("execute query","pvalue not found ");
-            emit finish(language::severe.value("A230"));
-            return false;
-        }
-        else{
-            emit config("find pvalue!","configuration ok");
-            emit config("ok!",language::config.value("A100"));
-        }
-
-        if(!deno){
-            emit error("execute query","company  deno no found ");
+            emit error("execute query",language::warning.value("A121"));
             emit finish(language::severe.value("A230"));
             return false;
         }else{
-            emit config("find deno ","configuration ok");
+            emit config("ok!",language::config.value("A100"));
+        }
+        if(!deno){
+            emit error("execute query",language::warning.value("A122"));
+            emit finish(language::severe.value("A230"));
+            return false;
+        }else{
             emit config("ok!",language::config.value("A101"));
         }
     } catch (...) {
@@ -167,7 +154,6 @@ bool Analyser::clientAction(){
         emit info("DB",language::info.value("A210"));
     }
     return true;
-
 }
 
 void Analyser::ioZone3Action(){
@@ -177,7 +163,6 @@ void Analyser::ioZone3Action(){
                               constantsTools::PATH_TMP+"f3 "+constantsTools::PATH_TMP+"f4 "+constantsTools::PATH_TMP+"f5 ",
                               constantsTools::FILE_IOZONE);
     emit info("iozone",language::info.value("A216"));
-
     if(code != 0){
         emit(warning("ioZone", "exit code anormal"));
     }
@@ -187,21 +172,18 @@ bool Analyser::nmonAction(){
     this->shell->doConnect();
     int code;
     code = this->shell->doShell("pgrep nmon","");
-
-
-
     int nmonPid = this->shell->getnmonPid();
-
     if(nmonPid != 0){
         emit(info("nmonAction","find running nmon process, kill it "));
         code = this->shell->doShell("kill -9 "+ QString::number(nmonPid));
         if( code == 0){
-            emit info("nmonAction"," kill sucessfull");
+            emit info("nmonAction"," kill sucessfull, starting nmon action...");
         }
         else{
             emit warning("nmonAction","Can not kill the running nmon");
         }
     }
+
     code = this->shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+QString::number(this->SAMPLE)
                                 +" -s "+QString::number(this->INTERVAL));
     if(code != 0 ){
@@ -232,7 +214,7 @@ bool Analyser::nmonAction(){
                 }
             }
 
-            int bar=(float(i)/float(this->SAMPLE))*100;
+            int bar=int((float(i)/float(this->SAMPLE))*100);
             emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
             if(bar>=5){
                  emit(processBar(bar));
