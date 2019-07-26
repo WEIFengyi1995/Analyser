@@ -34,7 +34,6 @@ SOURCES += \
     analyser.cpp \
     shellhandler.cpp \
     myapplication.cpp\
-    tool.cpp\
     singleinstance.cpp
 
 HEADERS += \

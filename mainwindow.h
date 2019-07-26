@@ -25,16 +25,53 @@ private:
     bool newService;
 
 signals:
+    /*!
+     * \brief loginSignal emit when login successful
+     */
     void loginSignal();
-    void restartSignal();
+
 private slots:
+    /*!
+     * \brief loginBtnClicked
+     * login action
+     * \return
+     */
     bool loginBtnClicked();
+    /*!
+     * \brief exitBtnClicked
+     * quit the program
+     */
     void exitBtnClicked();
+    /*!
+     * \brief closeBtnClicked
+     */
     void closeBtnClicked();
+    /*!
+     * \brief done
+     * \param error
+     */
     void done(QString error);
+    /*!
+     * \brief runCloseBtnClicked
+     * hide ui and keeping running the program
+     */
     void runCloseBtnClicked();
+    /*!
+     * \brief recvInfo display information on ui
+     * \param action
+     * \param info
+     */
     void recvInfo(QString action,QString info);
+
+    /*!
+     * \brief recheckBtnClicked
+     * click to restart the program
+     */
+
     void recheckBtnClicked();
+    /*!
+     * \brief NmonProcess update value of processbar
+     */
     void NmonProcess(int);
 };
 
