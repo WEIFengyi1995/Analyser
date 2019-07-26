@@ -5,7 +5,6 @@
 #include "language.h"
 #include "logger.h"
 #include <QObject>
-#include "tool.h"
 #include "singleinstance.h"
 #include "myapplication.h"
 
@@ -22,6 +21,9 @@ int main(int argc, char *argv[])
         MyApplication a(argc,argv);
         MainWindow w;
         SingleInstance instance(w,constantsTools::SERVER_NAME);
+//        qDebug()<<"   gfix -user "+ DBConnector::ISC_USER+" -password "+
+//                  DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT<<
+//                  constantsTools::FILE_GFIX;
         instance.listen();
         Logger infoLogger;
         Service *ser = Analyser::getAnalyser(infoLogger);

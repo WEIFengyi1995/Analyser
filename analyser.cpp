@@ -6,7 +6,6 @@
 #include <QDate>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
-#include "tool.h"
 #include "myapplication.h"
 
 
@@ -40,7 +39,7 @@ void Analyser::start(){
             emit(info("gfix","Start testing Database "));
             this->dbTest();
             emit processBar(2);
-            emit info("gifix","test done ");
+            emit info("gfix","test done ");
             emit(info("DBBackup","initialisation..."));
             this->ventapDBBackupAction();
             emit processBar(3);
@@ -126,6 +125,7 @@ bool Analyser::clientAction(){
         emit finish(language::severe.value("A230"));
         return false;
     }
+    emit info("检查客户信息",language::info.value("A110"));
     try {
         bool cr=  DBConnector::searchCR();
         bool deno = DBConnector::searchDENO();
@@ -144,14 +144,14 @@ bool Analyser::clientAction(){
             emit config("ok!",language::config.value("A101"));
         }
     } catch (...) {
-        emit error("error","A230");
+        emit error("严重错误","A230");
         emit finish(language::severe.value("A230"));
         shell->doShell("rm -r "+constantsTools::PATH_TMP,"");
         return false;
 
     }{
         db->close();
-        emit info("DB",language::info.value("A210"));
+        emit info("检查客户信息",language::info.value("A210"));
     }
     return true;
 }
@@ -215,7 +215,6 @@ bool Analyser::nmonAction(){
             }
 
             int bar=int((float(i)/float(this->SAMPLE))*100);
-            emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
             if(bar>=5){
                  emit(processBar(bar));
             }
@@ -229,9 +228,9 @@ bool Analyser::nmonAction(){
 void Analyser::ventapDBBackupAction(){
     int i=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP,constantsTools::FILE_GBAK);
-    if(i==1){
+    if(i==0){
         emit info("gbak db_ventap",language::info.value("A314"));
-    }else if(i==0){
+    }else if(i==1){
         emit warning("gbak db_ventap",language::info.value("A314"));
     }else{
         emit error("gbak db_ventap"," db backup error");
@@ -239,9 +238,9 @@ void Analyser::ventapDBBackupAction(){
 
     int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT,constantsTools::FILE_GBAK);
-    if(j==1){
+    if(j==0){
         emit info("gbak db_audit",language::info.value("A414"));
-    }else if(j==0){
+    }else if(j==1){
         emit warning("gbak db_audit",language::info.value("A414"));
     }else{
         emit error("gbak db_audit"," db backup error");
@@ -299,12 +298,13 @@ void Analyser::verifyDB(){
             int i=shell->doShell("gfix -user "+ DBConnector::ISC_USER+" -password "+
                                  DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT,
                                  constantsTools::FILE_GFIX);
+
             if(count==3&&i==0){
                 emit error("fix db failed after trying 3 times  : ",language::severe.value("A330"));
                 break;
             }
             if(i==0){
-                emit info("gix db_audit",language::info.value("A311"));
+                emit info("fix db_audit",language::info.value("A311"));
                 if(count>0){
                     emit info("fix databse ",language::severe.value("A411"));
                 }
