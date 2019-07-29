@@ -47,7 +47,7 @@ HEADERS += \
         shellhandler.h \
     singleinstance.h \
     myapplication.h
-        tool.h \
+
 
 
 FORMS += \

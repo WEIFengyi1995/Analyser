@@ -132,7 +132,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->crashWidget->hide();
     ui->completWidget->hide();
     ui->loginWidget->show();
-    QShortcut *key=new QShortcut(QKeySequence(Qt::Key_Return),this);
+    QShortcut *key=new QShortcut(QKeySequence(Qt::Key_Return),ui->loginWidget);
     connect(ui->exit, SIGNAL(clicked()),this,SLOT(exitBtnClicked()));
     connect(ui->closeButton, SIGNAL(clicked()),this,SLOT(closeBtnClicked()));
     connect(ui->Login,SIGNAL(clicked()),this,SLOT(loginBtnClicked()));
