@@ -4,8 +4,6 @@
 #include "constantstools.h"
 #include "language.h"
 #include "logger.h"
-#include <QObject>
-#include "tool.h"
 #include "singleinstance.h"
 #include "myapplication.h"
 
@@ -25,7 +23,7 @@ int main(int argc, char *argv[])
         instance.listen();
         Logger infoLogger;
         Service *ser = Analyser::getAnalyser(infoLogger);
-        QObject::connect(ser,SIGNAL(finish(QString)),&w,SLOT(done(QString)),Qt::DirectConnection);
+        QObject::connect(ser,SIGNAL(finish(QString)),&w,SLOT(done(QString)));
         QObject::connect(&w,SIGNAL(loginSignal()),ser,SLOT(start()));
         QObject::connect(ser,SIGNAL(warning(QString,QString)),&infoLogger,SLOT(warning_log(QString,QString)));
         QObject::connect(ser,SIGNAL(error(QString,QString)),&infoLogger,SLOT(severe_log(QString,QString)));

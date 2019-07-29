@@ -9,6 +9,7 @@ public:
     ShellHandler();
     int doShell(QString cmd,QString output);
     int doShell(QString cmd);
+    int doBash(QString cmd);
     void doConnect();
     void doDeconnect();
     int getnmonPid();

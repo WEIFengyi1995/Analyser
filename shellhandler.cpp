@@ -1,7 +1,6 @@
 #include "shellhandler.h"
 #include "constantstools.h"
 #include "myapplication.h"
-#include <QDebug>
 
 ShellHandler::ShellHandler()
 {
@@ -13,13 +12,13 @@ ShellHandler::ShellHandler()
 }
 
 int ShellHandler::doShell(QString cmd, QString output){
+    proc->close();
     //QProcess proc1;
     if(!output.isEmpty()){
         proc->setStandardOutputFile(output,QIODevice::Append);
     }
     proc->start(cmd);
     proc->waitForFinished(constantsTools::WAIT_TIME);
-    proc->close();
     proc->setStandardOutputFile("");
     return proc->exitCode();
     //return proc1.execute(cmd);
@@ -45,9 +44,22 @@ int ShellHandler::getnmonPid(){
 
 
 void ShellHandler::doConnect(){
-    QObject::connect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(readProcPid()));
+    //DirectConnection to prevent closed proc that cause IO problem
+    QObject::connect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(readProcPid()),Qt::DirectConnection);
 }
 
 void ShellHandler::doDeconnect(){
     QObject::disconnect(proc,SIGNAL(readyReadStandardOutput()),this,SLOT(readProcPid()));
+}
+
+
+int ShellHandler::doBash(QString cmd){
+    cmd = cmd + "\n\r";
+    this->proc->start("sh");
+    this->proc->waitForStarted();
+    this->proc->write(cmd.toUtf8());
+    this->proc->write(QString("exit \n\r").toUtf8());
+    this->proc->waitForFinished();
+    this->proc->close();
+    return this->proc->exitCode();
 }

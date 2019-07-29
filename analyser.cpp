@@ -1,12 +1,10 @@
 #include "analyser.h"
 #include "constantstools.h"
 #include "language.h"
-#include <QtDebug>
 #include <QThread>
 #include <QDate>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
-#include "tool.h"
 #include "myapplication.h"
 
 
@@ -29,7 +27,7 @@ Analyser::Analyser(Logger &log)
 void Analyser::start(){
     //delete .tmp folder fist
     this->shell->doShell("rm -rf "+constantsTools::PATH_TMP);
-    if(this->initAction() !=0){
+    if(this->initAction() != 0){
         emit(error("","can not start the service, check your log file to fix it"));
         this->shell->doShell("rm -r "+constantsTools::PATH_TMP);
         emit finish("can not start the service, check "+constantsTools::FILE_REP);
@@ -49,12 +47,12 @@ void Analyser::start(){
             this->ioZone3Action();
             emit processBar(4);
             emit(info("ioZone","done"));
+            emit(info("nmonAction","initialisation"));
             if(this->nmonAction()){
                 emit processBar(5);
                 emit(info("nmon","done"));
                 emit(info("Compress","initialisation..."));
                 this->doneAction();
-                emit info("",language::config.value("A117"));
                 emit(info("Analyser","finished, you can close the window"));
                 emit(finish("Successful"));
                 emit processBar(100);
@@ -96,17 +94,16 @@ int Analyser::initAction(){
         emit(error("mkdir -p "+constantsTools::PATH_DBK, "exit code anormal, pls check your permission"));
     }
     sum += code;
-    code = shell->doShell("apt update","");
-    if(code != 0){
+    code = shell->doBash("echo 'ventap' | sudo -S  apt update");
+    if(code != 9){
         emit(error("apt update ", "exit code anormal, check your permission"));
     }
-    sum += code;
-    code = shell->doShell("apt install -y -f iozone3","");
+    code = shell->doShell("sudo  apt install -y -f iozone3","");
     if(code != 0){
-        emit(error("apt install -y -f iozone3","can not install iozone3"));
+        emit(error("sudo apt install -y -f iozone3","can not install iozone3"));
     }
     sum += code;
-    code = shell->doShell("apt install -y -f nmon","");
+    code = shell->doShell("sudo  apt install -y -f nmon","");
     if(code != 0){
         emit(error("apt install -y -f nmon","can not install nmon"));
     }
@@ -185,19 +182,20 @@ bool Analyser::nmonAction(){
     }
 
     code = this->shell->doShell("nmon -F "+constantsTools::FILE_NMON+" -c "+QString::number(this->SAMPLE)
-                                +" -s "+QString::number(this->INTERVAL));
+                                +" -s "+QString::number(this->INTERVAL),"");
     if(code != 0 ){
         emit error("nmonAction","Can not start nmon process");
         return false;
     }
     this->shell->doShell("pgrep nmon","");
+    //wait nmon process to starts
     nmonPid = this->shell->getnmonPid();
     if( nmonPid == 0){
-        emit warning("nmonAction","can not get the current running nmon process, the inspectation may finished immediately but the nmon process is still running."
-                                  " Reboot your system to fix that ");
+        emit warning("nmonAction","can not control current running nmon process, the inspectation may finished immediately but the nmon process is still running."
+                                  " there are at least 2 nmon running process. Kill all nmon process or reboot your system");
     }
     else{
-        for(int i =0; i<this->SAMPLE;i++){
+        for(int i =0; i<this->SAMPLE;++i){
             QTime time=QTime().currentTime().addMSecs(this->INTERVAL*1000+100);
             while(time>QTime().currentTime()){
                 QCoreApplication::processEvents();
@@ -214,8 +212,7 @@ bool Analyser::nmonAction(){
                 }
             }
 
-            int bar=int((float(i)/float(this->SAMPLE))*100);
-            emit(info("nmonAction",QString::number(i+1)+"/"+QString::number(SAMPLE)));
+            int bar=(float(i)/float(this->SAMPLE))*100;
             if(bar>=5){
                  emit(processBar(bar));
             }
@@ -227,7 +224,7 @@ bool Analyser::nmonAction(){
 }
 
 void Analyser::ventapDBBackupAction(){
-    int i=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
+    int i=shell->doShell("sudo  gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_VENTAP+" "+constantsTools::FILE_DBK_VENTAP,constantsTools::FILE_GBAK);
     if(i==1){
         emit info("gbak db_ventap",language::info.value("A314"));
@@ -237,7 +234,7 @@ void Analyser::ventapDBBackupAction(){
         emit error("gbak db_ventap"," db backup error");
     }
 
-    int j=shell->doShell("gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
+    int j=shell->doShell("sudo  gbak -user "+DBConnector::ISC_USER+" -password "+DBConnector::ISC_PASSWORD+" -backup -v -ignore "
                          +constantsTools::FILE_DB_AUDIT+" "+constantsTools::FILE_DBK_AUDIT,constantsTools::FILE_GBAK);
     if(j==1){
         emit info("gbak db_audit",language::info.value("A414"));
@@ -262,7 +259,7 @@ void Analyser::verifyDB(){
         emit error("Verifying Database","database not found !");
     }else{
         do{
-            int i=shell->doShell("gfix -user "+ DBConnector::ISC_USER+" -password "+
+            int i=shell->doShell("sudo  gfix -user "+ DBConnector::ISC_USER+" -password "+
                                  DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_VENTAP,
                                  constantsTools::FILE_GFIX);
             if(count==3&&i==0){
@@ -296,7 +293,7 @@ void Analyser::verifyDB(){
         emit error("Verifying Database","database not found !");
     }else{
         do{
-            int i=shell->doShell("gfix -user "+ DBConnector::ISC_USER+" -password "+
+            int i=shell->doShell("sudo  gfix -user "+ DBConnector::ISC_USER+" -password "+
                                  DBConnector::ISC_PASSWORD+" -v -full "+ constantsTools::FILE_DB_AUDIT,
                                  constantsTools::FILE_GFIX);
             if(count==3&&i==0){
@@ -335,7 +332,7 @@ void Analyser::fixDB(int type){
     if(type==1){
         FILE_DB=constantsTools::FILE_DB_AUDIT;
     }
-    int i= shell->doShell("gfix -user "+ DBConnector::ISC_USER+" -password "+
+    int i= shell->doShell("sudo  gfix -user "+ DBConnector::ISC_USER+" -password "+
                           DBConnector::ISC_PASSWORD+" -mend -full -ignore "+ FILE_DB,
                           constantsTools::FILE_GFIX);
     if(i==1){
